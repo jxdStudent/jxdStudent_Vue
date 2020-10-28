@@ -1,0 +1,56 @@
+<template>
+  <div>
+    <!--显示欢迎信息-->
+    <div>欢迎你,{{$store.state.uname}}</div>
+    <el-table
+      :data="tableData"
+      border
+      style="width: 100%">
+      <el-table-column
+        prop="deptno"
+        label="部门编号"
+        width="300">
+      </el-table-column>
+      <el-table-column
+        prop="dname"
+        label="部门名称"
+        width="300">
+      </el-table-column>
+      <el-table-column
+        prop="loc"
+        label="地址">
+      </el-table-column>
+    </el-table>
+  </div>
+</template>
+
+<script>
+  import axios from 'axios';
+
+  export default {
+    name: "adminIndex",
+    data() {
+      return {
+        tableData: []   //从后台获取数据
+      }
+    },
+    methods: {
+      getAllDept: function () {   //获取全部部门
+        //通过getters属性获取仓库的值
+        var name = this.$store.getters.name;
+
+        axios.get("http://localhost:8081/getDept").then(res => {
+          this.tableData = res.data;
+        })
+      }
+    },
+    //生命周期钩子
+    mounted() {
+      this.getAllDept()
+    }
+  }
+</script>
+
+<style scoped>
+
+</style>
