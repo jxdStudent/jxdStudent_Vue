@@ -1,5 +1,6 @@
 <template>
   <div>
+    <navMenu></navMenu>
     <!--显示欢迎信息-->
     <div>欢迎你,{{$store.state.uname}}</div>
     <el-table
@@ -26,9 +27,11 @@
 
 <script>
   import axios from 'axios';
+  import navMenu from './navMenu.vue';/*引入navMenu导航栏组件*/
 
   export default {
     name: "adminIndex",
+    components:{navMenu},
     data() {
       return {
         tableData: []   //从后台获取数据
