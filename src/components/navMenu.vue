@@ -1,23 +1,24 @@
 <template>
     <!--添加横向导航栏-->
-  <div>
-    <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-      <el-menu-item index="1">处理中心</el-menu-item>
-      <el-submenu index="2">
-        <template slot="title">我的工作台</template>
-        <el-menu-item index="2-1">选项1</el-menu-item>
-        <el-menu-item index="2-2">选项2</el-menu-item>
-        <el-menu-item index="2-3">选项3</el-menu-item>
-        <el-submenu index="2-4">
-          <template slot="title">选项4</template>
-          <el-menu-item index="2-4-1">选项1</el-menu-item>
-          <el-menu-item index="2-4-2">选项2</el-menu-item>
-          <el-menu-item index="2-4-3">选项3</el-menu-item>
-        </el-submenu>
-      </el-submenu>
-      <el-menu-item index="3" disabled>消息中心</el-menu-item>
-      <el-menu-item index="4"><a href="https://www.ele.me" target="_blank">订单管理</a></el-menu-item>
-    </el-menu>
+  <div style="margin-top: -60px;border: 1px solid #000">
+    <el-row>
+      <el-col :span="2" :offset="22">
+        <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+          <el-submenu index="1">
+            <template slot="title">
+                <div class="block"><!--添加头像-->
+                  <el-avatar :size="50">
+                    <img src="../assets/imgs/test.jpg" alt="">
+                  </el-avatar>
+                </div>
+            </template>
+            <el-menu-item index="1-1">修改密码</el-menu-item>
+            <el-menu-item index="1-2">编辑资料</el-menu-item>
+            <el-menu-item index="1-3">退出</el-menu-item>
+          </el-submenu>
+        </el-menu>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
