@@ -8,17 +8,17 @@
       border
       style="width: 100%">
       <el-table-column
-        prop="deptno"
+        prop="uid"
         label="部门编号"
         width="300">
       </el-table-column>
       <el-table-column
-        prop="dname"
+        prop="uname"
         label="部门名称"
         width="300">
       </el-table-column>
       <el-table-column
-        prop="loc"
+        prop="pwd"
         label="地址">
       </el-table-column>
     </el-table>
