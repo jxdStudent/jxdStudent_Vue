@@ -2,7 +2,7 @@
 <div>
   <el-container>
     <el-header>
-      <nav-menu></nav-menu>
+      <NavMenu></NavMenu>
     </el-header>
     <el-container>
       <el-aside width="150px">
@@ -82,14 +82,11 @@
 </template>
 
 <script>
-import navMenu from "./navMenu";
+
 import NavMenu from "./navMenu";
 export default {
 name: "TeacherIndex",
   components: {NavMenu},
-  comments: {
-  navMenu
-  },
   data() {
     return {
       tableData: [{
@@ -158,7 +155,7 @@ name: "TeacherIndex",
 .el-header {
   background-color: #409EFF;
   color: #333;
-  line-height: 60px;
+  line-height: 90px;
   margin-top: -50px;
 }
 
