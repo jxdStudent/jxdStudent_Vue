@@ -52,7 +52,6 @@
             //第一个参数是变量名，第二个参数是方法名
             //this.$store.commit("setUname",this.form.name);
             //调用actions中的方法
-            alert(res.data.role)
             this.$store.dispatch("setUserName", res.data.uname);
             this.$store.dispatch("setUserRole", res.data.role);
             //页面跳转
@@ -63,7 +62,6 @@
             }else if (res.data.role == 1){//20001
               this.$router.push({path: "/TeacherIndex"});
             }
-
           } else {
             this.$message("用户名或密码错误");
           }

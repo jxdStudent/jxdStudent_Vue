@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import login from "../components/login";
 import adminIndex from "../components/adminIndex";
 import TeacherIndex from "../components/TeacherIndex";
+import studentInfoInAdmin from "../components/studentInfoInAdmin";
 import axios from 'axios'
 axios.defaults.baseURL='http://localhost:8081/'
 Vue.prototype.axios = axios
@@ -25,6 +26,11 @@ export default new Router({
       path: '/teacherIndex',
       name: 'teacherIndex',
       component: TeacherIndex
+    },
+    {
+      path: '/studentInfoInAdmin',
+      name: 'studentInfoInAdmin',
+      component: studentInfoInAdmin
     }
   ]
 })
