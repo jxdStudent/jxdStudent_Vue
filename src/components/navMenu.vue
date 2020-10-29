@@ -1,6 +1,6 @@
 <template>
     <!--添加横向导航栏-->
-  <div style="margin-top: -60px;">
+  <div >
   <div style="float: right;">
     <el-row>
       <el-col>
@@ -21,7 +21,7 @@
       </el-col>
     </el-row>
   </div>
-  <div style="float: right;padding: 15px 10px;font-size: 20px"><span>欢迎你,{{$store.state.uname}}</span></div>
+  <div style="float: right;font-size: 20px"><span>欢迎你,{{$store.state.uname}}</span></div>
   </div>
 </template>
 

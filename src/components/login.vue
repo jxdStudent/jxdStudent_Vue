@@ -44,18 +44,26 @@
     methods: {
       submitForm: function () {
         //提交操作
-        axios.get("http://localhost:8081/login/" + this.form.name + "/" + this.form.pwd).then(res => {
+        axios.get("login/" + this.form.name + "/" + this.form.pwd).then(res => {
           //登录是否成功
           if (res.data != null) {
             //将用户名存储到store仓库中
             //commit属于固定用法，用于调用mutation中的方法
             //第一个参数是变量名，第二个参数是方法名
             //this.$store.commit("setUname",this.form.name);
-
             //调用actions中的方法
-            this.$store.dispatch("setUser", res.data);
+            alert(res.data.role)
+            this.$store.dispatch("setUserName", res.data.uname);
+            this.$store.dispatch("setUserRole", res.data.role);
             //页面跳转
-            this.$router.push({path: "/adminIndex"})
+            //this.$router.push({path: "/adminIndex"});
+
+            if (res.data.role == 4){//30001
+              this.$router.push({path: "/adminIndex"});
+            }else if (res.data.role == 1){//20001
+              this.$router.push({path: "/TeacherIndex"});
+            }
+
           } else {
             this.$message("用户名或密码错误");
           }

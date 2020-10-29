@@ -79,7 +79,7 @@
     methods: {
       getAllDept: function () {   //获取全部部门
         //通过getters属性获取仓库的值
-        var name = this.$store.getters.name;
+        var name = this.$store.getters.uname;
 
         axios.get("http://localhost:8081/getDept").then(res => {
           this.tableData = res.data;
