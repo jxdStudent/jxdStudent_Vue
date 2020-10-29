@@ -1,6 +1,7 @@
 <template>
     <!--添加横向导航栏-->
-  <div>
+  <div style="margin-top: -60px;">
+  <div style="float: right;">
     <el-row>
       <el-col>
         <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
@@ -19,6 +20,8 @@
         </el-menu>
       </el-col>
     </el-row>
+  </div>
+  <div style="float: right;padding: 15px 10px;font-size: 20px"><span>欢迎你,{{$store.state.uname}}</span></div>
   </div>
 </template>
 

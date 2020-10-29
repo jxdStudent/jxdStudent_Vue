@@ -2,10 +2,12 @@
   <div>
     <el-container>
       <el-header>
-        <div style="float: left;background-color: #42b983;width: 100%;margin-top: -60px;">
-          <navMenu style="float: right;"></navMenu>
-          <div style="float: right;padding: 15px 10px;font-size: 20px"><span>欢迎你,{{$store.state.uname}}</span></div>
+        <!--<div style="float: left;background-color: #42b983;width: 100%;margin-top: -60px;">-->
+        <div>
+          <navMenu></navMenu>
         </div>
+          <!--<div style="float: right;padding: 15px 10px;font-size: 20px"><span>欢迎你,{{$store.state.uname}}</span></div>
+        </div>-->
       </el-header>
       <el-container>
         <el-aside width="200px"><navMenuSide></navMenuSide></el-aside>
