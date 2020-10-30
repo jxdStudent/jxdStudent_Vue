@@ -1,6 +1,6 @@
 <template>
     <!--添加横向导航栏-->
-  <div>
+  <div style="float: right">
     <el-row>
       <el-col>
         <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
