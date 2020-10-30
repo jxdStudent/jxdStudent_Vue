@@ -1,12 +1,12 @@
 <template>
-  <!--添加横向导航栏-->
-  <div >
-    <div style="float: right;">
-      <el-row>
-        <el-col>
-          <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-            <el-submenu index="1">
-              <template slot="title">
+    <!--添加横向导航栏-->
+  <div>
+  <div style="float: right;">
+    <el-row>
+      <el-col>
+        <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+          <el-submenu index="1">
+            <template slot="title">
                 <div class="block"><!--添加头像-->
                   <el-avatar :size="50">
                     <img src="../assets/imgs/test.jpg" alt="">

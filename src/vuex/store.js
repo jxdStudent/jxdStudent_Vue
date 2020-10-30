@@ -1,6 +1,7 @@
 import Vue from "vue";
 //引入vuex，类似vue-router
 import Vuex from "vuex";
+import ro from "element-ui/src/locale/lang/ro";
 Vue.use(Vuex);
 
 const modulesA = {
@@ -12,11 +13,15 @@ const modulesA = {
 const store = new Vuex.Store({
   state:{//状态，要存储的数据
     count:0,
-    uname:null
+    uname:null,
+    role:null
   },
   mutations:{//定义事件，set方法，用于给数据赋值
     setUname:function (state,uname) {
       state.uname = uname;  //将外部参数赋值为state对象中的数据
+    },
+    setRole:function (state,role) {
+      state.role = role;
     }
   },
   actions:{//作用同mutations，用于提供给数据赋值
@@ -24,13 +29,19 @@ const store = new Vuex.Store({
     //支持异步操作
     //第一个参数为mutations对象
     //第二个对象为传递进行的数据
-    setUser:function (context,uname) {
+    setUserName:function (context,uname) {
       context.commit("setUname",uname);
+    },
+    setUserRole:function (context, role) {
+      context.commit("setRole",role)
     }
   },
   getters:{
-    name:state => {//箭头函数相当于function(state){}
+    uname:state => {//箭头函数相当于function(state){}
       return state.uname;
+    },
+    role:state => {
+      return state.role;
     }
   },
   modules:{
