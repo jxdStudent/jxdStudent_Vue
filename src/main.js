@@ -6,6 +6,7 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import App from './App'
 import store from './vuex/store';
+import './assets/header.css'
 
 Vue.use(ElementUI);
 

@@ -91,7 +91,7 @@
         //通过getters属性获取仓库的值
         var name = this.$store.getters.uname;
 
-        axios.get("http://localhost:8081/getStudent").then(res => {
+        axios.get("http://localhost:8081/getStudentInAdmin").then(res => {
           this.tableData = res.data;
         })
       }
