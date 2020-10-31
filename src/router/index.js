@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import login from "../components/login";
-import adminIndex from "../components/adminIndex";
+import adminIndex from "../components/admin/adminIndex";
 import TeacherIndex from "../components/TeacherIndex";
-import studentInfoInAdmin from "../components/studentInfoInAdmin";
+import studentInfoInAdmin from "../components/admin/studentInfoInAdmin";
 import axios from 'axios'
 axios.defaults.baseURL='http://localhost:8081/'
 Vue.prototype.axios = axios

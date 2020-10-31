@@ -19,8 +19,8 @@
 
 <script>
   import axios from 'axios';
-  import navMenu from './navMenu.vue';/*引入navMenu导航栏组件*/
-  import navMenuSide from './navMenuSide.vue'
+  import navMenu from '../navMenu.vue';/*引入navMenu导航栏组件*/
+  import navMenuSide from '../navMenuSide.vue'
   import studentInfoInAdmin from "./studentInfoInAdmin";
 
   export default {
@@ -36,7 +36,7 @@
         //通过getters属性获取仓库的值
         var name = this.$store.getters.uname;
 
-        axios.get("http://localhost:8081/getDept").then(res => {
+        axios.get("http://localhost:8081/getStudentInAdmin").then(res => {
           this.tableData = res.data;
         })
       }
