@@ -1,10 +1,31 @@
 <template>
-  <div>
+  <div class="Terminal" v-loading="loading">
+    <!-- 查询操作 -->
+    <div class="select">
+      <el-form :inline="true" :model="formInline" class="demo-form-inline">
+        <el-form-item label="学生姓名">
+          <el-input v-model="formInline.user" placeholder="请输入学生姓名"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onSelect">查询</el-button>
+        </el-form-item>
+        <el-form-item label="学期">
+          <el-select v-model="formInline.region" placeholder="请选择学期">
+            <el-option label="47期" value="shanghai"></el-option>
+            <el-option label="48期" value="beijing"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onSubmit">查询</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+    <!-- 表格 -->
+    <div class="store-table">
     <el-table
       :data="tableData"
       border
       stripe
-      height="100%"
       style="width: 100%"
       :default-sort="{prop: 'date', order: 'descending'}">
       <el-table-column
@@ -73,6 +94,16 @@
         </template>
       </el-table-column>
     </el-table>
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="this.query.page"
+        :page-sizes="[1, 5, 10, 15]"
+        :page-size="this.query.pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="this.query.total">
+      </el-pagination>
+  </div>
   </div>
 </template>
 
@@ -83,7 +114,16 @@
     name: "studentInfoInAdmin",
     data() {
       return {
-        tableData: []   //从后台获取数据
+        tableData: [],   //从后台获取数据
+        query:{
+          total:1,
+          page:1,
+          pageSize:5,
+        },
+        formInline: {
+          user: '',
+          region: ''
+        }
       }
     },
     methods: {
@@ -94,11 +134,36 @@
         axios.get("http://localhost:8081/getStudentInAdmin").then(res => {
           this.tableData = res.data;
         })
+      },
+      getAllByPage:function(){
+        axios.get("http://localhost:8081/getAllByPage/"+this.query.page+"/"+this.query.pageSize).then(res=>{
+          this.tableData = res.data;
+        })
+      },
+      handleSizeChange(val) {
+        this.page = 1;
+        this.query.pageSize = val;
+        this.getAllByPage()
+      },
+      handleCurrentChange(val) {
+        this.query.page = val;
+        this.getAllByPage()
+      },
+      onSubmit() {
+        console.log('submit!');
+      },
+      onSelect(){
+        console.log('select!');
       }
+    },
+    //声明生命周期钩子
+    created() {//编译后直接获取数据
+      this.getAllByPage();
     },
     //生命周期钩子
     mounted() {
       this.getAllDept()
+      //this.handleUserList()
     }
   }
 </script>

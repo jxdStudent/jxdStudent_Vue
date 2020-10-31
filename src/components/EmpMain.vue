@@ -240,7 +240,6 @@
       getMenu() {
         axios.get('http://localhost:8080/getMenu/' + sessionStorage.getItem('userId')).then(res => {
           this.adminMenus = res.data;
-
         })
       },
 
