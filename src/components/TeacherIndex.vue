@@ -1,233 +1,158 @@
 <template>
-<div>
-  <el-container>
-    <el-header>
-      <NavMenu></NavMenu>
-    </el-header>
+  <div>
     <el-container>
-      <el-aside width="150px">
-        <el-menu
-          default-active="1"
-          class="el-menu-vertical-demo">
-          <el-menu-item index="1">
-            <i class="el-icon-menu"></i>
-            <span slot="title">导航一</span>
-          </el-menu-item>
-          <el-menu-item index="2">
-            <i class="el-icon-menu"></i>
-            <span slot="title">导航二</span>
-          </el-menu-item>
-          <el-menu-item index="3">
-            <i class="el-icon-menu"></i>
-            <span slot="title">导航三</span>
-          </el-menu-item>
-        </el-menu>
-      </el-aside>
+      <el-header>
+        <navMenu></navMenu>
+      </el-header>
       <el-main>
         <el-table
           :data="tableData"
           border
           stripe
-          height="100%"
           style="width: 100%"
-          :default-sort = "{prop: 'date', order: 'descending'}">
+          :default-sort="{prop: 'sno', order: 'descending'}">
           <el-table-column
             prop="sno"
             label="学号"
             sortable
             width="100"
-            align="right">
+            align="center">
           </el-table-column>
           <el-table-column
             prop="sname"
             label="姓名"
+            sortable
             width="100"
             align="center">
           </el-table-column>
           <el-table-column
             prop="sex"
             label="性别"
+            sortable
             width="100"
             align="center">
           </el-table-column>
           <el-table-column
             prop="nation"
             label="民族"
+            sortable
             width="100"
             align="center">
           </el-table-column>
           <el-table-column
             prop="birthday"
             label="生日"
+            sortable
             width="100"
             align="center">
           </el-table-column>
           <el-table-column
             prop="classno"
             label="班期"
+            sortable
             width="100"
             align="center">
           </el-table-column>
           <el-table-column
             prop="tel"
             label="手机号"
+            sortable
             width="120"
             align="center">
           </el-table-column>
           <el-table-column
             prop="address"
             label="地址"
+            sortable
             width="240"
             align="center">
           </el-table-column>
           <el-table-column
             prop="graduate"
             label="毕业院校"
+            sortable
             width="180"
             align="center">
           </el-table-column>
           <el-table-column
             prop="major"
             label="所学专业"
+            sortable
             width="180"
             align="center">
           </el-table-column>
           <el-table-column
             prop="identity"
             label="身份证号"
+            sortable
             width="180"
             align="center">
           </el-table-column>
           <el-table-column
             fixed="right"
-            label="操作"
-            width="300"
+            label="综合评价"
+            width="320"
             align="center">
             <template slot-scope="scope">
               <el-button
                 size="mini"
-                @click="">编辑</el-button>
+                @click="toStudentScore()">学校
+              </el-button>
               <el-button
                 size="mini"
-                @click="">编辑</el-button>
+                @click="">工作1
+              </el-button>
               <el-button
                 size="mini"
-                @click="">编辑</el-button>
+                @click="">工作2
+              </el-button>
               <el-button
                 size="mini"
-                @click="">编辑</el-button>
+                @click="">工作3
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
       </el-main>
     </el-container>
-  </el-container>
-</div>
+  </div>
 </template>
 
 <script>
+import axios from "axios";
+import navMenu from "./navMenu";
 
-import NavMenu from "./navMenu";
 export default {
-name: "TeacherIndex",
-  components: {NavMenu},
+  name: "TeacherIndex",
+  components: {navMenu},
   data() {
     return {
-      tableData: [{
-        sno: 10001,
-        sname: "张三",
-        sex: "男",
-        nation: "汉族",
-        birthday: "1999-09-09",
-        identity: 145623988709675467,
-        classno: 47,
-        tel: 177777777,
-        address: "山东省济南市高新区",
-        graduate: "中国大学",
-        major: "计算机技术",
-      }, {
-        sno: 10002,
-        sname: "张三",
-        sex: "男",
-        nation: "汉族",
-        birthday: "1999-09-09",
-        identity: 145623988709675467,
-        classno: 47,
-        tel: 177777777,
-        address: "山东省济南市高新区",
-        graduate: "中国大学",
-        major: "计算机技术",
-      }, {
-        sno: 10003,
-        sname: "张三",
-        sex: "男",
-        nation: "汉族",
-        birthday: "1999-09-09",
-        identity: 145623988709675467,
-        classno: 47,
-        tel: 177777777,
-        address: "山东省济南市高新区",
-        graduate: "中国大学",
-        major: "计算机技术",
-      }, {
-        sno: 10004,
-        sname: "张三",
-        sex: "男",
-        nation: "汉族",
-        birthday: "1999-09-09",
-        identity: 145623988709675467,
-        classno: 47,
-        tel: 177777777,
-        address: "山东省济南市高新区",
-        graduate: "中国大学",
-        major: "计算机技术",
-      }, {
-        sno: 10005,
-        sname: "张三",
-        sex: "男",
-        nation: "汉族",
-        birthday: "1999-09-09",
-        identity: 145623988709675467,
-        classno: 47,
-        tel: 177777777,
-        address: "山东省济南市高新区",
-        graduate: "中国大学",
-        major: "计算机技术",
-      }, {
-        sno: 10006,
-        sname: "张三",
-        sex: "男",
-        nation: "汉族",
-        birthday: "1999-09-09",
-        identity: 145623988709675467,
-        classno: 47,
-        tel: 177777777,
-        address: "山东省济南市高新区",
-        graduate: "中国大学",
-        major: "计算机技术",
-      }, {
-        sno: 10007,
-        sname: "张三",
-        sex: "男",
-        nation: "汉族",
-        birthday: "1999-09-09",
-        identity: 145623988709675467,
-        classno: 47,
-        tel: 177777777,
-        address: "山东省济南市高新区",
-        graduate: "中国大学",
-        major: "计算机技术",
-      }]
+      tableData: [//测试数据
+        {
+          sno: 10001,
+          sname: "张三"
+        },
+        {
+          sno: 10002,
+          sname: "李四"
+        }
+      ]
     }
   },
   methods: {
-    getAllStudent: function () {
-      Axios.get("http://localhost:8081/getAllStudent").then(res => {
+    //获取学生基本信息渲染到表格中
+    getAllStudent() {
+      var name = this.$store.getters.uname;
+      axios.get("http://localhost:8081/getAllStudents").then(res => {
         this.tableData = res.data;
       })
+    },
+    toStudentScore() {
+      this.$router.push({path: "/studentScore"})
     }
   },
   mounted() {
+    //html渲染完成后调用方法获取学生信息
     this.getAllStudent();
   }
 }
@@ -239,10 +164,6 @@ name: "TeacherIndex",
   color: #333;
   line-height: 90px;
   margin-top: -50px;
-}
-
-.el-aside {
-  color: #C0C4CC;
 }
 
 .el-footer {
