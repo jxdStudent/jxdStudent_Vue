@@ -1,32 +1,5 @@
 <template>
   <div class="Terminal" v-loading="loading">
-    <!-- 查询操作 -->
-    <el-row>
-      <el-col :span="8" offset="4">
-        <div class="select">
-          <el-form :inline="true" :model="formInline" class="demo-form-inline">
-            <el-form-item label="用户ID">
-              <el-input v-model="formInline.user" placeholder="请输入用户ID"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="onSelect">查询</el-button>
-            </el-form-item>
-          </el-form>
-        </div>
-      </el-col>
-      <el-col :span="8">
-        <div class="select">
-          <el-form :inline="true" :model="formInline" class="demo-form-inline">
-            <el-form-item label="用户姓名">
-              <el-input v-model="formInline.user" placeholder="请输入用户姓名"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="onSelect">查询</el-button>
-            </el-form-item>
-          </el-form>
-        </div>
-      </el-col>
-    </el-row>
     <!-- 表格 -->
     <div class="store-table">
       <el-table
@@ -37,24 +10,14 @@
         style="width: 100%"
         :default-sort="{prop: 'date', order: 'descending'}">
         <el-table-column
-          prop="uid"
-          label="用户id"
+          prop="cno"
+          label="部门编号"
           sortable
           >
         </el-table-column>
         <el-table-column
-          prop="uname"
-          label="用户姓名"
-          >
-        </el-table-column>
-        <el-table-column
-          prop="pwd"
-          label="密码"
-          >
-        </el-table-column>
-        <el-table-column
-          prop="role"
-          label="角色"
+          prop="cname"
+          label="部门名称"
           >
         </el-table-column>
         <el-table-column
@@ -80,9 +43,10 @@
 </template>
 
 <script>
-  import axios from "axios";
+    import axios from "axios";
+
     export default {
-        name: "accountInfoInAdmin",
+        name: "courseInfoInAdmin",
       data() {
         return {
           tableData: [],   //从后台获取数据
@@ -97,11 +61,11 @@
         }
       },
       methods:{
-        getAllAccount: function () {   //获取全部部门
+        getAllCourse: function () {   //获取全部部门
           //通过getters属性获取仓库的值
           var name = this.$store.getters.uname;
 
-          axios.get("http://localhost:8081/getAllAccount").then(res => {
+          axios.get("http://localhost:8081/getAllCourse").then(res => {
             this.tableData = res.data;
           })
         },
@@ -124,7 +88,7 @@
         }
       },
       mounted() {
-        this.getAllAccount();
+        this.getAllCourse();
         //this.handleUserList()
         this.getAllByPage();
       }

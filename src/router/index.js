@@ -3,10 +3,16 @@ import Router from 'vue-router'
 import login from "../components/login";
 import adminIndex from "../components/admin/adminIndex";
 import TeacherIndex from "../components/TeacherIndex";
+import studentIndex from "../components/studentIndex";
 import studentInfoInAdmin from "../components/admin/studentInfoInAdmin";
 import accountInfoInAdmin from "../components/admin/accountInfoInAdmin";
+import teacherInfoInAdmin from "../components/admin/teacherInfoInAdmin";
+import deptInfoInAdmin from "../components/admin/deptInfoInAdmin";
+import courseInfoInAdmin from "../components/admin/courseInfoInAdmin";
+import classInfoInAdmin from "../components/admin/classInfoInAdmin";
 import axios from 'axios'
-axios.defaults.baseURL='http://localhost:8081/'
+
+axios.defaults.baseURL = 'http://localhost:8081/'
 Vue.prototype.axios = axios
 
 Vue.use(Router)
@@ -21,7 +27,39 @@ export default new Router({
     {
       path: '/adminIndex',
       name: 'adminIndex',
-      component: adminIndex
+      component: adminIndex,
+      redirect:"/studentInfoInAdmin",
+      children: [
+        {
+          path: '/studentInfoInAdmin',
+          name: 'studentInfoInAdmin',
+          component: studentInfoInAdmin
+        },
+        {
+          path: '/teacherInfoInAdmin',
+          name: 'teacherInfoInAdmin',
+          component: teacherInfoInAdmin
+        },
+        {
+          path: '/deptInfoInAdmin',
+          name: 'deptInfoInAdmin',
+          component: deptInfoInAdmin
+        },
+        {
+          path: '/courseInfoInAdmin',
+          name: 'courseInfoInAdmin',
+          component: courseInfoInAdmin
+        },
+        {
+          path: '/classInfoInAdmin',
+          name: 'classInfoInAdmin',
+          component: classInfoInAdmin
+        },{
+          path: '/accountInfoInAdmin',
+          name: 'accountInfoInAdmin',
+          component: accountInfoInAdmin
+        }
+      ]
     },
     {
       path: '/teacherIndex',
@@ -29,14 +67,9 @@ export default new Router({
       component: TeacherIndex
     },
     {
-      path: '/studentInfoInAdmin',
-      name: 'studentInfoInAdmin',
-      component: studentInfoInAdmin
-    },
-    {
-      path: '/accountInfoInAdmin',
-      name: 'accountInfoInAdmin',
-      component: accountInfoInAdmin
+      path: '/studentIndex',
+      name: 'studentIndex',
+      component: studentIndex
     }
   ]
 })
