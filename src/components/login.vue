@@ -54,13 +54,15 @@
             //调用actions中的方法
             this.$store.dispatch("setUserName", res.data.uname);
             this.$store.dispatch("setUserRole", res.data.role);
+            this.$store.dispatch("setUserSno", this.form.name);
             //页面跳转
             //this.$router.push({path: "/adminIndex"});
-
             if (res.data.role == 4){//30001
               this.$router.push({path: "/adminIndex"});
             }else if (res.data.role == 1){//20001
               this.$router.push({path: "/TeacherIndex"});
+            }else if (res.data.role == 0){
+              this.$router.push({path: "/studentIndex"});
             }
           } else {
             this.$message("用户名或密码错误");

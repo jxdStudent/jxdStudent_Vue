@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import login from "../components/login";
-import adminIndex from "../components/adminIndex";
+import studentIndex from "../components/studentIndex"
+import adminIndex from "../components/admin/adminIndex";
 import TeacherIndex from "../components/TeacherIndex";
 import StudentScore from "../components/StudentScore";
-import studentInfoInAdmin from "../components/studentInfoInAdmin";
+import studentInfoInAdmin from "../components/admin/studentInfoInAdmin";
 import axios from 'axios'
 axios.defaults.baseURL='http://localhost:8081/'
 Vue.prototype.axios = axios
@@ -24,6 +25,11 @@ export default new Router({
       component: adminIndex
     },
     {
+      path: '/studentIndex',
+      name: 'studentIndex',
+      component: studentIndex
+    },
+    {
       path: '/teacherIndex',
       name: 'teacherIndex',
       component: TeacherIndex
@@ -37,6 +43,11 @@ export default new Router({
       path: '/studentInfoInAdmin',
       name: 'studentInfoInAdmin',
       component: studentInfoInAdmin
+    },
+    {
+      path: '/accountInfoInAdmin',
+      name: 'accountInfoInAdmin',
+      component: accountInfoInAdmin
     }
   ]
 })
