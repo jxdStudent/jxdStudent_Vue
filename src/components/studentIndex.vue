@@ -13,7 +13,7 @@
 
             <!--折叠面板-->
             <el-collapse accordion v-model="activeNames">
-              <el-collapse-item name="学生信息">
+              <el-collapse-item name="学生基本信息">
                 <template slot="title">
                   <h1 style="color: #42b983">学生基本信息<i class="header-icon el-icon-info"></i></h1>
                 </template>
@@ -158,6 +158,31 @@
         </el-col>
       </el-row>
     </div>
+    <div>
+      <el-row :gutter="20">
+        <el-col :span="16" :offset="4">
+          <div class="grid-content bg-purple">
+
+            <!--折叠面板-->
+            <el-collapse accordion v-model="activeNames">
+              <el-collapse-item name="学生成绩信息">
+                <template slot="title">
+                  <h1 style="color: #42b983">学生成绩<i class="header-icon el-icon-info"></i></h1>
+                </template>
+
+                <el-table  highlight-current-row :data="table_course_score" border>
+                  <template v-for="(head,index) in table_course_head">
+                    <!--拼接''：格式转换--课程编号head.cno是number类型的，从后台接收的成绩json里cno是字符串，-->
+                    <el-table-column :prop="head.cno + ''" :label="head.cname"></el-table-column>
+                  </template>
+                </el-table>
+
+              </el-collapse-item>
+            </el-collapse>
+          </div>
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 
@@ -168,16 +193,20 @@
   export default {
     name: "studentIndex",
     components: {
-      navMenu,
+      navMenu
     },
     data() {
       return {
         //学生个人数据
         form: {},
+        //学生课程
+        table_course_head:[],
+        //学生课程成绩
+        table_course_score:[],
         //表单右对齐
         labelPosition: 'right',
         //折叠面板默认开启
-        activeNames: ['学生信息'],
+        activeNames: ['学生基本信息'],
         //是否编辑
         isEdit: false,
         //Todo  修改验证规则
@@ -193,13 +222,25 @@
       //获取个人信息
       getAllInfo() {
         //Todo  动态传值  学生学号
-        this.axios.get("getStudent/10001").then(res => {
+        this.axios.get("getStudent/" + this.$store.getters.sno).then(res => {
           if (res.data.marriage == 0) {
-            res.data.marriage = "未婚"
+            res.data.marriage = "未婚";
           } else {
-            res.data.marriage = "已婚"
+            res.data.marriage = "已婚";
           }
           this.form = res.data;
+        })
+      },
+      //获取课程信息
+      getAllCourse(){
+        this.axios.get("getAllCourse").then(res =>{
+          this.table_course_head = res.data;
+        })
+      },
+      //获取该学生的课程成绩
+      getAllScore(){
+        this.axios.get("getAllScore/" + this.$store.getters.sno).then(res =>{
+          this.table_course_score = res.data;
         })
       },
       //取消编辑
@@ -209,7 +250,6 @@
       },
       //修改信息提交
       onSubmit() {
-        debugger
         let data = this.form;
         if (data.marriage == "未婚") {
           data.marriage = 0;
@@ -237,6 +277,8 @@
     //加载执行
     mounted() {
       this.getAllInfo();
+      this.getAllCourse();
+      this.getAllScore();
     }
   }
 </script>
@@ -269,10 +311,11 @@
     width:180px;
   }*/
   .width_mark {
-    width: 820px;
+    width: 830px;
   }
 
   .width_idCard {
     width: 200px;
   }
+
 </style>
