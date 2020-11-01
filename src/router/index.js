@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import login from "../components/login";
+import studentIndex from "../components/studentIndex"
 import adminIndex from "../components/admin/adminIndex";
 import TeacherIndex from "../components/TeacherIndex";
 import studentInfoInAdmin from "../components/admin/studentInfoInAdmin";
@@ -22,6 +23,11 @@ export default new Router({
       path: '/adminIndex',
       name: 'adminIndex',
       component: adminIndex
+    },
+    {
+      path: '/studentIndex',
+      name: 'studentIndex',
+      component: studentIndex
     },
     {
       path: '/teacherIndex',

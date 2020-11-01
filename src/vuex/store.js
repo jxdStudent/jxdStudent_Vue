@@ -14,7 +14,8 @@ const store = new Vuex.Store({
   state:{//状态，要存储的数据
     count:0,
     uname:null,
-    role:null
+    role:null,
+    sno:null  //学生编号
   },
   mutations:{//定义事件，set方法，用于给数据赋值
     setUname:function (state,uname) {
@@ -22,6 +23,9 @@ const store = new Vuex.Store({
     },
     setRole:function (state,role) {
       state.role = role;
+    },
+    setSno:function (state,sno) {
+      state.sno = sno;
     }
   },
   actions:{//作用同mutations，用于提供给数据赋值
@@ -34,6 +38,9 @@ const store = new Vuex.Store({
     },
     setUserRole:function (context, role) {
       context.commit("setRole",role)
+    },
+    setUserSno:function (context,sno) {
+      context.commit("setSno",sno)
     }
   },
   getters:{
@@ -42,6 +49,9 @@ const store = new Vuex.Store({
     },
     role:state => {
       return state.role;
+    },
+    sno:state =>{
+      return state.sno;
     }
   },
   modules:{
