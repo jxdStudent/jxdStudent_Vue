@@ -37,10 +37,10 @@ const store = new Vuex.Store({
       context.commit("setUname",uname);
     },
     setUserRole:function (context, role) {
-      context.commit("setRole",role)
+      context.commit("setRole",role);
     },
     setUserSno:function (context,sno) {
-      context.commit("setSno",sno)
+      context.commit("setSno",sno);
     }
   },
   getters:{

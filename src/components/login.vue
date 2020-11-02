@@ -46,7 +46,7 @@
         //提交操作
         axios.get("login/" + this.form.name + "/" + this.form.pwd).then(res => {
           //登录是否成功
-          if (res.data != null) {
+          if (res.data != null && res.data != "") {
             //将用户名存储到store仓库中
             //commit属于固定用法，用于调用mutation中的方法
             //第一个参数是变量名，第二个参数是方法名
@@ -65,7 +65,7 @@
               this.$router.push({path: "/studentIndex"});
             }
           } else {
-            this.$message("用户名或密码错误");
+            this.$message.error("用户名或密码错误");
           }
         })
       }

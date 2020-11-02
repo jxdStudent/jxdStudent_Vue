@@ -14,8 +14,8 @@
                 </div>
             </template>
             <el-menu-item index="1-1">修改密码</el-menu-item>
-            <el-menu-item index="1-2">编辑资料</el-menu-item>
-            <el-menu-item index="1-3">退出</el-menu-item>
+            <el-menu-item index="1-2" :edit_user="edit_user">编辑资料</el-menu-item>
+            <el-menu-item index="1-3" @click="exit">退出</el-menu-item>
           </el-submenu>
         </el-menu>
       </el-col>
@@ -27,7 +27,15 @@
 
 <script>
     export default {
-        name: "navMenu"
+        name: "navMenu",
+      methods:{
+          edit_user(){
+
+          },
+          exit(){
+            this.$router.push({path: "/"});
+          }
+      }
     }
 </script>
 
