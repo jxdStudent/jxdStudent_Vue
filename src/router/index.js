@@ -11,6 +11,7 @@ import teacherInfoInAdmin from "../components/admin/teacherInfoInAdmin";
 import deptInfoInAdmin from "../components/admin/deptInfoInAdmin";
 import courseInfoInAdmin from "../components/admin/courseInfoInAdmin";
 import classInfoInAdmin from "../components/admin/classInfoInAdmin";
+import empInfoInAdmin from "../components/admin/empInfoInAdmin";
 import axios from 'axios'
 
 axios.defaults.baseURL = 'http://localhost:8081/'
@@ -44,7 +45,14 @@ export default new Router({
         {
           path: '/deptInfoInAdmin',
           name: 'deptInfoInAdmin',
-          component: deptInfoInAdmin
+          component: deptInfoInAdmin,
+          /*children : [
+            {
+              path :"/empInfoInAdmin",
+              name: 'empInfoInAdmin',
+              component: empInfoInAdmin,
+            }
+          ]*/
         },
         {
           path: '/courseInfoInAdmin',
@@ -71,6 +79,11 @@ export default new Router({
       path: '/studentIndex',
       name: 'studentIndex',
       component: studentIndex
+    },
+    {
+      path :"/empInfoInAdmin",
+      name: 'empInfoInAdmin',
+      component: empInfoInAdmin,
     }
   ]
 })

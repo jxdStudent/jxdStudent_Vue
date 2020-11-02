@@ -29,7 +29,7 @@
           label="操作"
           >
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+            <el-button @click="allEmp(scope.row.deptno)" type="text" size="small">查看</el-button>
             <el-button type="text" size="small">编辑</el-button>
           </template>
         </el-table-column>
@@ -74,7 +74,15 @@
             this.tableData = res.data;
           })
         },
-        getAllByPage:function(){
+        allEmp: function(deptno) {
+          this.$router.push({
+            path:"/empInfoInAdmin",
+            query : {
+                deptno: deptno
+            }
+          });
+        },
+        /*getAllByPage:function(){
           axios.get("http://localhost:8081/getAllByPage/"+this.query.page+"/"+this.query.pageSize).then(res=>{
             this.tableData = res.data;
           })
@@ -87,7 +95,7 @@
         handleCurrentChange(val) {
           this.query.page = val;
           this.getAllByPage()
-        },
+        },*/
         onSelect(){
           console.log('select!');
         }

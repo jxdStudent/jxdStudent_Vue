@@ -34,7 +34,8 @@
         border
         fit="fit"
         stripe="stripe"
-        style="width: 100%"
+        v-infinite-scroll="load"
+        style="width: 100%;overflow:auto"
         :default-sort="{prop: 'date', order: 'descending'}">
         <el-table-column
           prop="uid"

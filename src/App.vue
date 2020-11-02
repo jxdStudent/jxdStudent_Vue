@@ -1,13 +1,33 @@
 <template>
   <div id="app">
     <!--<img src="./assets/logo.png">-->
-    <router-view/>
+    <router-view v-if="isShow"></router-view>
   </div>
 </template>
 
 <script>
 export default {
   name: 'App',
+  /*=====================实现表格的动态刷新，调用this.reload()==========================*/
+  provide () {
+    return {
+      reload: this.reload
+    }
+  },
+  data () {
+    return {
+      isShow: true
+    }
+  },
+  methods: {
+    reload () {
+      this.isShow= false
+      this.$nextTick(function () {
+        this.isShow= true
+      })
+    }
+  },
+
   //===========================下面是解决刷新页面丢失vuex数据
   created() {
     //在页面加载时读取sessionStorage里的状态信息
