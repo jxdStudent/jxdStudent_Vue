@@ -51,19 +51,24 @@
             //commit属于固定用法，用于调用mutation中的方法
             //第一个参数是变量名，第二个参数是方法名
             //this.$store.commit("setUname",this.form.name);
+
             //调用actions中的方法
             this.$store.dispatch("setUserName", res.data.uname);
             this.$store.dispatch("setUserRole", res.data.role);
-            this.$store.dispatch("setUserSno", this.form.name);
+            this.$store.dispatch("setUserUid", this.form.name);
+
             //页面跳转
             //this.$router.push({path: "/adminIndex"});
+
             if (res.data.role == 4){//30001
               this.$router.push({path: "/adminIndex"});
             }else if (res.data.role == 1){//20001
               this.$router.push({path: "/TeacherIndex"});
-            }else if (res.data.role == 0){
-              this.$router.push({path: "/studentIndex"});
-            }
+            } else if(res.data.role == 2){
+            this.$router.push({path: "/mgrIndex"});
+          }else if (res.data.role == 0){
+            this.$router.push({path: "/studentIndex"});
+          }
           } else {
             this.$message.error("用户名或密码错误");
           }

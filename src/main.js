@@ -6,10 +6,11 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import App from './App'
 import store from './vuex/store';
-import './assets/header.css'
 import axios from 'axios'
 axios.defaults.baseURL='http://localhost:8081/'
 Vue.prototype.axios = axios
+import './assets/header.css'
+
 
 Vue.use(ElementUI);
 

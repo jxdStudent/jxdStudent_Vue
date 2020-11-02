@@ -12,8 +12,13 @@ import deptInfoInAdmin from "../components/admin/deptInfoInAdmin";
 import courseInfoInAdmin from "../components/admin/courseInfoInAdmin";
 import classInfoInAdmin from "../components/admin/classInfoInAdmin";
 import empInfoInAdmin from "../components/admin/empInfoInAdmin";
-import axios from 'axios'
+import mgrIndex from "../components/mgrIndex";
+import addDeptEvaluate from "../components/addDeptEvaluate";
+import getDeptEvaluate from "../components/getDeptEvaluate";
 
+
+
+import axios from 'axios'
 axios.defaults.baseURL = 'http://localhost:8081/'
 Vue.prototype.axios = axios
 
@@ -45,14 +50,7 @@ export default new Router({
         {
           path: '/deptInfoInAdmin',
           name: 'deptInfoInAdmin',
-          component: deptInfoInAdmin,
-          /*children : [
-            {
-              path :"/empInfoInAdmin",
-              name: 'empInfoInAdmin',
-              component: empInfoInAdmin,
-            }
-          ]*/
+          component: deptInfoInAdmin
         },
         {
           path: '/courseInfoInAdmin',
@@ -81,9 +79,19 @@ export default new Router({
       component: studentIndex
     },
     {
-      path :"/empInfoInAdmin",
-      name: 'empInfoInAdmin',
-      component: empInfoInAdmin,
+      path: '/mgrIndex',
+      name: 'mgrIndex',
+      component: mgrIndex
+    },
+    {
+      path: '/addDeptEvaluate',
+      name: 'addDeptEvaluate',
+      component: addDeptEvaluate
+    },
+    {
+      path: '/getDeptEvaluate',
+      name: 'getDeptEvaluate',
+      component: getDeptEvaluate
     }
   ]
 })
