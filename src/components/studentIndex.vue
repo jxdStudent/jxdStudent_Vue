@@ -21,11 +21,11 @@
                 <!--表单-->  <!--:span控制input长度-->
                 <el-form ref="form" :data="form" :label-position="labelPosition" :inline="true">
 
-                  <!--<el-form-item label="学号：" label-width="50">
-                    <el-col >
-                    <el-input v-model="form.sno"></el-input>
+                  <el-form-item label="学号：" label-width="50">
+                    <el-col>
+                      <el-input v-model="form.classno"></el-input>
                     </el-col>
-                  </el-form-item>-->
+                  </el-form-item>
                   <el-row>
                     <el-col :span="8">
                       <div class="grid-content bg-purple">
@@ -170,7 +170,7 @@
                   <h1 style="color: #42b983">学生成绩<i class="header-icon el-icon-info"></i></h1>
                 </template>
 
-                <el-table  highlight-current-row :data="table_course_score" border>
+                <el-table highlight-current-row :data="table_course_score" border>
                   <template v-for="(head,index) in table_course_head">
                     <!--拼接''：格式转换--课程编号head.cno是number类型的，从后台接收的成绩json里cno是字符串，-->
                     <el-table-column :prop="head.cno + ''" :label="head.cname"></el-table-column>
@@ -200,9 +200,9 @@
         //学生个人数据
         form: {},
         //学生课程
-        table_course_head:[],
+        table_course_head: [],
         //学生课程成绩
-        table_course_score:[],
+        table_course_score: [],
         //表单右对齐
         labelPosition: 'right',
         //折叠面板默认开启
@@ -221,8 +221,8 @@
     methods: {
       //获取个人信息
       getAllInfo() {
-        //Todo  动态传值  学生学号
         this.axios.get("getStudent/" + this.$store.getters.sno).then(res => {
+          this.$store.dispatch("setStudentClassno", res.data.classno);
           if (res.data.marriage == 0) {
             res.data.marriage = "未婚";
           } else {
@@ -232,14 +232,15 @@
         })
       },
       //获取课程信息
-      getAllCourse(){
-        this.axios.get("getAllCourse").then(res =>{
+      //todo 获取所属班级的课程，不是全部的
+      getAllCourse() {
+        this.axios.get("getAllCourse/" + this.$store.getters.classno).then(res => {
           this.table_course_head = res.data;
         })
       },
       //获取该学生的课程成绩
-      getAllScore(){
-        this.axios.get("getAllScore/" + this.$store.getters.sno).then(res =>{
+      getAllScore() {
+        this.axios.get("getAllScore/" + this.$store.getters.sno).then(res => {
           this.table_course_score = res.data;
         })
       },
