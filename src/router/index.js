@@ -6,6 +6,7 @@ import adminIndex from "../components/admin/adminIndex";
 import TeacherIndex from "../components/TeacherIndex";
 import StudentScore from "../components/StudentScore";
 import studentInfoInAdmin from "../components/admin/studentInfoInAdmin";
+import accountInfoInAdmin from "../components/admin/accountInfoInAdmin";
 import axios from 'axios'
 axios.defaults.baseURL='http://localhost:8081/'
 Vue.prototype.axios = axios

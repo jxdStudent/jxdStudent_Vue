@@ -128,14 +128,14 @@ export default {
   data() {
     return {
       tableData: [//测试数据
-        {
-          sno: 10001,
-          sname: "张三"
-        },
-        {
-          sno: 10002,
-          sname: "李四"
-        }
+        // {
+        //   sno: 10001,
+        //   sname: "张三"
+        // },
+        // {
+        //   sno: 10002,
+        //   sname: "李四"
+        // }
       ]
     }
   },
@@ -148,7 +148,8 @@ export default {
       })
     },
     toStudentScore() {
-      this.$router.push({path: "/studentScore"})
+      this.$store.dispatch("setStudentNo",10001);
+      this.$router.push({path: "/studentScore"});
     }
   },
   mounted() {

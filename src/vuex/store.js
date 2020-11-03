@@ -4,10 +4,24 @@ import Vuex from "vuex";
 import ro from "element-ui/src/locale/lang/ro";
 Vue.use(Vuex);
 
-const modulesA = {
-  state:{},
-  mutations:{},
-  actions:{}
+const modulesA = {//给teacher用的module
+  state:{
+    studentNo: null
+  },
+  mutations:{
+    setStudentNo: function (state, sno) {
+      state.studentNo = sno;
+    }
+  },
+  actions:{
+  },
+  getters:{
+    studentNo: state => {
+      return state.studentNo;
+    }
+
+
+  }
 }
 
 const store = new Vuex.Store({
