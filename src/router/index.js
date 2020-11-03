@@ -92,6 +92,11 @@ export default new Router({
       path: '/getDeptEvaluate',
       name: 'getDeptEvaluate',
       component: getDeptEvaluate
+    },
+    {
+      path: "/studentScore",
+      name: "studentScore",
+      component: StudentScore
     }
   ]
 })

@@ -10,7 +10,7 @@
           border
           stripe
           style="width: 100%"
-          :default-sort="{prop: 'sno', order: 'descending'}">
+          :default-sort="{prop: 'sno'}">
           <el-table-column
             prop="sno"
             label="学号"
@@ -127,28 +127,19 @@ export default {
   components: {navMenu},
   data() {
     return {
-      tableData: [//测试数据
-        // {
-        //   sno: 10001,
-        //   sname: "张三"
-        // },
-        // {
-        //   sno: 10002,
-        //   sname: "李四"
-        // }
-      ]
+      tableData: []
     }
   },
   methods: {
     //获取学生基本信息渲染到表格中
     getAllStudent() {
       var name = this.$store.getters.uname;
-      axios.get("http://localhost:8081/getAllStudents").then(res => {
+      axios.get("/getAllStudents").then(res => {
         this.tableData = res.data;
       })
     },
     toStudentScore() {
-      this.$store.dispatch("setStudentNo",10001);
+      this.$store.dispatch("setSno",10001);
       this.$router.push({path: "/studentScore"});
     }
   },
