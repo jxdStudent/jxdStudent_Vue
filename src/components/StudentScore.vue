@@ -6,7 +6,7 @@
       </el-header>
       <el-main>
         <el-table
-          :data="tableData"
+          :data="table_data"
           border
           stripe
           style="width: 100%">
@@ -72,7 +72,7 @@ export default {
   components: {navMenu},
   data() {
     return {
-      tableData: [],
+      table_data: [],
       table_course_head: [],
       table_course_score: [],
       table_evaluate: []
@@ -81,8 +81,9 @@ export default {
   methods: {
     getStudent() {
       var name = this.$store.getters.uname;
-      axios.get("/getStudent/" + this.$store.getters.sno).then(res => {
-        this.tableData = res.data;
+      axios.get("/getStudentById/" + this.$store.getters.sno).then(res => {
+        this.table_data = res.data;
+        debugger
       })
     },
     //获取课程信息
@@ -96,7 +97,7 @@ export default {
       axios.get("/getAllScore/" + this.$store.getters.sno).then(res => {
         this.table_course_score = res.data;
       })
-    },
+    }
   },
   mounted() {
     this.getStudent();
@@ -114,11 +115,4 @@ export default {
   margin-top: -50px;
 }
 
-.el-footer {
-  background-color: #d9ecff;
-}
-
-.el-table .warning-row {
-  background: oldlace;
-}
 </style>
