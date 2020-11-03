@@ -4,11 +4,14 @@
       <el-header>
         <nav-menu></nav-menu>
       </el-header>
-      <el-container>
-        <el-aside width="200px"><navMenuSide></navMenuSide></el-aside>
+      <el-container class="el-container">
+        <el-aside width="15%">
+          <navMenuSide></navMenuSide>
+        </el-aside>
         <el-container>
           <el-main>
-            <student-info-in-admin></student-info-in-admin>
+            <router-view></router-view>
+            <!--            <student-info-in-admin></student-info-in-admin>-->
           </el-main>
           <el-footer class="el-footer-style">Footer</el-footer>
         </el-container>
@@ -25,7 +28,7 @@
 
   export default {
     name: "adminIndex",
-    components:{navMenu,navMenuSide,studentInfoInAdmin},
+    components: {navMenu, navMenuSide, studentInfoInAdmin},
     data() {
       return {
         tableData: []   //从后台获取数据
@@ -39,7 +42,7 @@
         axios.get("http://localhost:8081/getStudentInAdmin").then(res => {
           this.tableData = res.data;
         })
-      }
+      },
     },
     //生命周期钩子
     mounted() {
@@ -49,7 +52,12 @@
 </script>
 
 <style scoped>
-  .el-footer-style{
-    margin-bottom: 0;
+  .el-footer-style {
+    position: absolute;
+    bottom: 0;
+    color: #333;
+    text-align: center;
+    line-height: 60px;
+    width: 84%;
   }
 </style>

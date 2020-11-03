@@ -29,7 +29,7 @@ const store = new Vuex.Store({
     count:0,
     uname:null,
     role:null,
-    sno:null  //学生编号
+    uid:null
   },
   mutations:{//定义事件，set方法，用于给数据赋值
     setUname:function (state,uname) {
@@ -38,9 +38,9 @@ const store = new Vuex.Store({
     setRole:function (state,role) {
       state.role = role;
     },
-    setSno:function (state,sno) {
-      state.sno = sno;
-    }
+    setUid:function (state,uid) {
+      state.uid =uid;
+    },
   },
   actions:{//作用同mutations，用于提供给数据赋值
     //调用mutations中的方法，类似于dao和service的关系
@@ -53,8 +53,8 @@ const store = new Vuex.Store({
     setUserRole:function (context, role) {
       context.commit("setRole",role)
     },
-    setUserSno:function (context,sno) {
-      context.commit("setSno",sno)
+    setUserUid:function (context, uid) {
+      context.commit("setUid",uid)
     }
   },
   getters:{
@@ -64,12 +64,9 @@ const store = new Vuex.Store({
     role:state => {
       return state.role;
     },
-    sno:state =>{
-      return state.sno;
-    }
-  },
-  modules:{
-    a: modulesA
+    uid:state => {
+      return state.uid;
+    },
   }
 })
 export default  store;

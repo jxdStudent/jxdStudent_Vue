@@ -1,0 +1,350 @@
+<template>
+  <div>
+    <h1 style="color: #42b983">员工评价信息<i class="header-icon el-icon-info"></i></h1>
+    <el-row :gutter="20">
+      <el-col :span="24" :offset="8">
+        <div class="grid-content bg-purple">
+
+          <el-radio-group v-model="labelPosition" size="small">
+            <el-radio-button label="right">右对齐</el-radio-button>
+            <el-radio-button label="top">顶部对齐</el-radio-button>
+          </el-radio-group>
+
+          <!--表单-->  <!--:span控制input长度-->
+          <el-form ref="form" :data="form"  :label-position="labelPosition" :label-width="width"  :inline="true">
+
+            <el-row v-show="false" >
+              <el-col :span="8">
+                <div class="grid-content bg-purple">
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content bg-purple">
+                  <el-form-item label="评价人员：" prop="mgr">
+                    <el-input type="text" v-model="form.mgr"
+                              :disabled="!isEdit"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content bg-purple">
+                </div>
+              </el-col>
+            </el-row>
+
+
+            <el-row>
+              <el-col :span="8">
+                <div class="grid-content bg-purple">
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content bg-purple">
+                  <el-form-item label="员工编号：" prop="empno">
+                    <el-input type="text" v-model="form.empno"
+                              :disabled="!isEdit"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content bg-purple">
+                </div>
+              </el-col>
+            </el-row>
+
+            <el-row>
+              <el-col :span="8">
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content bg-purple">
+                  <el-form-item label="积极性："  prop="initiative">
+                    <el-select v-model="form.initiative" :disabled="!isEdit">
+                      <el-option value="1">1分</el-option>
+                      <el-option value="2">2分</el-option>
+                      <el-option value="3">3分</el-option>
+                      <el-option value="4">4分</el-option>
+                      <el-option value="5">5分</el-option>
+                    </el-select>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content bg-purple">
+                </div>
+              </el-col>
+            </el-row>
+
+            <el-row v-show="false">
+              <el-col :span="8">
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content bg-purple">
+                  <el-form-item label="评价类型："  prop="type">
+                    <el-input type="text" v-model="form.type"
+                              :disabled="!isEdit"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content bg-purple">
+                </div>
+              </el-col>
+            </el-row>
+
+            <el-row>
+              <el-col :span="8">
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content bg-purple">
+                  <el-form-item label="能力分数：" prop="ability" >
+                    <el-select v-model="form.ability" :disabled="!isEdit">
+                      <el-option value="1">1分</el-option>
+                      <el-option value="2">2分</el-option>
+                      <el-option value="3">3分</el-option>
+                      <el-option value="4">4分</el-option>
+                      <el-option value="5">5分</el-option>
+                    </el-select>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content bg-purple">
+                </div>
+              </el-col>
+            </el-row>
+
+            <el-row>
+              <el-col :span="8">
+                <div class="grid-content bg-purple">
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content bg-purple">
+                  <el-form-item label="沟通交流：" prop="communicate">
+                    <el-select v-model="form.communicate" :disabled="!isEdit">
+                      <el-option value="1">1分</el-option>
+                      <el-option value="2">2分</el-option>
+                      <el-option value="3">3分</el-option>
+                      <el-option value="4">4分</el-option>
+                      <el-option value="5">5分</el-option>
+                    </el-select>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content bg-purple">
+                </div>
+              </el-col>
+            </el-row>
+
+            <el-row>
+              <el-col :span="8">
+                <div class="grid-content bg-purple">
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content bg-purple">
+                  <el-form-item label="人品分数："  prop="quality">
+                    <el-select v-model="form.quality" :disabled="!isEdit">
+                      <el-option value="1">1分</el-option>
+                      <el-option value="2">2分</el-option>
+                      <el-option value="3">3分</el-option>
+                      <el-option value="4">4分</el-option>
+                      <el-option value="5">5分</el-option>
+                    </el-select>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content bg-purple">
+                </div>
+              </el-col>
+            </el-row>
+
+            <el-row>
+              <el-col :span="8">
+                <div class="grid-content bg-purple">
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content bg-purple">
+                  <el-form-item label="性格分数：" prop="characterc">
+                    <el-select v-model="form.characterc" :disabled="!isEdit">
+                      <el-option value="1">1分</el-option>
+                      <el-option value="2">2分</el-option>
+                      <el-option value="3">3分</el-option>
+                      <el-option value="4">4分</el-option>
+                      <el-option value="5">5分</el-option>
+                    </el-select>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content bg-purple">
+                </div>
+              </el-col>
+            </el-row>
+
+            <el-row>
+              <el-col :span="8">
+                <div class="grid-content bg-purple">
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content bg-purple">
+                  <el-form-item label="整体评价：" prop="mark">
+                    <el-select v-model="form.mark" :disabled="!isEdit">
+                      <el-option value="1">1分</el-option>
+                      <el-option value="2">2分</el-option>
+                      <el-option value="3">3分</el-option>
+                      <el-option value="4">4分</el-option>
+                      <el-option value="5">5分</el-option>
+                    </el-select>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content bg-purple">
+                </div>
+              </el-col>
+            </el-row>
+
+            <el-row>
+              <el-col :span="8">
+                <div class="grid-content bg-purple">
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content bg-purple">
+                  <el-form-item label="文字评价：" prop="commentc">
+                    <el-input type="textarea" v-model="form.commentc" autosize
+                              :disabled="!isEdit"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content bg-purple">
+                </div>
+              </el-col>
+            </el-row>
+
+            <el-row>
+              <el-col :span="10">
+                <div class="grid-content bg-purple">
+                </div>
+              </el-col>
+              <el-col :span="9">
+                <div class="grid-content bg-purple">
+                  <el-form-item>
+                    <el-button type="primary" @click="isEdit = !isEdit" v-if="!isEdit">编辑</el-button>
+                    <el-button type="danger" @click="cancel_submit" v-else>取消编辑</el-button>
+                    <el-button type="primary" @click="onSubmit">保存</el-button>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="5">
+                <div class="grid-content bg-purple">
+                </div>
+              </el-col>
+            </el-row>
+
+          </el-form>
+        </div>
+      </el-col>
+    </el-row>
+  </div>
+</template>
+
+<script>
+  import Qs from 'qs';
+
+  export default {
+    data() {
+      return {
+        //表单数据
+        form: {
+          mgr: '',
+          empno: '',
+          type: '',
+          ability: '',
+          initiative: '',
+          communicate: '',
+          quality: '',
+          characterc: '',
+          mark: '',
+          commentc: ''
+        },
+        //label-width和label-position一起使用可以设置表单左侧文字对齐
+        //表单右对齐
+        labelPosition: 'right',
+        //label标签的宽度
+         width:"150px",
+        //是否编辑
+        isEdit: false,
+      }
+    },
+    methods: {
+      getQuery() {
+        //获取个人信息
+        // 取到路由带过来的参数
+        let routerQuery = this.$route.query.dataObj;
+        debugger
+        // 将数据放在当前组件的数据内（需要将json字符串转为json对象）
+        this.form = JSON.parse(routerQuery);
+      },
+      //取消编辑
+      cancel_submit() {
+        this.getQuery();
+        this.isEdit = !this.isEdit;
+      },
+      //修改信息提交
+      onSubmit() {
+        if (this.isEdit == false) {
+          this.$message("请先编辑内容");
+        } else {
+          debugger
+          let formdata = this.form;
+          //提交信息
+          this.axios.post("updateDeptEvaluate", Qs.stringify(formdata)).then(res => {
+            if (res.data) {
+              this.$message("编辑信息成功");
+              this.isEdit = false;
+
+              //页面跳转
+              this.$router.push({path: "/mgrIndex"})
+            } else {
+              this.$message("编辑信息失败");
+            }
+          });
+        }
+      }
+    },
+      //加载执行
+      mounted() {
+        this.getQuery();
+      },
+      watch: {
+        //监测路由变化,只要变化了就调用获取路由参数方法将数据存储本组件即可
+        '$route': 'getQuery'
+      }
+  }
+</script>
+
+<style scoped>
+  .el-input {
+    width: 180px;
+    font-size: medium;
+  }
+
+  .el-select {
+    width: 180px;
+    font-size: medium;
+  }
+  .width_mark {
+    width: 820px;
+  }
+
+  .width_idCard {
+    width: 200px;
+  }
+</style>
