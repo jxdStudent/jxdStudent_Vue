@@ -10,22 +10,25 @@
         </el-aside>
         <el-container>
           <el-main>
-
-            <el-row>
-              <el-col :span="8" offset="4">
-                <div class="select">
-                  <el-form :inline="true" :model="selectEmp" class="demo-form-inline">
+            <div class="select">
+              <el-form :inline="true" :model="selectEmp" class="demo-form-inline">
+                <el-row>
+                  <el-col :span="8" offset="4">
                     <el-form-item label="员工编号">
                       <el-input v-model="selectEmp.empno" placeholder="请输入员工编号"></el-input>
                     </el-form-item>
                     <el-form-item>
                       <el-button type="primary" @click="onSelect">查询</el-button>
                     </el-form-item>
-                  </el-form>
-                </div>
-              </el-col>
-            </el-row>
-
+                  </el-col>
+                  <el-col :span="4">
+                    <el-form-item>
+                      <el-button type="primary" @click="dialogFormVisible = true">添加员工</el-button>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+              </el-form>
+            </div>
             <div class="store-table">
               <el-table
                 :data="tableData"
@@ -63,15 +66,15 @@
                   </template>
                 </el-table-column>
               </el-table>
-              <!--<el-pagination
+              <el-pagination
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
-                :current-page="this.query.page"
-                :page-sizes="[1, 5, 10, 15]"
-                :page-size="this.query.pageSize"
+                :current-page="this.query.current"
+                :page-sizes="[2, 5, 10, 15]"
+                :page-size="this.query.size"
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="this.query.total">
-              </el-pagination>-->
+              </el-pagination>
             </div>
             <!--            <student-info-in-admin></student-info-in-admin>-->
           </el-main>
@@ -87,59 +90,59 @@
   import navMenuSide from '../navMenuSide.vue'
   import axios from "axios";
 
-    export default {
-        name: "empInfoInAdmin",
-      components:{navMenu,navMenuSide},
-      data() {
-        return {
-          tableData: [],   //从后台获取数据
-          query:{
-            total:1,
-            page:1,
-            pageSize:5,
-          },
-          selectEmp:{
-            empno: ''
-          }
-          /*formInline: {
-            user: '',
-          }*/
+  export default {
+    name: "empInfoInAdmin",
+    components: {navMenu, navMenuSide},
+    data() {
+      return {
+        tableData: [],   //从后台获取数据
+        query: {
+          total: 1,
+          current: 1,
+          size: 2,
+        },
+        selectEmp: {
+          empno: ''
         }
-      },
-      methods:{
-        getAllEmp: function () {   //获取全部部门
-          //通过getters属性获取仓库的值
-          var name = this.$store.getters.uname;
-
-          let deptno = this.$route.query.deptno;
-          axios.get("http://localhost:8081/selectEmpByNo/" + deptno).then(res => {
-            this.tableData = res.data;
-          })
-        },
-        /*getAllByPage:function(){
-          axios.get("http://localhost:8081/getAllByPage/"+this.query.page+"/"+this.query.pageSize).then(res=>{
-            this.tableData = res.data;
-          })
-        },
-        handleSizeChange(val) {
-          this.page = 1;
-          this.query.pageSize = val;
-          this.getAllByPage()
-        },
-        handleCurrentChange(val) {
-          this.query.page = val;
-          this.getAllByPage()
-        },*/
-        onSelect(){
-          console.log('select!');
-        }
-      },
-      mounted() {
-        this.getAllEmp();
-        //this.handleUserList()
-        //this.getAllByPage();
+        /*formInline: {
+          user: '',
+        }*/
       }
+    },
+    methods: {
+      getAllEmpSize: function () {
+        let deptno = this.$route.query.deptno;
+        axios.get("http://localhost:8081/selectAllEmpByPage/" + deptno).then(res => {
+          this.query.total = res.data.length;
+        })
+      },
+      getAllByPage: function () {
+        let deptno = this.$route.query.deptno;
+        axios.get("http://localhost:8081/selectEmpWithDeptByPage/" + this.query.current + "/" +
+          this.query.size + "/" + deptno).then(res => {
+          this.tableData = res.data;
+        })
+      },
+      handleSizeChange(val) {
+        this.page = 1;
+        this.query.size = val;
+        this.getAllByPage()
+      },
+      handleCurrentChange(val) {
+        this.query.current = val;
+        this.getAllByPage()
+      },
+      onSelect() {
+        console.log('select!');
+      }
+    },
+    mounted() {
+      //this.getAllEmp();
+      //this.handleUserList()
+      this.getAllEmpSize();
+      this.getAllByPage();
     }
+  }
 </script>
 
 <style scoped>

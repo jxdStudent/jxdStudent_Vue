@@ -1,24 +1,25 @@
 <template>
   <div>
-    <h1 style="color: #42b983">员工评价信息<i class="header-icon el-icon-info"></i></h1>
-    <el-row :gutter="20">
-      <el-col :span="24" :offset="8">
-        <div class="grid-content bg-purple">
+    <el-row>
+      <el-col :span="13" :offset="8">
+    <h1 style="color: #42b983">员工评价信息<i class="header-icon el-icon-info"></i>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;   <el-link type="primary" @click="returnMgrIndex" icon="el-icon-s-home"style="font-size: 20px">返回首页</el-link></h1>
+      </el-col>
+    </el-row>
 
+          <el-row>
+            <el-col :span="12" :offset="12">
           <el-radio-group v-model="labelPosition" size="small">
             <el-radio-button label="right">右对齐</el-radio-button>
             <el-radio-button label="top">顶部对齐</el-radio-button>
           </el-radio-group>
+            </el-col>
+          </el-row>
 
           <!--表单-->  <!--:span控制input长度-->
           <el-form ref="form" :data="form"  :label-position="labelPosition" :label-width="width"  :inline="true">
 
             <el-row v-show="false" >
-              <el-col :span="8">
-                <div class="grid-content bg-purple">
-                </div>
-              </el-col>
-              <el-col :span="8">
+              <el-col :span="8" :offset="7">
                 <div class="grid-content bg-purple">
                   <el-form-item label="评价人员：" prop="mgr">
                     <el-input type="text" v-model="form.mgr"
@@ -26,36 +27,33 @@
                   </el-form-item>
                 </div>
               </el-col>
-              <el-col :span="8">
-                <div class="grid-content bg-purple">
-                </div>
-              </el-col>
             </el-row>
 
 
             <el-row>
-              <el-col :span="8">
+              <el-col :span="8" :offset="7">
                 <div class="grid-content bg-purple">
-                </div>
-              </el-col>
-              <el-col :span="8">
-                <div class="grid-content bg-purple">
-                  <el-form-item label="员工编号：" prop="empno">
+                  <el-form-item label="员工工号：" prop="empno">
                     <el-input type="text" v-model="form.empno"
-                              :disabled="!isEdit"></el-input>
+                              :disabled="!isEdit" readonly></el-input>
                   </el-form-item>
                 </div>
               </el-col>
-              <el-col :span="8">
+            </el-row>
+
+            <el-row>
+              <el-col :span="8" :offset="7">
                 <div class="grid-content bg-purple">
+                  <el-form-item label="员工姓名：" prop="ename">
+                    <el-input type="text" v-model="form.ename"
+                              :disabled="!isEdit" readonly></el-input>
+                  </el-form-item>
                 </div>
               </el-col>
             </el-row>
 
             <el-row>
-              <el-col :span="8">
-              </el-col>
-              <el-col :span="8">
+              <el-col :span="8" :offset="7">
                 <div class="grid-content bg-purple">
                   <el-form-item label="积极性："  prop="initiative">
                     <el-select v-model="form.initiative" :disabled="!isEdit">
@@ -68,16 +66,10 @@
                   </el-form-item>
                 </div>
               </el-col>
-              <el-col :span="8">
-                <div class="grid-content bg-purple">
-                </div>
-              </el-col>
             </el-row>
 
             <el-row v-show="false">
-              <el-col :span="8">
-              </el-col>
-              <el-col :span="8">
+              <el-col :span="8" :offset="7">
                 <div class="grid-content bg-purple">
                   <el-form-item label="评价类型："  prop="type">
                     <el-input type="text" v-model="form.type"
@@ -85,16 +77,10 @@
                   </el-form-item>
                 </div>
               </el-col>
-              <el-col :span="8">
-                <div class="grid-content bg-purple">
-                </div>
-              </el-col>
             </el-row>
 
             <el-row>
-              <el-col :span="8">
-              </el-col>
-              <el-col :span="8">
+              <el-col :span="8" :offset="7">
                 <div class="grid-content bg-purple">
                   <el-form-item label="能力分数：" prop="ability" >
                     <el-select v-model="form.ability" :disabled="!isEdit">
@@ -107,18 +93,10 @@
                   </el-form-item>
                 </div>
               </el-col>
-              <el-col :span="8">
-                <div class="grid-content bg-purple">
-                </div>
-              </el-col>
             </el-row>
 
             <el-row>
-              <el-col :span="8">
-                <div class="grid-content bg-purple">
-                </div>
-              </el-col>
-              <el-col :span="8">
+              <el-col :span="8" :offset="7">
                 <div class="grid-content bg-purple">
                   <el-form-item label="沟通交流：" prop="communicate">
                     <el-select v-model="form.communicate" :disabled="!isEdit">
@@ -131,18 +109,10 @@
                   </el-form-item>
                 </div>
               </el-col>
-              <el-col :span="8">
-                <div class="grid-content bg-purple">
-                </div>
-              </el-col>
             </el-row>
 
             <el-row>
-              <el-col :span="8">
-                <div class="grid-content bg-purple">
-                </div>
-              </el-col>
-              <el-col :span="8">
+              <el-col :span="8" :offset="7">
                 <div class="grid-content bg-purple">
                   <el-form-item label="人品分数："  prop="quality">
                     <el-select v-model="form.quality" :disabled="!isEdit">
@@ -155,18 +125,10 @@
                   </el-form-item>
                 </div>
               </el-col>
-              <el-col :span="8">
-                <div class="grid-content bg-purple">
-                </div>
-              </el-col>
             </el-row>
 
             <el-row>
-              <el-col :span="8">
-                <div class="grid-content bg-purple">
-                </div>
-              </el-col>
-              <el-col :span="8">
+              <el-col :span="8" :offset="7">
                 <div class="grid-content bg-purple">
                   <el-form-item label="性格分数：" prop="characterc">
                     <el-select v-model="form.characterc" :disabled="!isEdit">
@@ -179,18 +141,10 @@
                   </el-form-item>
                 </div>
               </el-col>
-              <el-col :span="8">
-                <div class="grid-content bg-purple">
-                </div>
-              </el-col>
             </el-row>
 
             <el-row>
-              <el-col :span="8">
-                <div class="grid-content bg-purple">
-                </div>
-              </el-col>
-              <el-col :span="8">
+              <el-col :span="8" :offset="7">
                 <div class="grid-content bg-purple">
                   <el-form-item label="整体评价：" prop="mark">
                     <el-select v-model="form.mark" :disabled="!isEdit">
@@ -203,18 +157,10 @@
                   </el-form-item>
                 </div>
               </el-col>
-              <el-col :span="8">
-                <div class="grid-content bg-purple">
-                </div>
-              </el-col>
             </el-row>
 
             <el-row>
-              <el-col :span="8">
-                <div class="grid-content bg-purple">
-                </div>
-              </el-col>
-              <el-col :span="8">
+              <el-col :span="8" :offset="7">
                 <div class="grid-content bg-purple">
                   <el-form-item label="文字评价：" prop="commentc">
                     <el-input type="textarea" v-model="form.commentc" autosize
@@ -222,18 +168,10 @@
                   </el-form-item>
                 </div>
               </el-col>
-              <el-col :span="8">
-                <div class="grid-content bg-purple">
-                </div>
-              </el-col>
             </el-row>
 
             <el-row>
-              <el-col :span="10">
-                <div class="grid-content bg-purple">
-                </div>
-              </el-col>
-              <el-col :span="9">
+              <el-col :span="8" :offset="8">
                 <div class="grid-content bg-purple">
                   <el-form-item>
                     <el-button type="primary" @click="isEdit = !isEdit" v-if="!isEdit">编辑</el-button>
@@ -242,17 +180,10 @@
                   </el-form-item>
                 </div>
               </el-col>
-              <el-col :span="5">
-                <div class="grid-content bg-purple">
-                </div>
-              </el-col>
             </el-row>
 
           </el-form>
         </div>
-      </el-col>
-    </el-row>
-  </div>
 </template>
 
 <script>
@@ -265,6 +196,7 @@
         form: {
           mgr: '',
           empno: '',
+          ename:'',
           type: '',
           ability: '',
           initiative: '',
@@ -284,6 +216,10 @@
       }
     },
     methods: {
+      //返回首页
+      returnMgrIndex(){
+        this.$router.push({path: "/mgrIndex"});
+      },
       getQuery() {
         //获取个人信息
         // 取到路由带过来的参数

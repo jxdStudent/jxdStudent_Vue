@@ -70,9 +70,9 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="this.query.page"
-        :page-sizes="[1, 5, 10, 15]"
-        :page-size="this.query.pageSize"
+        :current-page="this.query.current"
+        :page-sizes="[2, 5, 10, 15]"
+        :page-size="this.query.size"
         layout="total, sizes, prev, pager, next, jumper"
         :total="this.query.total">
       </el-pagination>
@@ -89,8 +89,8 @@
           tableData: [],   //从后台获取数据
           query:{
             total:1,
-            page:1,
-            pageSize:5,
+            current:1,
+            size:2,
           },
           formInline: {
             user: '',
@@ -98,26 +98,21 @@
         }
       },
       methods:{
-        getAllAccount: function () {   //获取全部部门
-          //通过getters属性获取仓库的值
-          var name = this.$store.getters.uname;
-
-          axios.get("http://localhost:8081/getAllAccount").then(res => {
-            this.tableData = res.data;
-          })
-        },
         getAllByPage:function(){
-          axios.get("http://localhost:8081/getAllByPage/"+this.query.page+"/"+this.query.pageSize).then(res=>{
-            this.tableData = res.data;
+          axios.get("http://localhost:8081/getAllAccountInAdminByPage/" + this.query.current + "/" + this.query.size).then(res=>{
+            this.tableData = res.data.records;
+            this.query.current = res.data.current;
+            this.query.size = res.data.size;
+            this.query.total = res.data.total;
           })
         },
         handleSizeChange(val) {
           this.page = 1;
-          this.query.pageSize = val;
+          this.query.size = val;
           this.getAllByPage()
         },
         handleCurrentChange(val) {
-          this.query.page = val;
+          this.query.current = val;
           this.getAllByPage()
         },
         onSelect(){
@@ -125,7 +120,7 @@
         }
       },
       mounted() {
-        this.getAllAccount();
+        //this.getAllAccount();
         //this.handleUserList()
         this.getAllByPage();
       }

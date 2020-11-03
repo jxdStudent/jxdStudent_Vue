@@ -4,24 +4,7 @@ import Vuex from "vuex";
 import ro from "element-ui/src/locale/lang/ro";
 Vue.use(Vuex);
 
-const modulesA = {//给teacher用的module
-  state:{
-    studentNo: null
-  },
-  mutations:{
-    setStudentNo: function (state, sno) {
-      state.studentNo = sno;
-    }
-  },
-  actions:{
-  },
-  getters:{
-    studentNo: state => {
-      return state.studentNo;
-    }
-
-
-  }
+const modulesA = {
 }
 
 const store = new Vuex.Store({
@@ -29,7 +12,8 @@ const store = new Vuex.Store({
     count:0,
     uname:null,
     role:null,
-    uid:null
+    uid:null,
+    sno: null
   },
   mutations:{//定义事件，set方法，用于给数据赋值
     setUname:function (state,uname) {
@@ -41,6 +25,9 @@ const store = new Vuex.Store({
     setUid:function (state,uid) {
       state.uid =uid;
     },
+    setSno: function (state, sno) {
+      state.sno = sno;
+    }
   },
   actions:{//作用同mutations，用于提供给数据赋值
     //调用mutations中的方法，类似于dao和service的关系
@@ -55,6 +42,9 @@ const store = new Vuex.Store({
     },
     setUserUid:function (context, uid) {
       context.commit("setUid",uid)
+    },
+    setSno:function (context, sno) {
+      context.commit("setSno",sno)
     }
   },
   getters:{
@@ -67,6 +57,9 @@ const store = new Vuex.Store({
     uid:state => {
       return state.uid;
     },
+    sno: state => {
+      return state.sno;
+    }
   }
 })
 export default  store;

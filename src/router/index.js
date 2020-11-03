@@ -92,6 +92,16 @@ export default new Router({
       path: '/getDeptEvaluate',
       name: 'getDeptEvaluate',
       component: getDeptEvaluate
+    },
+    {
+      path: '/empInfoInAdmin',
+      name: 'empInfoInAdmin',
+      component: empInfoInAdmin
+    },
+    {
+      path: '/StudentScore',
+      name: 'StudentScore',
+      component: StudentScore
     }
   ]
 })
