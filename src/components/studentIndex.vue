@@ -168,28 +168,58 @@
 
                 <el-table highlight-current-row :data="table_course_score"
                           border empty-text="没显示出来？请刷新一下">
+                  <el-table-column label="老师">{{tname}}</el-table-column>
                   <template v-for="(head,index) in table_course_head">
-                    <!--拼接''：格式转换--课程编号head.cno是number类型的，从后台接收的成绩json里cno是字符串，-->
                     <el-table-column :prop="head.cno + ''" :label="head.cname"></el-table-column>
                   </template>
                   <el-table-column prop="score_total" label="综合成绩"></el-table-column>
                 </el-table>
               </el-collapse-item>
 
-                <el-collapse-item name="学生成绩信息" v-if="isShowEvaluate">
+                <el-collapse-item name="部门评价" v-if="isShowEvaluate">
                   <template slot="title">
                     <h1 style="color: #42b983">
                       {{$store.state.uname}}&nbsp;&&nbsp;成绩<i class="header-icon el-icon-info"></i>
                     </h1>
                   </template>
-                  <el-table highlight-current-row :data="table_course_score"
-                            border empty-text="没显示出来？请刷新一下">
-                    <template v-for="(head,index) in table_course_head">
-                      <!--拼接''：格式转换--课程编号head.cno是number类型的，从后台接收的成绩json里cno是字符串，-->
-                      <el-table-column :prop="head.cno + ''" :label="head.cname"></el-table-column>
-                    </template>
+                  <el-table
+                    :data="table_evaluate_1"
+                    empty-text="没显示出来？请刷新一下"
+                    border
+                    style="width: 100%">
+                    <el-table-column
+                      prop="ability"
+                      label="能力"
+                      width="180">
+                    </el-table-column>
+                    <el-table-column
+                      prop="initiative"
+                      label="积极性"
+                      width="180">
+                    </el-table-column>
+                    <el-table-column
+                      prop="communicate"
+                      label="沟通">
+                    </el-table-column>
+                    <el-table-column
+                      prop="quality"
+                      label="质量">
+                    </el-table-column>
+                    <el-table-column
+                      prop="character"
+                      label="个性">
+                    </el-table-column>
+                    <el-table-column
+                      prop="mark"
+                      label="mark">
+                    </el-table-column>
+                    <el-table-column
+                      prop="commentc"
+                      label="总评价">
+                    </el-table-column>
+                  </el-table>
 
-                    <el-table-column label="老师">{{tname}}</el-table-column>
+
                   </el-table>
                 </el-collapse-item>
 
@@ -229,6 +259,11 @@
         table_course_head: [],
         //学生课程成绩
         table_course_score: [],
+        //部门评价
+        table_evaluate_1:[
+          {"empno":1,"type":1,"mgr":2,"ability":5,"initiative":5,"communicate":5,"quality":5,"characterc":5,"mark":5,"commentc":"优秀"}
+        ],
+        //老师姓名
         tname:null,
         //表单右对齐
         labelPosition: 'right',
@@ -285,14 +320,19 @@
         this.axios.get("getAllCourse/" + this.form.classno).then(res => {
           this.table_course_head = res.data;
           this.tname=res.data[0].tname;
-          alert(res.data[0].tname)
-          alert(this.tname)
         })
       },
       //获取该学生的课程成绩
       getAllScore() {
         this.axios.get("getAllScore/" + this.form.sno).then(res => {
           this.table_course_score = res.data;
+        })
+      },
+      //获得部门评价
+      getEvaluate1(){
+        this.axios.get("getDeptEvaluate/1/1").then(res => {
+          this.table_evaluate_1 = Object.entries(res.data);
+          console.log(this.table_evaluate_1)
         })
       },
       //编辑信息
@@ -348,6 +388,7 @@
       //在获取基本信息之后执行，以便获取其中的班级编号classno
       setTimeout(this.getAllCourse, 1000);
       setTimeout(this.getAllScore, 1000);
+      //this.getEvaluate1();
     }
   }
 </script>
