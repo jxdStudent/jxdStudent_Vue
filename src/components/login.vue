@@ -66,7 +66,11 @@
               this.$router.push({path: "/TeacherIndex"});
             } else if(res.data.role == 2){
             this.$router.push({path: "/mgrIndex"});
-          }else if (res.data.role == 0){
+          }else if (res.data.role == 3){
+              //通过员工号获取学生号
+              this.axios.get("getAllCourse/" + this.form.classno).then(res => {})
+              this.$router.push({path: "/studentIndex"});
+            } else if (res.data.role == 0){
             this.$router.push({path: "/studentIndex"});
           }
           } else {
