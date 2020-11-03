@@ -26,7 +26,8 @@
             label="成绩"
             align="center">
             <el-table-column
-              v-for="item in table_course_head"
+              v-for="(item,index) in table_course_head"
+              :key="index"
               :prop="item.cno+''"
               :label="item.cname"
               align="center">
