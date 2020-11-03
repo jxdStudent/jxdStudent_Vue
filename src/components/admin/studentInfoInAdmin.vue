@@ -15,7 +15,10 @@
           <el-col :span="8">
             <el-form-item label="学期">
               <el-select v-model="SelectForm.classno" placeholder="请选择学期">
-                <el-option v-for="item in options" :key="item.classno" :value="item.classno"></el-option>
+                <el-option v-for="item in options" :key="item.classno" :value="item.classno">
+                  <span style="float: left">{{ item.classno }}</span>
+                  <span style="float: right">test</span>
+                </el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
@@ -106,15 +109,15 @@
           </template>
         </el-table-column>
       </el-table>
-      <!--<el-pagination
+      <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="this.query.page"
-        :page-sizes="[1, 5, 10, 15]"
-        :page-size="this.query.pageSize"
+        :current-page="this.query.current"
+        :page-sizes="[2, 5, 10, 15]"
+        :page-size="this.query.size"
         layout="total, sizes, prev, pager, next, jumper"
         :total="this.query.total">
-      </el-pagination>-->
+      </el-pagination>
     </div>
 
     <!--添加学生-->
@@ -197,8 +200,8 @@
         options:[],
         query: {
           total: 1,
-          page: 1,
-          pageSize: 5,
+          current: 1,
+          size: 2,
         },
         SelectForm: {
           sno: '',
@@ -225,14 +228,13 @@
       }
   },
   methods: {
-    getAllDept: function () {   //获取全部部门
-      //通过getters属性获取仓库的值
-      var name = this.$store.getters.uname;
-
-      axios.get("http://localhost:8081/getAllStudent").then(res => {
-          this.tableData = res.data;
-        }
-      )
+    getAllByPage: function () {
+      axios.get("http://localhost:8081/getAllStudentInAdminByPage/" + this.query.current + "/" + this.query.size).then(res => {
+        this.tableData = res.data.records;
+        this.query.current = res.data.current;
+        this.query.size = res.data.size;
+        this.query.total = res.data.total;
+      })
     },
     addStudent:function () {
       axios.post("addStudentInUser/" + this.addStudentForm.stuname +
@@ -258,22 +260,17 @@
         this.options = res.data;
       })
     },
-    /*getAllByPage: function () {
-      axios.get("http://localhost:8081/getAllByPage/" + this.query.page + "/" + this.query.pageSize).then(res => {
-        this.tableData = res.data;
-      })
-    },*/
-    /*handleSizeChange(val) {
+    handleSizeChange(val) {
       this.page = 1;
-      this.query.pageSize = val;
+      this.query.size = val;
       this.getAllByPage()
     }
     ,
     handleCurrentChange(val) {
-      this.query.page = val;
+      this.query.current = val;
       this.getAllByPage()
     }
-    ,*/
+    ,
     onSelectID() {
       console.log('submit!');
     }
@@ -286,14 +283,14 @@
   //声明生命周期钩子
   created()
   {//编译后直接获取数据
-    //this.getAllByPage();
-    this.getClass();
   }
   ,
   //生命周期钩子
   mounted()
   {
-    this.getAllDept()
+    //this.getAllDept()
+    this.getAllByPage();
+    this.getClass();
     //this.handleUserList()
   }
   }

@@ -1,5 +1,24 @@
 <template>
   <div class="Terminal" v-loading="loading">
+    <div class="select">
+      <el-form :inline="true" :model="selectClassForm" class="demo-form-inline">
+        <el-row>
+          <el-col :span="8" offset="4">
+            <el-form-item label="学期类型">
+              <el-input v-model="selectClassForm.classname" placeholder="请输入学期类型"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="onSelectID(selectClassForm.classname)">查询</el-button>
+            </el-form-item>
+          </el-col>
+          <el-col :span="4">
+            <el-form-item>
+              <el-button type="primary" @click="dialogFormVisible = true">添加学期</el-button>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+    </div>
     <!-- 表格 -->
     <div class="store-table">
       <el-table
@@ -19,7 +38,7 @@
           label="学期类型">
         </el-table-column>
         <el-table-column
-          prop="tno"
+          prop="teacher.tname"
           label="授课教师">
         </el-table-column>
         <el-table-column
@@ -33,67 +52,123 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="this.query.page"
-        :page-sizes="[1, 5, 10, 15]"
-        :page-size="this.query.pageSize"
+        :current-page="this.query.current"
+        :page-sizes="[2, 5, 10, 15]"
+        :page-size="this.query.size"
         layout="total, sizes, prev, pager, next, jumper"
         :total="this.query.total">
       </el-pagination>
     </div>
+
+    <!--添加学期-->
+    <el-dialog title="添加学期" :visible.sync="dialogFormVisible">
+      <el-form :model="addClassForm" :rules="rules2" @close='closeDialog'>
+        <el-row>
+          <el-col :span="12" offset="5">
+            <el-form-item label="学期名称" :label-width="formLabelWidth" prop="dname">
+              <el-input v-model="addClassForm.classname" autocomplete="off"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12" offset="5">
+            <el-form-item>
+              <el-button @click="dialogFormVisible = false">取 消</el-button>
+              <el-button type="primary" @click="addClass">确 定</el-button>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
-    import axios from "axios";
+  import axios from "axios";
 
-    export default {
-        name: "classInfoInAdmin",
-      data() {
-        return {
-          tableData: [],   //从后台获取数据
-          query:{
-            total:1,
-            page:1,
-            pageSize:5,
-          },
-          formInline: {
-            user: '',
-          }
+  export default {
+    name: "classInfoInAdmin",
+    data() {
+      var validateName = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入学期类型'));
+        } else {
+          callback();
         }
-      },
-      methods:{
-        getAllCourse: function () {   //获取全部部门
-          //通过getters属性获取仓库的值
-          var name = this.$store.getters.uname;
-
-          axios.get("http://localhost:8081/getAllClass").then(res => {
-            this.tableData = res.data;
-          })
+      };
+      return {
+        tableData: [],   //从后台获取数据
+        query: {
+          total: 1,
+          current: 1,
+          size: 2,
         },
-        getAllByPage:function(){
-          axios.get("http://localhost:8081/getAllByPage/"+this.query.page+"/"+this.query.pageSize).then(res=>{
-            this.tableData = res.data;
-          })
+        selectClassForm: {
+          classname: "",
         },
-        handleSizeChange(val) {
-          this.page = 1;
-          this.query.pageSize = val;
-          this.getAllByPage()
+        addClassForm:{
+          classname:"",
         },
-        handleCurrentChange(val) {
-          this.query.page = val;
-          this.getAllByPage()
+        rules2: {
+          classname: [
+            {validator: validateName, trigger: 'blur'}
+          ]
         },
-        onSelect(){
-          console.log('select!');
-        }
-      },
-      mounted() {
-        this.getAllCourse();
-        //this.handleUserList()
-        this.getAllByPage();
+        dialogFormVisible: false,
+        formLabelWidth: '120px'
       }
+    },
+    methods: {
+      getAllClassSize: function (classname) {
+        axios.get("http://localhost:8081/getAllClassByPage/" + classname).then(res => {
+          this.query.total = res.data.length;
+        })
+      },
+      getAllByPage: function (classname) {
+        alert(classname)
+        axios.get("http://localhost:8081/getClassWithDeptByPage/" + this.query.current + "/" +
+          this.query.size + "/" + classname).then(res => {
+          this.tableData = res.data;
+        })
+      },
+      addClass:function () {
+        let data = this.addTeacherForm;
+        axios.post("/addTeacherInUser",Qs.stringify(data)).then(res => {
+          if (res.data == "success") {//添加成功
+            this.reload();/*动态刷新表格*/
+            this.dialogFormVisible = false;/*关闭弹出层*/
+            this.$message({
+              type: 'success',
+              message: '添加成功！'
+            });
+          } else {
+            this.$message.error('添加成功！');
+          }
+        })
+      },
+      handleSizeChange(val) {
+        this.page = 1;
+        this.query.size = val;
+        this.getAllByPage()
+      },
+      handleCurrentChange(val) {
+        this.query.current = val;
+        this.getAllByPage()
+      },
+      onSelectID(classname) {
+        console.log('select!');
+        this.getAllClassSize(classname)
+        this.getAllByPage(classname)
+      }
+    },
+    mounted() {
+      //this.getAllCourse();
+      //this.handleUserList()
+      this.getAllClassSize();
+      this.getAllByPage();
     }
+  }
 </script>
 
 <style scoped>

@@ -60,15 +60,15 @@
             //页面跳转
             //this.$router.push({path: "/adminIndex"});
 
-            if (res.data.role == 4){//30001
+            if (res.data.role == 4) {//30001
               this.$router.push({path: "/adminIndex"});
-            }else if (res.data.role == 1){//20001
+            } else if (res.data.role == 1) {//20001
               this.$router.push({path: "/TeacherIndex"});
-            } else if(res.data.role == 2){
-            this.$router.push({path: "/mgrIndex"});
-          }else if (res.data.role == 0){
-            this.$router.push({path: "/studentIndex"});
-          }
+            } else if (res.data.role == 2) {
+              this.$router.push({path: "/mgrIndex"});
+            } else if (res.data.role == 0) {
+              this.$router.push({path: "/studentIndex"});
+            }
           } else {
             this.$message.error("用户名或密码错误");
           }
@@ -96,7 +96,7 @@
     color: #303133;
   }
 
-  .login-btn{
+  .login-btn {
     margin-left: -200px;
   }
 </style>
