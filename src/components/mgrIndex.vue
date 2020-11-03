@@ -8,17 +8,19 @@
         <el-main>
           <el-table
             :data="tableData"
+            @row-click="getScore"
             border
             stripe
             style="width: 100%"
             :default-sort = "{prop: 'date', order: 'descending'}">
+
             <el-table-column
+              v-if="false"
               prop="sno"
               label="学号"
               sortable
               width="100"
-              align="right"
-            v-if="false">
+              align="right">
             </el-table-column>
 
             <el-table-column
@@ -31,7 +33,8 @@
               prop="sname"
               label="姓名"
               width="100"
-              align="center">
+              align="center"
+              cell-click="getScore(scope.row.empno)">
             </el-table-column>
             <el-table-column
               prop="nation"
@@ -70,16 +73,16 @@
               <template slot-scope="scope">
                 <el-button
                   size="mini"
-                  @click="getEvaluate(scope.row.empno,0)">转正评价</el-button>
+                  @click="getEvaluate(scope.row.empno,scope.row.sname,0)">转正评价</el-button>
                 <el-button
                   size="mini"
-                  @click="getEvaluate(scope.row.empno,1)">工作一年评价</el-button>
+                  @click="getEvaluate(scope.row.empno,scope.row.sname,1)">工作一年评价</el-button>
                 <el-button
                   size="mini"
-                  @click="getEvaluate(scope.row.empno,2)">工作二年评价</el-button>
+                  @click="getEvaluate(scope.row.empno,scope.row.sname,2)">工作二年评价</el-button>
                 <el-button
                   size="mini"
-                  @click="getEvaluate(scope.row.empno,3)">工作三年评价</el-button>
+                  @click="getEvaluate(scope.row.empno,scope.row.sname,3)">工作三年评价</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -115,9 +118,9 @@
       }
     },
     methods: {
-      getEvaluate(val1,val2) {//val1为员工编号，val2为评价类型
-        console.log(val1,val2);
-        this.axios.get("getDeptEvaluate/"+val1+"/"+val2).then(res => {
+      getEvaluate(val1,val2,val3) {//val1为员工编号，val2为评价类型
+        console.log(val1,val2,val3);
+        this.axios.get("getDeptEvaluate/"+val1+"/"+val3).then(res => {
           console.log(res.data);
           debugger
               if(res.data == ""|| res.data == null){
@@ -127,7 +130,8 @@
                   path: "/addDeptEvaluate",
                   query: {
                     empno: val1,
-                    type:val2
+                    ename:val2,
+                    type:val3
                   }
                 });
               }else {
@@ -169,6 +173,10 @@
       handleCurrentChange(val) {
         this.query.page = val;
         this.getAllByPage()
+      },
+      //跳转到学生成绩页面
+      getScore(val){
+      console.log(val.sno)
       }
     },
     //声明生命周期钩子
