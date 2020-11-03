@@ -96,7 +96,7 @@
     color: #303133;
   }
 
-  .login-btn {
+  .login-btn{
     margin-left: -200px;
   }
 </style>

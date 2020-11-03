@@ -96,7 +96,7 @@
             <template slot-scope="scope">
               <el-button
                 size="mini"
-                @click="toStudentScore()">学校
+                @click="toStudentScore(scope.row.sno)">学校
               </el-button>
               <el-button
                 size="mini"
@@ -138,8 +138,8 @@ export default {
         this.tableData = res.data;
       })
     },
-    toStudentScore() {
-      this.$store.dispatch("setSno",10001);
+    toStudentScore(sno) {
+      this.$store.dispatch("setSno", sno);
       this.$router.push({path: "/studentScore"});
     }
   },
