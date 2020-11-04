@@ -2,28 +2,35 @@
   <div class="Terminal" v-loading="loading">
     <!-- 查询操作 -->
     <div class="select">
-      <el-form :inline="true" :model="SelectForm" class="demo-form-inline">
+      <el-form :inline="true" ref="SelectForm" :model="SelectForm" class="demo-form-inline">
         <el-row>
-          <el-col :span="8" offset="2">
-            <el-form-item label="学生ID">
+          <el-col :span="8">
+            <el-form-item label="学生ID" prop="sno">
               <el-input v-model="SelectForm.sno" placeholder="请输入学生ID"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="onSelectID">查询</el-button>
+              <el-button type="primary" @click="onSelectID(SelectForm.sno,'SelectForm')">查询</el-button>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="学期">
-              <el-select v-model="SelectForm.classno" placeholder="请选择学期">
+            <el-form-item label="学期" prop="classno">
+              <el-select v-model="SelectForm.classno" filterable placeholder="请选择学期">
                 <el-option v-for="item in options" :key="item.classno" :value="item.classno">
                   <span style="float: left">{{ item.classno }}</span>
-                  <span style="float: right">test</span>
+                  <span style="float: right;color: #8492a6; font-size: 13px">{{item.classname}}</span>
                 </el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="onSelectClass">查询</el-button>
+              <el-button type="primary" @click="onSelectClass(SelectForm.classno,'SelectForm')">查询</el-button>
             </el-form-item>
+          </el-col>
+          <el-col :span="3" offset="1">
+            <el-form :inline="true" class="demo-form-inline">
+              <el-form-item>
+                <el-button type="primary" @click="onSelectAll()">显示全部</el-button>
+              </el-form-item>
+            </el-form>
           </el-col>
           <el-col :span="4">
             <el-form-item>
@@ -100,6 +107,11 @@
           width="120">
         </el-table-column>
         <el-table-column
+          prop="classno"
+          label="学期"
+          width="120">
+        </el-table-column>
+        <el-table-column
           fixed="right"
           label="操作"
           width="200">
@@ -133,15 +145,18 @@
         <el-row>
           <el-col :span="12" offset="5">
             <el-form-item label="所在学期" :label-width="formLabelWidth" prop="classno">
-              <el-input v-model="addStudentForm.classno" autocomplete="off"></el-input>
+              <!--<el-input v-model="addStudentForm.classno" autocomplete="off"></el-input>-->
+              <el-select v-model="addStudentForm.classno" filterable placeholder="请选择学期">
+                <el-option v-for="item in options" :key="item.classno" :value="item.classno">
+                  <span style="float: left">{{ item.classno }}</span>
+                  <span style="float: right;color: #8492a6; font-size: 13px">{{item.classname}}</span>
+                </el-option>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12" offset="5">
-            <!--<el-form-item label="学生性别" :label-width="formLabelWidth">
-              <el-input v-model="addStudentForm.sex" autocomplete="off"></el-input>
-            </el-form-item>-->
             <el-form-item label="学生性别" :label-width="formLabelWidth" prop="sex">
               <el-radio-group v-model="addStudentForm.sex">
                 <el-radio label="男" value="1"></el-radio>
@@ -168,7 +183,7 @@
 
   export default {
     name: "studentInfoInAdmin",
-    inject:["reload"],
+    inject: ["reload"],
     data() {
       var validateName = (rule, value, callback) => {
         if (value === '') {
@@ -197,7 +212,7 @@
       };
       return {
         tableData: [],   //从后台获取数据
-        options:[],
+        options: [],
         query: {
           total: 1,
           current: 1,
@@ -206,6 +221,7 @@
         SelectForm: {
           sno: '',
           classno: '',
+          classname: ''
         },
         addStudentForm: {
           stuname: '',
@@ -226,73 +242,83 @@
         dialogFormVisible: false,
         formLabelWidth: '120px'
       }
-  },
-  methods: {
-    getAllByPage: function () {
-      axios.get("http://localhost:8081/getAllStudentInAdminByPage/" + this.query.current + "/" + this.query.size).then(res => {
-        this.tableData = res.data.records;
-        this.query.current = res.data.current;
-        this.query.size = res.data.size;
-        this.query.total = res.data.total;
-      })
     },
-    addStudent:function () {
-      axios.post("addStudentInUser/" + this.addStudentForm.stuname +
-        "/" + this.addStudentForm.sex + "/" + this.addStudentForm.classno).then(res => {
-        if (res.data == "success") {//添加成功
-          this.reload();/*动态刷新表格*/
-          this.dialogFormVisible = false;/*关闭弹出层*/
-          this.$message({
-            type: 'success',
-            message: '添加成功！'
-          });
-          //location.reload();
-        } else {
-          this.$message.error('添加成功！');
-        }
-      })
-    },
-    closeDialog(){
-      this.addStudentForm = '';//清空数据
-    },
-    getClass(){
-      axios.get("http://localhost:8081/getAllClass").then(res => {
-        this.options = res.data;
-      })
-    },
-    handleSizeChange(val) {
-      this.page = 1;
-      this.query.size = val;
-      this.getAllByPage()
+    methods: {
+      getAllByPage: function (sno, classno) {
+        axios.get("http://localhost:8081/getAllStudentInAdminByPage/" + this.query.current + "/" + this.query.size +
+          "/" + sno + "/" + classno).then(res => {
+          for (let i = 0; i < res.data.records.length; i++) {
+            var marriage = res.data.records[i].marriage
+            if (marriage == 0) {
+              res.data.records[i].marriage = "未婚";
+            } else if (marriage == 1) {
+              res.data.records[i].marriage = "已婚";
+            }
+          }
+          this.tableData = res.data.records;
+          this.query.current = res.data.current;
+          this.query.size = res.data.size;
+          this.query.total = res.data.total;
+        })
+      },
+      addStudent: function () {
+        axios.post("addStudentInUser/" + this.addStudentForm.stuname +
+          "/" + this.addStudentForm.sex + "/" + this.addStudentForm.classno).then(res => {
+          if (res.data == "success") {//添加成功
+            this.reload();/*动态刷新表格*/
+            this.dialogFormVisible = false;/*关闭弹出层*/
+            this.$message({
+              type: 'success',
+              message: '添加成功！'
+            });
+            //location.reload();
+          } else {
+            this.$message.error('添加成功！');
+          }
+        })
+      },
+      closeDialog() {
+        this.addStudentForm = '';//清空数据
+      },
+      getClass() {
+        axios.get("http://localhost:8081/getAllClass").then(res => {
+          this.options = res.data;
+        })
+      },
+      handleSizeChange(val) {
+        this.page = 1;
+        this.query.size = val;
+        this.getAllByPage()
+      }
+      ,
+      handleCurrentChange(val) {
+        this.query.current = val;
+        this.getAllByPage()
+      }
+      ,
+      onSelectID(sno, SelectForm) {
+        console.log('submit!');
+        this.getAllByPage(sno, "undefined");
+        this.$refs[SelectForm].resetFields()
+      }
+      ,
+      onSelectClass(classno, SelectForm) {
+        console.log('select!');
+        this.getAllByPage("undefined", classno);
+        this.$refs[SelectForm].resetFields()
+      },
+      onSelectAll() {
+        this.getAllByPage("undefined", "undefined");
+      },
     }
     ,
-    handleCurrentChange(val) {
-      this.query.current = val;
-      this.getAllByPage()
+    //生命周期钩子
+    mounted() {
+      //this.getAllDept()
+      this.getAllByPage("undefined", "undefined");
+      this.getClass();
+      //this.handleUserList()
     }
-    ,
-    onSelectID() {
-      console.log('submit!');
-    }
-  ,
-    onSelectClass() {
-      console.log('select!');
-    }
-  }
-  ,
-  //声明生命周期钩子
-  created()
-  {//编译后直接获取数据
-  }
-  ,
-  //生命周期钩子
-  mounted()
-  {
-    //this.getAllDept()
-    this.getAllByPage();
-    this.getClass();
-    //this.handleUserList()
-  }
   }
 </script>
 

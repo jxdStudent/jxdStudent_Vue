@@ -2,29 +2,32 @@
   <div class="Terminal" v-loading="loading">
     <!-- 查询操作 -->
     <el-row>
-      <el-col :span="8" offset="4">
-        <div class="select">
-          <el-form :inline="true" :model="formInline" class="demo-form-inline">
-            <el-form-item label="用户ID">
-              <el-input v-model="formInline.user" placeholder="请输入用户ID"></el-input>
+      <el-col :span="8" offset="2">
+          <el-form :inline="true" :model="selectById" ref="selectById" class="demo-form-inline">
+            <el-form-item label="用户ID" prop="id">
+              <el-input v-model="selectById.id" placeholder="请输入用户ID"></el-input>
             </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="onSelect">查询</el-button>
+            <el-form-item prop="selectById_btn">
+              <el-button type="primary" @click="onSelectId(selectById.id,'selectById')">查询</el-button>
             </el-form-item>
           </el-form>
-        </div>
       </el-col>
       <el-col :span="8">
-        <div class="select">
-          <el-form :inline="true" :model="formInline" class="demo-form-inline">
-            <el-form-item label="用户姓名">
-              <el-input v-model="formInline.user" placeholder="请输入用户姓名"></el-input>
+          <el-form :inline="true" :model="selectByName" ref="selectByName" class="demo-form-inline">
+            <el-form-item label="用户姓名" prop="uname">
+              <el-input v-model="selectByName.uname" placeholder="请输入用户姓名"></el-input>
             </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="onSelect">查询</el-button>
+            <el-form-item prop="selectByName_btn">
+              <el-button type="primary" @click="onSelectName(selectByName.uname,'selectByName')">查询</el-button>
             </el-form-item>
           </el-form>
-        </div>
+      </el-col>
+      <el-col :span="4">
+          <el-form :inline="true" :model="selectByName" ref="selectByName" class="demo-form-inline">
+            <el-form-item>
+              <el-button type="primary" @click="onSelectAll()">显示全部</el-button>
+            </el-form-item>
+          </el-form>
       </el-col>
     </el-row>
     <!-- 表格 -->
@@ -92,14 +95,32 @@
             current:1,
             size:2,
           },
-          formInline: {
-            user: '',
+          selectById: {
+            id: '',
+          },
+          selectByName:{
+            uname : ''
           }
         }
       },
       methods:{
-        getAllByPage:function(){
-          axios.get("http://localhost:8081/getAllAccountInAdminByPage/" + this.query.current + "/" + this.query.size).then(res=>{
+        getAllByPage:function(uid,uname){
+          axios.get("/getAllAccountInAdminByPage/" + this.query.current + "/" + this.query.size +
+                      "/" + uid + "/" + uname).then(res=>{
+            for (let i = 0; i < res.data.records.length; i++) {
+              var role = res.data.records[i].role
+              if (role == 0){
+                res.data.records[i].role = "学生";
+              }else if (role == 1){
+                res.data.records[i].role = "老师";
+              }else if (role == 2){
+                res.data.records[i].role = "员工";
+              }else if (role == 3){
+                res.data.records[i].role = "部门经理";
+              }else if (role == 4){
+                res.data.records[i].role = "管理员";
+              }
+            }
             this.tableData = res.data.records;
             this.query.current = res.data.current;
             this.query.size = res.data.size;
@@ -115,8 +136,18 @@
           this.query.current = val;
           this.getAllByPage()
         },
-        onSelect(){
-          console.log('select!');
+        onSelectId(id,selectById){
+          console.log('onSelectId!');
+          this.getAllByPage(id,"undefined")
+          this.$refs[selectById].resetFields()
+        },
+        onSelectName(uname,selectByName){
+          console.log('onSelectName!');
+          this.getAllByPage("undefined",uname)
+          this.$refs[selectByName].resetFields()
+        },
+        onSelectAll(){
+          this.getAllByPage("undefined","undefined");
         }
       },
       mounted() {

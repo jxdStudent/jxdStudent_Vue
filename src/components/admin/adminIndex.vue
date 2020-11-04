@@ -6,7 +6,9 @@
       </el-header>
       <el-container class="el-container">
         <el-aside width="15%">
-          <navMenuSide></navMenuSide>
+          <el-menu>
+          <navMenuSide v-for="(menu,i) in adminMenus" :key="i" :item="menu"></navMenuSide>
+          </el-menu>
         </el-aside>
         <el-container>
           <el-main>
@@ -31,10 +33,16 @@
     components: {navMenu, navMenuSide, studentInfoInAdmin},
     data() {
       return {
-        tableData: []   //从后台获取数据
+        tableData: [],   //从后台获取数据
+        adminMenus: [],
       }
     },
     methods: {
+      getMenu() {
+        axios.get('http://localhost:8081/getMenu').then(res => {
+          this.adminMenus = res.data;
+        })
+      },
       getAllDept: function () {   //获取全部部门
         //通过getters属性获取仓库的值
         var name = this.$store.getters.uname;
@@ -46,7 +54,8 @@
     },
     //生命周期钩子
     mounted() {
-      this.getAllDept()
+      this.getAllDept();
+      this.getMenu();
     }
   }
 </script>

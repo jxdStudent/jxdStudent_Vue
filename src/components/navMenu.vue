@@ -21,7 +21,7 @@
       </el-col>
     </el-row>
   </div>
-  <div style="float: right;font-size: 20px"><span>欢迎你,{{$store.state.uname}}</span></div>
+  <div style="float: right;font-size: 20px;padding: 15px 15px"><span>欢迎你,{{$store.state.uname}}</span></div>
   </div>
 </template>
 

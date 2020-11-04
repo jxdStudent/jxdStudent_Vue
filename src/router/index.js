@@ -15,6 +15,8 @@ import empInfoInAdmin from "../components/admin/empInfoInAdmin";
 import mgrIndex from "../components/mgrIndex";
 import addDeptEvaluate from "../components/addDeptEvaluate";
 import getDeptEvaluate from "../components/getDeptEvaluate";
+import StudentScoreInAdmin from "../components/admin/StudentScoreInAdmin"
+import TeacherIndexInAdmin from "../components/admin/TeacherIndexInAdmin";
 
 
 
@@ -35,7 +37,7 @@ export default new Router({
       path: '/adminIndex',
       name: 'adminIndex',
       component: adminIndex,
-      redirect:"/studentInfoInAdmin",
+      redirect:"/TeacherIndexInAdmin",
       children: [
         {
           path: '/studentInfoInAdmin',
@@ -65,6 +67,10 @@ export default new Router({
           path: '/accountInfoInAdmin',
           name: 'accountInfoInAdmin',
           component: accountInfoInAdmin
+        },{
+          path: '/TeacherIndexInAdmin',
+          name: 'TeacherIndexInAdmin',
+          component: TeacherIndexInAdmin,
         }
       ]
     },
@@ -102,6 +108,11 @@ export default new Router({
       path: '/StudentScore',
       name: 'StudentScore',
       component: StudentScore
+    },
+    {
+      path: '/StudentScoreInAdmin',
+      name: 'StudentScoreInAdmin',
+      component: StudentScoreInAdmin
     }
   ]
 })

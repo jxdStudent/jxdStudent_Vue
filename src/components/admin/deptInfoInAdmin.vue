@@ -1,14 +1,19 @@
 <template>
   <div class="Terminal" v-loading="loading">
     <div class="select">
-      <el-form :inline="true" :model="selectDeptForm" class="demo-form-inline">
+      <el-form :inline="true" :model="selectDeptForm" ref="selectDeptForm" class="demo-form-inline">
         <el-row>
           <el-col :span="8" offset="4">
-            <el-form-item label="部门名称">
-              <el-input v-model="selectDeptForm.deptno" placeholder="请输入部门名称"></el-input>
+            <el-form-item label="部门名称" prop="dname">
+              <el-input v-model="selectDeptForm.dname" placeholder="请输入部门名称"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="onSelectID">查询</el-button>
+              <el-button type="primary" @click="onSelectID(selectDeptForm.dname,'selectDeptForm')">查询</el-button>
+            </el-form-item>
+          </el-col>
+          <el-col :span="4" offset="1">
+            <el-form-item>
+              <el-button type="primary" @click="onSelectAll()">显示全部</el-button>
             </el-form-item>
           </el-col>
           <el-col :span="4">
@@ -125,8 +130,9 @@
         }
       },
       methods:{
-        getAllByPage:function(){
-          axios.get("http://localhost:8081/getAllDeptInAdminByPage/" + this.query.current + "/" + this.query.size).then(res=>{
+        getAllByPage:function(dname){
+          axios.get("http://localhost:8081/getAllDeptInAdminByPage/" + this.query.current + "/" + this.query.size +
+                      "/" + dname).then(res=>{
             this.tableData = res.data.records;
             this.query.current = res.data.current;
             this.query.size = res.data.size;
@@ -165,23 +171,13 @@
           this.query.current = val;
           this.getAllByPage()
         },
-        /*addTeacher:function () {
-          let data = this.addTeacherForm;
-          axios.post("/addTeacherInUser",Qs.stringify(data)).then(res => {
-            if (res.data == "success") {//添加成功
-              this.reload();/!*动态刷新表格*!/
-              this.dialogFormVisible = false;/!*关闭弹出层*!/
-              this.$message({
-                type: 'success',
-                message: '添加成功！'
-              });
-            } else {
-              this.$message.error('添加成功！');
-            }
-          })
-        },*/
-        onSelectID(){
+        onSelectID(dname,selectDeptForm){
           console.log('select!');
+          this.getAllByPage(dname);
+          this.$refs[selectDeptForm].resetFields();
+        },
+        onSelectAll(){
+          this.getAllByPage('undefined');
         }
       },
       mounted() {
