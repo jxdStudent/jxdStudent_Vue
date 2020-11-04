@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import login from "../components/login";
-import studentIndex from "../components/studentIndex"
+import InfoIndex from "../components/InfoIndex"
 import adminIndex from "../components/admin/adminIndex";
 import TeacherIndex from "../components/TeacherIndex";
 import StudentScore from "../components/StudentScore";
@@ -17,6 +17,8 @@ import addDeptEvaluate from "../components/addDeptEvaluate";
 import getDeptEvaluate from "../components/getDeptEvaluate";
 import StudentScoreInAdmin from "../components/admin/StudentScoreInAdmin"
 import TeacherIndexInAdmin from "../components/admin/TeacherIndexInAdmin";
+import EmpEvaluate from "../components/EmpEvaluate";
+import EmpEvaluate_part from "../components/EmpEvaluate_part";
 
 
 
@@ -80,9 +82,9 @@ export default new Router({
       component: TeacherIndex
     },
     {
-      path: '/studentIndex',
-      name: 'studentIndex',
-      component: studentIndex
+      path: '/InfoIndex',
+      name: 'InfoIndex',
+      component: InfoIndex
     },
     {
       path: '/mgrIndex',
@@ -113,6 +115,16 @@ export default new Router({
       path: '/StudentScoreInAdmin',
       name: 'StudentScoreInAdmin',
       component: StudentScoreInAdmin
+    },
+    {
+      path: '/EmpEvaluate',
+      name: 'EmpEvaluate',
+      component: EmpEvaluate
+    },
+    {
+      path: '/EmpEvaluate_part',
+      name: 'EmpEvaluate_part',
+      component: EmpEvaluate_part
     }
   ]
 })

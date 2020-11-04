@@ -67,11 +67,17 @@
             } else if(res.data.role == 2){
             this.$router.push({path: "/mgrIndex"});
           }else if (res.data.role == 3){
+              this.$store.dispatch("setUserUid", this.form.name);
               //通过员工号获取学生号
-              this.axios.get("getAllCourse/" + this.form.classno).then(res => {})
-              this.$router.push({path: "/studentIndex"});
-            } else if (res.data.role == 0){
-            this.$router.push({path: "/studentIndex"});
+              this.axios.get("getStudentnoByEmpno/" + this.form.name).then(res => {
+                //存储学号
+                this.$store.dispatch("setUserUid", res.data.sno);
+                //存储员工号
+                this.$store.dispatch("setSno", this.form.name);
+                this.$router.push({path: "/InfoIndex"});
+              });
+            } else if (res.data.role == 0){  //10001
+            this.$router.push({path: "/InfoIndex"});
           }
           } else {
             this.$message.error("用户名或密码错误");
