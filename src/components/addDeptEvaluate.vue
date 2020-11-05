@@ -2,7 +2,7 @@
   <div>
     <el-row>
       <el-col :span="12" :offset="8">
-    <h1 style="color: #42b983">新增员工评价信息<i class="header-icon el-icon-info"/>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;   <el-link type="primary" @click="returnMgrIndex" icon="el-icon-s-home"style="font-size: 20px">返回首页</el-link></h1>
+    <h1 style="color: #42b983">{{this.msg}}<i class="header-icon el-icon-info"/>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;   <el-link type="primary" @click="returnMgrIndex" icon="el-icon-s-home"style="font-size: 20px">返回首页</el-link></h1>
       </el-col>
     </el-row>
 
@@ -20,6 +20,16 @@
 
           <!--表单-->  <!--:span控制input长度-->
           <el-form ref="form" :model="form" :rules="rules" :label-position="labelPosition" :label-width="width"  :inline="true" class="demo-ruleForm">
+
+            <el-row  v-show="false">
+              <el-col :span="8" :offset="7">
+                <div class="grid-content bg-purple">
+                  <el-form-item label="评价类型:">
+                    <el-input type="text" v-model="form.type"></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+            </el-row>
 
             <el-row v-show="false">
               <el-col :span="8" :offset="7">
@@ -55,7 +65,7 @@
             <el-row>
               <el-col :span="8" :offset="7">
                 <div class="grid-content bg-purple">
-                  <el-form-item label="积极性：" prop="initiative">
+                  <el-form-item label="积极性：" prop="initiative" @click.native="getMark">
                     <el-select v-model="form.initiative">
                       <el-option value="1">1分</el-option>
                       <el-option value="2">2分</el-option>
@@ -68,21 +78,11 @@
               </el-col>
             </el-row>
 
-            <el-row  v-show="false">
-              <el-col :span="8" :offset="7">
-                <div class="grid-content bg-purple">
-                  <el-form-item label="评价类型:">
-                    <el-input type="text" v-model="form.type"></el-input>
-                  </el-form-item>
-                </div>
-              </el-col>
-            </el-row>
-
             <el-row>
               <el-col :span="8" :offset="7">
                 <div class="grid-content bg-purple">
                   <el-form-item label="能力分数:" prop="ability" >
-                    <el-select v-model="form.ability">
+                    <el-select v-model="form.ability" @click.native="getMark">
                       <el-option value="1">1分</el-option>
                       <el-option value="2">2分</el-option>
                       <el-option value="3">3分</el-option>
@@ -99,7 +99,7 @@
               <el-col :span="8" :offset="7">
                 <div class="grid-content bg-purple">
                   <el-form-item label="沟通交流：" prop="communicate">
-                    <el-select v-model="form.communicate">
+                    <el-select v-model="form.communicate" @click.native="getMark">
                       <el-option value="1">1分</el-option>
                       <el-option value="2">2分</el-option>
                       <el-option value="3">3分</el-option>
@@ -114,7 +114,7 @@
             <el-row>
               <el-col :span="8" :offset="7">
                 <div class="grid-content bg-purple">
-                  <el-form-item label="人品分数："  prop="quality">
+                  <el-form-item label="人品分数："  prop="quality" @click="getMark">
                     <el-select v-model="form.quality">
                       <el-option value="1">1分</el-option>
                       <el-option value="2">2分</el-option>
@@ -130,7 +130,7 @@
             <el-row>
               <el-col :span="8" :offset="7">
                 <div class="grid-content bg-purple">
-                  <el-form-item label="性格分数：" prop="characterc">
+                  <el-form-item label="性格分数：" prop="characterc" @click="getMark">
                     <el-select v-model="form.characterc">
                       <el-option value="1">1分</el-option>
                       <el-option value="2">2分</el-option>
@@ -147,13 +147,7 @@
               <el-col :span="8" :offset="7">
                 <div class="grid-content bg-purple">
                   <el-form-item label="整体评价：" prop="mark">
-                    <el-select v-model="form.mark">
-                      <el-option value="1">1分</el-option>
-                      <el-option value="2">2分</el-option>
-                      <el-option value="3">3分</el-option>
-                      <el-option value="4">4分</el-option>
-                      <el-option value="5">5分</el-option>
-                    </el-select>
+                      <el-input type="text" v-model="form.mark" readonly></el-input>
                   </el-form-item>
                 </div>
               </el-col>
@@ -196,14 +190,16 @@
           empno:'',
           ename:'',
           type:'',
-          ability:'',
-          initiative:'',
-          communicate:'',
-          quality:'',
-          characterc:'',
+          ability:0,
+          initiative:0,
+          communicate:0,
+          quality:0,
+          characterc:0,
           mark:'',
           commentc:''
         },
+        //标题信息
+        msg:'',
         //表单右对齐
         labelPosition: 'right',
         width:"150px",
@@ -222,9 +218,6 @@
           ],
           characterc: [
             { required: true, message: '请选择分数', trigger: 'change' }
-          ],
-          mark: [
-            { required: true, message: '请选择分数', trigger: 'blur' }
           ],
           commentc: [
             { required: true, message: '请输入评价内容', trigger: 'blur' },
@@ -272,12 +265,31 @@
             this.$message("输入有误");
           }
         });
+      },
+      getMsg(){
+        if(this.form.type == 0){
+          this.msg = "新增员工转正评价信息"
+        }else if(this.form.type == 1){
+          this.msg = "新增工作一年评价信息"
+        }else if(this.form.type == 2){
+          this.msg = "新增工作二年评价信息"
+        }else if(this.form.type == 3){
+          this.msg = "新增工作三年评价信息"
+        }
+      },
+      getMark(){
+        debugger
+        console.log(this.form.mark)
+        this.form.mark = (String)(parseInt(this.form.ability)+parseInt(this.form.initiative)+parseInt(this.form.communicate)+parseInt(this.form.quality)+parseInt(this.form.characterc));
       }
-    },
 
+
+    },
     //加载执行
     mounted() {
+      debugger
       this.getQuery();
+      this.getMsg();
     },
     watch: {
       // 监测路由变化,只要变化了就调用获取路由参数方法将数据存储本组件即可
