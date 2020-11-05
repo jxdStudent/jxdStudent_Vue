@@ -15,7 +15,7 @@ import empInfoInAdmin from "../components/admin/empInfoInAdmin";
 import mgrIndex from "../components/mgrIndex";
 import addDeptEvaluate from "../components/addDeptEvaluate";
 import getDeptEvaluate from "../components/getDeptEvaluate";
-
+import ScoreScore from "../components/ScoreScore";
 
 
 import axios from 'axios'
@@ -102,6 +102,11 @@ export default new Router({
       path: '/StudentScore',
       name: 'StudentScore',
       component: StudentScore
+    },
+    {
+      path :"/scoreScore",
+      name: "ScoreScore",
+      component: ScoreScore
     }
   ]
 })

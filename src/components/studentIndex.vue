@@ -218,9 +218,6 @@
                       label="总评价">
                     </el-table-column>
                   </el-table>
-
-
-                  </el-table>
                 </el-collapse-item>
 
 
