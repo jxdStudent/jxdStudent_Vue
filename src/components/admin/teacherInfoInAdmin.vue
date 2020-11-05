@@ -1,11 +1,20 @@
 <template>
   <div class="Terminal" v-loading="loading">
+    <div style="margin-top: -20px;padding-bottom: 20px">
+      <el-row>
+        <el-col :span="2">
+          <span style="font-family: 'Microsoft YaHei';font-weight: bold;font-size: 20px">老师管理</span>
+        </el-col>
+      </el-row>
+    </div>
     <div class="select">
       <el-form :inline="true" :model="selectTeacherForm" ref="selectTeacherForm" class="demo-form-inline">
         <el-row>
           <el-col :span="8" offset="4">
             <el-form-item label="教师ID" prop="tno">
-              <el-input v-model="selectTeacherForm.tno" placeholder="请输入教师ID"></el-input>
+              <el-input v-model="selectTeacherForm.tno"
+                        @keyup.enter.native="onSelectID(selectTeacherForm.tno,'selectTeacherForm')"
+                        placeholder="请输入教师ID"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="onSelectID(selectTeacherForm.tno,'selectTeacherForm')">查询</el-button>
@@ -38,20 +47,22 @@
         <el-table-column
           prop="tno"
           label="教师编号"
+          align="center"
           sortable
         >
         </el-table-column>
         <el-table-column
           prop="tname"
-          label="教师姓名"
-        >
+          label="教师姓名" align="center">
         </el-table-column>
         <el-table-column
-          label="操作"
-        >
+          label="操作" align="center">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-            <el-button type="text" size="small">编辑</el-button>
+            <el-button @click="deleteStudent(scope.row.sno,scope.row.classno)"
+                       @dblclick.native="dblclickDeleteStudent(scope.row.sno,scope.row.classno)"
+                       type="danger" size="mini">删除
+            </el-button>
+            <el-button type="primary" size="mini">编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -159,10 +170,11 @@
       onSelectID(tno, selectTeacherForm) {
         console.log("onSelectID!!")
         this.getAllByPage(tno);
-        this.$refs[selectTeacherForm].resetFields();
+        //this.$refs[selectTeacherForm].resetFields();
       },
       onSelectAll() {
         this.getAllByPage('undefined');
+        this.$refs['selectTeacherForm'].resetFields();
       },
       handleSizeChange(val) {
         this.page = 1;

@@ -21,7 +21,10 @@
       </el-col>
     </el-row>
   </div>
-  <div style="float: right;font-size: 20px;padding: 15px 15px"><span>欢迎你,{{$store.state.uname}}</span></div>
+  <div style="float: right;font-size: 18px;padding: 15px 15px"><span>欢迎你,{{$store.state.uname}}</span></div>
+    <div style="float: left;font-size: 25px;padding: 15px 15px;font-weight: bold;font-family: 'Microsoft YaHei'">
+      <span>金桥学员成长跟踪系统</span>
+    </div>
   </div>
 </template>
 
