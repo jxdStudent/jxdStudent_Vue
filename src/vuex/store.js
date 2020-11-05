@@ -13,7 +13,7 @@ const store = new Vuex.Store({
     uname:null,
     role:null,
     uid:null,
-    studentNo: null
+    sno: null
   },
   mutations:{//定义事件，set方法，用于给数据赋值
     setUname:function (state,uname) {
@@ -26,7 +26,7 @@ const store = new Vuex.Store({
       state.uid =uid;
     },
     setSno: function (state, sno) {
-      state.studentNo = sno;
+      state.sno = sno;
     }
   },
   actions:{//作用同mutations，用于提供给数据赋值
@@ -57,8 +57,8 @@ const store = new Vuex.Store({
     uid:state => {
       return state.uid;
     },
-    studentNo: state => {
-      return state.studentNo;
+    sno: state => {
+      return state.sno;
     }
   }
 })

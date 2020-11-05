@@ -14,26 +14,37 @@
                 </div>
             </template>
             <el-menu-item index="1-1">修改密码</el-menu-item>
-            <el-menu-item index="1-2" :edit_user="edit_user">编辑资料</el-menu-item>
+            <el-menu-item index="1-2" @click="edit">编辑资料</el-menu-item>
             <el-menu-item index="1-3" @click="exit">退出</el-menu-item>
           </el-submenu>
         </el-menu>
       </el-col>
     </el-row>
   </div>
-  <div style="float: right;font-size: 20px"><span>欢迎你,{{$store.state.uname}}</span></div>
+  <div style="float: right;font-size: 20px;padding: 15px 15px"><span>欢迎你,{{$store.state.uname}}</span></div>
   </div>
 </template>
 
 <script>
     export default {
         name: "navMenu",
+      props:{
+        edit_student:{
+          type:Function,
+          required:true
+        }
+      },
       methods:{
-          edit_user(){
-
-          },
+        edit(){
+          this.edit_student()
+        },
           exit(){
-            this.$router.push({path: "/"});
+            //TODO
+            sessionStorage.clear()    //点击退出清除vuex的数据， 不能实现？？
+            this.$store.dispatch("setSno", "");
+            this.$router.push('/');
+            //想清空vuex中的数据，让页面重新加载就行了
+            window.location.reload()
           }
       }
     }

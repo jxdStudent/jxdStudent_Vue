@@ -1,48 +1,47 @@
 <template>
   <div>
-      <el-container>
-        <el-header style="background-color: #42b983">
-          <navMenu/>
-        </el-header>
+    <el-container>
+      <el-header style="background-color: #42b983">
+        <navMenu v-bind:edit_student="edit_student"/>
+      </el-header>
 
-        <el-col :span="16" :offset="5">
 
+      <el-col :span="16" :offset="5">
+
+        <el-container>
+          <el-main>
             <!--折叠面板-->
             <el-collapse accordion v-model="activeNames">
               <el-collapse-item name="学生基本信息">
                 <template slot="title">
-                  <h1 style="color: #42b983">{{$store.state.uname}}&nbsp;&&nbsp;基本信息<i class="header-icon el-icon-info"></i></h1>
+                  <h1 style="color: #42b983">{{$store.state.uname}}&nbsp;&&nbsp;基本信息<i class="header-icon el-icon-info"></i>
+                  </h1>
                 </template>
-
-                <div class="img_student">
-                  <img src="../assets/imgs/test.jpg" alt="" style="float: right">
-
-                </div>
 
                 <!--表单-->  <!--:span控制区域长度-->
                 <el-form ref="form" :model="form" :label-position="labelPosition"
                          label-width="100px" :inline="true" :rules="rules"
                          :hide-required-asterisk="isHide" label-suffix="：">
                   <el-row>
-                    <el-col :span="8">
-                        <div>
-                          <!--prop对应的不单单是rules规则里面的验证项，同时对应着我们form-item下的v-model的值。prop绑定的类要与el-form-item下的v-model的值相对应。-->
-                          <el-form-item label="班期" prop="sname">
-                            <el-input v-model="form.classno" readonly :disabled="isEdit"></el-input>
-                          </el-form-item>
-                        </div>
+                    <el-col :span="10">
+                      <div>
+                        <!--prop对应的不单单是rules规则里面的验证项，同时对应着我们form-item下的v-model的值。prop绑定的类要与el-form-item下的v-model的值相对应。-->
+                        <el-form-item label="班期" prop="sname">
+                          <el-input v-model="form.classno" readonly :disabled="isEdit"></el-input>
+                        </el-form-item>
+                      </div>
                     </el-col>
-                    <el-col :span="8">
-                        <div>
-                          <el-form-item label="技术栈">
-                            <el-input v-model="table_course_head[0].classname" readonly :disabled="isEdit"></el-input>
-                          </el-form-item>
-                        </div>
+                    <el-col :span="10">
+                      <div>
+                        <el-form-item label="技术栈">
+                          <el-input v-model="table_course_head[0].classname" readonly :disabled="isEdit"></el-input>
+                        </el-form-item>
+                      </div>
                     </el-col>
                   </el-row>
 
                   <el-row>
-                    <el-col :span="8">
+                    <el-col :span="10">
                       <el-tooltip content="不可修改" placement="top-start" :disabled="!isEdit">
                         <div>
                           <!--prop对应的不单单是rules规则里面的验证项，同时对应着我们form-item下的v-model的值。prop绑定的类要与el-form-item下的v-model的值相对应。-->
@@ -52,7 +51,7 @@
                         </div>
                       </el-tooltip>
                     </el-col>
-                    <el-col :span="8">
+                    <el-col :span="10">
                       <el-tooltip content="不可修改" placement="top-start" :disabled="!isEdit">
                         <div>
                           <el-form-item label="性别">
@@ -64,14 +63,14 @@
                   </el-row>
 
                   <el-row>
-                    <el-col :span="8">
+                    <el-col :span="10">
                       <div class="grid-content bg-purple">
                         <el-form-item label="民族" prop="nation">
                           <el-input v-model="form.nation" :disabled="!isEdit"></el-input>
                         </el-form-item>
                       </div>
                     </el-col>
-                    <el-col :span="8">
+                    <el-col :span="10">
                       <div>
                         <el-form-item label="婚否">
                           <el-select v-model="form.marriage" :disabled="!isEdit">
@@ -84,7 +83,7 @@
                   </el-row>
 
                   <el-row>
-                    <el-col :span="8">
+                    <el-col :span="10">
                       <div>
                         <el-form-item label="出生年月" prop="birthday">
                           <el-date-picker type="date" placeholder="选择日期:"
@@ -96,7 +95,7 @@
                         </el-form-item>
                       </div>
                     </el-col>
-                    <el-col :span="8">
+                    <el-col :span="10">
                       <div class="grid-content bg-purple-light">
                         <el-form-item label="籍贯" prop="address">
                           <el-input v-model="form.address" :disabled="!isEdit"></el-input>
@@ -105,7 +104,7 @@
                     </el-col>
                   </el-row>
                   <el-row>
-                    <el-col :span="8">
+                    <el-col :span="10">
                       <div class="grid-content bg-purple">
                         <el-form-item label="联系电话"
                                       prop="tel">
@@ -113,7 +112,7 @@
                         </el-form-item>
                       </div>
                     </el-col>
-                    <el-col :span="8">
+                    <el-col :span="10">
                       <div class="grid-content bg-purple">
                         <el-form-item label="身份证号" prop="identity">
                           <el-input v-model="form.identity" class="width_idCard" :disabled="!isEdit"></el-input>
@@ -124,14 +123,14 @@
                   </el-row>
 
                   <el-row>
-                    <el-col :span="8">
+                    <el-col :span="10">
                       <div class="grid-content bg-purple">
                         <el-form-item label="毕业学校" prop="graduate">
                           <el-input v-model="form.graduate" :disabled="!isEdit"></el-input>
                         </el-form-item>
                       </div>
                     </el-col>
-                    <el-col :span="8">
+                    <el-col :span="10">
                       <div class="grid-content bg-purple-light">
                         <el-form-item label="专业" prop="major">
                           <el-input v-model="form.major" :disabled="!isEdit"></el-input>
@@ -141,162 +140,140 @@
                   </el-row>
 
                   <el-row>
-                    <el-col :span="22">
+                    <el-col :span="20">
                       <div class="grid-content bg-purple-dark">
                         <el-form-item label="备注">
-                          <el-input type="textarea" v-model="form.remark" class="width_mark"  maxlength="255"
-                                    :autosize="{ minRows: 2, maxRows: 4}" :disabled="!isEdit" show-word-limit></el-input>
+                          <el-input type="textarea" v-model="form.remark" class="width_mark"
+                                    maxlength="255" :autosize="{ minRows: 2, maxRows: 4}"
+                                    :disabled="!isEdit" show-word-limit></el-input>
                         </el-form-item>
                       </div>
                     </el-col>
                   </el-row>
 
                   <el-form-item>
-                    <el-button type="primary" @click="edit" v-if="!isEdit">编辑</el-button>
+                    <el-button type="primary" @click="edit_student" v-if="!isEdit">编辑</el-button>
                     <el-button type="danger" @click="cancel_edit('form')" v-else>取消编辑</el-button>
                     <el-button type="primary" @click="onSubmit('form')" v-if="isEdit">保存</el-button>
                   </el-form-item>
                 </el-form>
               </el-collapse-item>
 
-              <el-collapse-item name="学生成绩信息" v-if="isShowEvaluate">
+              <el-collapse-item name="学生成绩信息" v-if="isStudent">
                 <template slot="title">
                   <h1 style="color: #42b983">
                     {{$store.state.uname}}&nbsp;&&nbsp;成绩<i class="header-icon el-icon-info"></i>
                   </h1>
                 </template>
-
+                <div v-if="isShowScore">
                 <el-table highlight-current-row :data="table_course_score"
-                          border empty-text="没显示出来？请刷新一下">
+                          border empty-text="阿欧，请稍后再试！">
                   <el-table-column label="老师">{{tname}}</el-table-column>
                   <template v-for="(head,index) in table_course_head">
                     <el-table-column :prop="head.cno + ''" :label="head.cname"></el-table-column>
                   </template>
                   <el-table-column prop="score_total" label="综合成绩"></el-table-column>
                 </el-table>
+                </div>
+                <div v-else>
+                  <h1>暂未被评价</h1>
+                </div>
               </el-collapse-item>
 
-                <el-collapse-item name="部门评价" v-if="isShowEvaluate">
-                  <template slot="title">
-                    <h1 style="color: #42b983">
-                      {{$store.state.uname}}&nbsp;&&nbsp;成绩<i class="header-icon el-icon-info"></i>
-                    </h1>
-                  </template>
-                  <el-table
-                    :data="table_evaluate_1"
-                    empty-text="没显示出来？请刷新一下"
-                    border
-                    style="width: 100%">
-                    <el-table-column
-                      prop="ability"
-                      label="能力"
-                      width="180">
-                    </el-table-column>
-                    <el-table-column
-                      prop="initiative"
-                      label="积极性"
-                      width="180">
-                    </el-table-column>
-                    <el-table-column
-                      prop="communicate"
-                      label="沟通">
-                    </el-table-column>
-                    <el-table-column
-                      prop="quality"
-                      label="质量">
-                    </el-table-column>
-                    <el-table-column
-                      prop="character"
-                      label="个性">
-                    </el-table-column>
-                    <el-table-column
-                      prop="mark"
-                      label="mark">
-                    </el-table-column>
-                    <el-table-column
-                      prop="commentc"
-                      label="总评价">
-                    </el-table-column>
-                  </el-table>
-                </el-collapse-item>
-
-
-
+              <!--部门评价-->
+              <EmpEvaluate v-else></EmpEvaluate>
 
             </el-collapse>
+          </el-main>
 
-        </el-col>
+          <!--头像-->
+          <el-aside width="200px">
+            <div class="div_img">
+            <img src="../assets/imgs/test.jpg" alt="" style="float: right">
 
+          </div></el-aside>
+
+        </el-container>
+
+      </el-col>
     </el-container>
     <div>
 
     </div>
+
   </div>
 </template>
 
 <script>
   import Qs from 'qs';
   import navMenu from './navMenu.vue';
+  import EmpEvaluate from './EmpEvaluate.vue';
 
   export default {
-    name: "studentIndex",
-    props: {
-      edit_user: function () {
-        this.edit()
-      }
-    },
+    name: "InfoIndex",
     components: {
-      navMenu
+      navMenu:navMenu,
+      EmpEvaluate:EmpEvaluate
     },
     data() {
       return {
         //学生个人数据
         form: {},
+
         //学生课程
         table_course_head: [],
+
         //学生课程成绩
         table_course_score: [],
-        //部门评价
-        table_evaluate_1:[
-          {"empno":1,"type":1,"mgr":2,"ability":5,"initiative":5,"communicate":5,"quality":5,"characterc":5,"mark":5,"commentc":"优秀"}
-        ],
+
+        classname:"",
+
         //老师姓名
-        tname:null,
-        //表单右对齐
+        tname: null,
+
+        //表单对齐
         labelPosition: 'right',
+
         //折叠面板默认开启
         activeNames: ['学生基本信息'],
+
         //是否编辑
         isEdit: false,
+
         //控制必填项的 * 是否显示
-        isHide:true,
-        //学员入职后显示评价
-        isShowEvaluate:true,
+        isHide: true,
+
+        //登录的身份是学生还是员工
+        isStudent: true,
+
+        //是否显示成绩表格
+        isShowScore:true,
+
         //验证规则
         rules: {
           nation: [
             {required: true, message: '请输入所属民族', trigger: 'blur'},
           ],
-          birthday:[
-            {required:true,message:'请输入生日',trigger:'blur'}
+          birthday: [
+            {required: true, message: '请输入生日', trigger: 'blur'}
           ],
-          address:[
-            {required:true,message:'请输入家庭住址',trigger:'blur'}
+          address: [
+            {required: true, message: '请输入家庭住址', trigger: 'blur'}
           ],
           tel: [
-            { required: true, message: '请输入联系电话', trigger: 'blur' },
-            { pattern:/^([1][3,4,5,6,7,8,9]\d{9}$)/, message: '请输入正确的联系电话', trigger: 'blur'}
-            ],
-          identity:[
-            { required: true, message: '请输入身份证号', trigger: 'blur' },
-            { pattern:/^((\d{18})|([0-9x]{18})|([0-9X]{18}))$/, message: '请输入正确的身份证号', trigger: 'blur'}
+            {required: true, message: '请输入联系电话', trigger: 'blur'},
+            {pattern: /^([1][3,4,5,6,7,8,9]\d{9}$)/, message: '请输入正确的联系电话', trigger: 'blur'}
           ],
-          graduate:[
-            {required:true,message:'请输入毕业院校',trigger:'blur'}
+          identity: [
+            {required: true, message: '请输入身份证号', trigger: 'blur'},
+            {pattern: /^((\d{18})|([0-9x]{18})|([0-9X]{18}))$/, message: '请输入正确的身份证号', trigger: 'blur'}
           ],
-          major:[
-          {required:true,message:'请输入所学专业',trigger:'blur'}
-        ]
+          graduate: [
+            {required: true, message: '请输入毕业院校', trigger: 'blur'}
+          ],
+          major: [
+            {required: true, message: '请输入所学专业', trigger: 'blur'}
+          ]
         }
       }
     },
@@ -309,6 +286,9 @@
           } else {
             res.data.marriage = "已婚";
           }
+          if (this.$store.getters.studentno){
+            this.isStudent = false;
+          }
           this.form = res.data;
         })
       },
@@ -316,34 +296,31 @@
       getAllCourse() {
         this.axios.get("getAllCourse/" + this.form.classno).then(res => {
           this.table_course_head = res.data;
-          this.tname=res.data[0].tname;
+          this.tname = res.data[0].tname;
         })
       },
       //获取该学生的课程成绩
       getAllScore() {
         this.axios.get("getAllScore/" + this.form.sno).then(res => {
+          if (res.data[0].score_total == 0){
+              this.isShowScore = false;
+              return;
+          }
           this.table_course_score = res.data;
         })
       },
-      //获得部门评价
-      getEvaluate1(){
-        this.axios.get("getDeptEvaluate/1/1").then(res => {
-          this.table_evaluate_1 = Object.entries(res.data);
-          console.log(this.table_evaluate_1)
-        })
-      },
       //编辑信息
-      edit(){
+      edit_student() {
         this.isEdit = !this.isEdit;
         this.isHide = !this.isHide;
       },
       //取消编辑
       cancel_edit(form) {
-
+        //重置信息
         this.$refs[form].resetFields();
 
         this.getAllInfo();
-        this.edit();
+        this.edit_student();
       },
       //修改信息提交
       onSubmit(form) {
@@ -373,7 +350,7 @@
               }
             });
           } else {
-            this.$message.error("请按要求填写");
+            this.$message.error("请按照规范填写");
             return false;
           }
         })
@@ -385,36 +362,51 @@
       //在获取基本信息之后执行，以便获取其中的班级编号classno
       setTimeout(this.getAllCourse, 1000);
       setTimeout(this.getAllScore, 1000);
-      //this.getEvaluate1();
+
     }
   }
 </script>
 
 <style scoped>
   .el-input {
-    width: 180px;
+    width: 200px;
     font-size: medium;
   }
 
   .el-select {
-    width: 180px;
+    width: 200px;
     font-size: medium;
   }
 
   .width_mark {
-    width: 770px;
+    width: 520px
   }
 
   .width_idCard {
-    width: 195px;
-  }
-  .img_student{
-    position: absolute;
-    width: 60%;
 
   }
-  img{
+
+  .div_img {
+    position: absolute;
+    margin-left: 30px;
+    margin-top: 60px;
+
+  }
+
+  img {
     width: 150px;
   }
+  .el-aside {
+    background-color: #D3DCE6;
+    color: #333;
+    text-align: center;
+    line-height: 200px;
+  }
 
+  .el-main {
+    background-color: #E9EEF3;
+    color: #333;
+    text-align: center;
+    line-height: 160px;
+  }
 </style>
