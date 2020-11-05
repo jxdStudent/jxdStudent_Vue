@@ -15,7 +15,6 @@ import empInfoInAdmin from "../components/admin/empInfoInAdmin";
 import mgrIndex from "../components/mgrIndex";
 import addDeptEvaluate from "../components/addDeptEvaluate";
 import getDeptEvaluate from "../components/getDeptEvaluate";
-import getDeptStudentScore from "../components/getDeptStudentScore";
 import editDeptEvaluate from "../components/editDeptEvaluate";
 
 import StudentScoreInAdmin from "../components/admin/StudentScoreInAdmin"
@@ -110,11 +109,14 @@ export default new Router({
       component: empInfoInAdmin
     },
     {
-      path: '/StudentScore',
+      path: '/studentScore',
       name: 'StudentScore',
       component: StudentScore
     },
     {
+      path: "/scoreScore",
+      name: "ScoreScore",
+      component: ScoreScore
     },
     {
     path: '/editDeptEvaluate',
