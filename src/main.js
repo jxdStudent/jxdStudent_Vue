@@ -10,7 +10,9 @@ import axios from 'axios'
 axios.defaults.baseURL='http://localhost:8081/'
 Vue.prototype.axios = axios
 import './assets/header.css'
+import moment from 'moment'//导入文件
 
+Vue.prototype.$moment = moment;//赋值使用
 
 Vue.use(ElementUI);
 
