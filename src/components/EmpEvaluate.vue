@@ -8,7 +8,7 @@
           </h1>
         </template>
 
-        <EmpEvaluate_part v-bind:table_evaluate="table_evaluate"></EmpEvaluate_part>
+        <EmpEvaluate_part :table_evaluate="table_evaluate"></EmpEvaluate_part>
 
       </el-collapse-item>
 
@@ -19,7 +19,7 @@
           </h1>
         </template>
 
-          <EmpEvaluate_part v-bind:table_evaluate="table_evaluate"></EmpEvaluate_part>
+          <EmpEvaluate_part :table_evaluate="table_evaluate"></EmpEvaluate_part>
 
       </el-collapse-item>
 
@@ -31,7 +31,7 @@
           </h1>
         </template>
 
-          <EmpEvaluate_part v-bind:table_evaluate="table_evaluate"></EmpEvaluate_part>
+          <EmpEvaluate_part :table_evaluate="table_evaluate"></EmpEvaluate_part>
 
       </el-collapse-item>
 
@@ -43,7 +43,7 @@
           </h1>
         </template>
 
-          <EmpEvaluate_part v-bind:table_evaluate="table_evaluate"></EmpEvaluate_part>
+          <EmpEvaluate_part :table_evaluate="table_evaluate"></EmpEvaluate_part>
 
       </el-collapse-item>
       </el-collapse>
@@ -59,13 +59,18 @@
       },
       data(){
           return{
+            //员工的评价
             table_evaluate:[],
+            //折叠面板
             activeNames:[]
           }
       },
       methods:{
           //根据打开的第几行，传递index，查找第几年的评价
         getEvaluate(index) {
+          //点击查看评价，隐藏基本信息
+          this.$parent.activeNames=[];
+
           this.axios.get("getDeptEvaluate/" + this.$store.getters.studentno + "/" + index).then(res => {
             if (res.data) {
               var table_evaluate_json = [];

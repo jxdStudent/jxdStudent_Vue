@@ -26,7 +26,7 @@
                     <el-col :span="10">
                       <div>
                         <!--prop对应的不单单是rules规则里面的验证项，同时对应着我们form-item下的v-model的值。prop绑定的类要与el-form-item下的v-model的值相对应。-->
-                        <el-form-item label="班期" prop="sname">
+                        <el-form-item label="班期" prop="classno">
                           <el-input v-model="form.classno" readonly :disabled="isEdit"></el-input>
                         </el-form-item>
                       </div>
@@ -142,9 +142,9 @@
                   <el-row>
                     <el-col :span="20">
                       <div class="grid-content bg-purple-dark">
-                        <el-form-item label="备注">
+                        <el-form-item label="备注" prop="remark">
                           <el-input type="textarea" v-model="form.remark" class="width_mark"
-                                    maxlength="255" :autosize="{ minRows: 2, maxRows: 4}"
+                                    maxlength="255" :autosize="{ minRows: 2}"
                                     :disabled="!isEdit" show-word-limit></el-input>
                         </el-form-item>
                       </div>
@@ -159,6 +159,7 @@
                 </el-form>
               </el-collapse-item>
 
+              <!--学员成绩信息-->
               <el-collapse-item name="学生成绩信息" v-if="isStudent">
                 <template slot="title">
                   <h1 style="color: #42b983">
@@ -167,7 +168,7 @@
                 </template>
                 <div v-if="isShowScore">
                 <el-table highlight-current-row :data="table_course_score"
-                          border empty-text="阿欧，请稍后再试！">
+                          border empty-text="加载失败，请稍后再试！">
                   <el-table-column label="老师">{{tname}}</el-table-column>
                   <template v-for="(head,index) in table_course_head">
                     <el-table-column :prop="head.cno + ''" :label="head.cname"></el-table-column>
@@ -188,18 +189,38 @@
 
           <!--头像-->
           <el-aside width="200px">
-            <div class="div_img">
+            <!--<div class="div_img">
             <img src="../assets/imgs/test.jpg" alt="" style="float: right">
+            </div>-->
 
-          </div></el-aside>
+            <img :src="require('@/assets/imgs/' + this.form.photo)" alt="">
+            <!--<el-upload
+              class="avatar-uploader"
+              action=" 123"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload">
+            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>-->
+
+            <%--用于显示图片--%>
+            <div id="show_img"></div>
+            <%--用于存储图片的路径--%>
+            <input type="hidden" id="imgPath">
+            <input type="text" value="asdfg" ref="test">
+            <form id="form_img" enctype="multipart/form-data">
+              <input id="photo" type="file" name="photo" @change="submit_img(index)" ref="input_img" style="display: none">
+              <button type="button" onclick="javascript:document.getElementById('photo').click()">上传</button>
+              <button type="button" id="btn_del">删除</button>
+            </form>
+
+         </el-aside>
 
         </el-container>
 
       </el-col>
     </el-container>
-    <div>
-
-    </div>
 
   </div>
 </template>
@@ -208,6 +229,7 @@
   import Qs from 'qs';
   import navMenu from './navMenu.vue';
   import EmpEvaluate from './EmpEvaluate.vue';
+  import $ from 'jquery';
 
   export default {
     name: "InfoIndex",
@@ -217,16 +239,17 @@
     },
     data() {
       return {
-        //学生个人数据
-        form: {},
 
+        //学生个人数据
+        form: {
+          photo:''
+        },
+        //div_img:'require("../assets/imgs/" + this.form.photo)',
         //学生课程
         table_course_head: [],
 
         //学生课程成绩
         table_course_score: [],
-
-        classname:"",
 
         //老师姓名
         tname: null,
@@ -277,7 +300,47 @@
         }
       }
     },
+    watch:{
+      tname:{
+        deep:true,
+        handler:function (newVal,old) {
+
+        }
+      }
+    },
     methods: {
+      submit_img(){
+        if (this.val() == ""){
+          alert("aaa")
+          return;
+        }
+        //获取表单中要上传的数据
+        var formData = new FormData($("#form_img")[0]);
+        $.ajax({
+          url:"imgUpload",
+          data:formData,
+          type:"post",
+          cache:false,
+          contentType:false,  //告诉服务器数据的编码方式
+          processData:false,  //避免jQuery对formData进行额外的处理
+          dataType:"text",    //后台响应为字符串，后台响应字符串设置为text。或者不设置。如果响应的是json数据，name必须设置该属性为json
+          success:function (data) {
+            //data是后台图片存储的路径
+            //在div中显示图片
+            var imgObj = $("<img src='${pageContext.request.contextPath}/images/" + data + " 'width='100px'>");
+            $("#show_img").append(imgObj);
+            //$("#show_img").html(imgObj);
+
+            //存储文件名称
+            $("#imgPath").val(data);
+          },
+          error:function () {
+            layer.msg("图片上传失败");
+          }
+        })
+      },
+
+
       //获取个人信息
       getAllInfo() {
         this.axios.get("getStudent/" + this.$store.getters.uid).then(res => {
@@ -319,12 +382,12 @@
         //重置信息
         this.$refs[form].resetFields();
 
-        this.getAllInfo();
         this.edit_student();
       },
       //修改信息提交
       onSubmit(form) {
 
+        //对表单的 “婚否” 数据进行修改为数据库对应字段
         this.$refs[form].validate((valid) => {
           if (valid) {
             let data = this.form;

@@ -79,8 +79,12 @@
             } else if (res.data.role == 0){  //10001
             this.$router.push({path: "/InfoIndex"});
           }
-          } else {
-            this.$message.error("用户名或密码错误");
+          else if(res.data.role == -1){
+              this.$message.error("用户名或密码错误")
+            }
+          else {
+              this.$message.error("用户名或密码错误")
+            };
           }
         })
       }

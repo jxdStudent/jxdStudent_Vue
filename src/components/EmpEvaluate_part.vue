@@ -39,7 +39,7 @@
     name: "EmpEvaluate_part",
     data() {
       return {
-        table_evaluate: this.$store.getters.empEvaluate
+
       }
     },
     props: {

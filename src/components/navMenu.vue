@@ -44,7 +44,7 @@
             this.$store.dispatch("setSno", "");
             this.$router.push('/');
             //想清空vuex中的数据，让页面重新加载就行了
-            window.location.reload()
+            //window.location.reload()
           }
       }
     }
