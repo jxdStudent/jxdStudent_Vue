@@ -17,7 +17,6 @@
               <i class="el-icon-document"></i>
               <span slot="title">学生成绩表</span>
             </el-menu-item>
-
           </el-menu>
         </el-aside>
         <el-main>

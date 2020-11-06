@@ -52,6 +52,7 @@
             <template slot-scope="scope">
               <el-button
                 size="mini"
+                icon="el-icon-edit"
                 @click="dialogVisible = true">编辑
               </el-button>
               <el-dialog
@@ -59,12 +60,28 @@
                 :visible.sync="dialogVisible"
                 width="40%"
                 @close='closeDialog'>
-                <iframe
-                  src="http://localhost:8080/#/scoreScore"
-                  frameborder="0"
-                  width="100%"
-                  height="300px">
-                </iframe>
+                <el-row>
+                  <el-col :span="6" :offset="4">
+                    <el-form
+                      :label-position="labelPosition"
+                      label-width="80px"
+                      ref="dynamicForm"
+                      :model="dynamicForm">
+                      <el-form-item
+                        v-for="dynamic in dynamicForm.dynamics"
+                        :key="dynamic.prop"
+                        :label="dynamic.label"
+                        :prop="dynamic.prop"
+                        width="100px">
+                        <el-input-number
+                          v-model="dynamic.value"
+                          controls-position="right"
+                          :min="0" :max="5">
+                        </el-input-number>
+                      </el-form-item>
+                    </el-form>
+                  </el-col>
+                </el-row>
                 <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
@@ -128,7 +145,37 @@ export default {
           num2: 3,
           num3: 4
         }
-      ]
+      ],
+      labelPosition: 'right',
+      dynamicForm: {
+        dynamics: [
+          {
+            prop: '1',
+            label: 'HTML',
+            value: '5',
+          },
+          {
+            prop: '2',
+            label: 'Oracle',
+            value: '5',
+          },
+          {
+            prop: '3',
+            label: 'Java初级',
+            value: '5',
+          },
+          {
+            prop: '4',
+            label: 'Java高级',
+            value: '5',
+          },
+          {
+            prop: '5',
+            label: 'JavaWeb',
+            value: '5',
+          }
+        ],
+      }
     }
   },
   methods: {
@@ -172,13 +219,13 @@ export default {
       this.axios.post("/editSchoolEvaluate", qs.stringify(table_evaluate_obj)).then(res => {
         if (res.data == "success") {
           this.$router.go(0);
-        //   this.$message({
-        //     message: '修改成功',
-        //   })
-        // } else {
-        //   this.$message({
-        //     message: '服务器错误',
-        //   })
+          //   this.$message({
+          //     message: '修改成功',
+          //   })
+          // } else {
+          //   this.$message({
+          //     message: '服务器错误',
+          //   })
         }
       })
     },
