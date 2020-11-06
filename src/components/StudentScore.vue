@@ -102,7 +102,7 @@
             prop="sevaluate"
             label="评价"
             header-align="center">
-            <template scope="scope">
+            <template slot-scope="scope">
               <el-input
                 maxlength="255"
                 show-word-limit

@@ -12,6 +12,7 @@ import deptInfoInAdmin from "../components/admin/deptInfoInAdmin";
 import courseInfoInAdmin from "../components/admin/courseInfoInAdmin";
 import classInfoInAdmin from "../components/admin/classInfoInAdmin";
 import empInfoInAdmin from "../components/admin/empInfoInAdmin";
+import test from "../components/admin/test";
 import mgrIndex from "../components/mgrIndex";
 import addDeptEvaluate from "../components/addDeptEvaluate";
 import getDeptEvaluate from "../components/getDeptEvaluate";
@@ -131,6 +132,11 @@ export default new Router({
       path: '/EmpEvaluate_part',
       name: 'EmpEvaluate_part',
       component: EmpEvaluate_part
+    },
+    {
+      path: '/test',
+      name: 'test',
+      component: test
     }
   ]
 })

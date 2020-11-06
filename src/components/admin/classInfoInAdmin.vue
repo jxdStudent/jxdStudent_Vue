@@ -73,8 +73,7 @@
         <el-table-column
           label="操作" align="center">
           <template slot-scope="scope">
-            <el-button @click="deleteStudent(scope.row.sno,scope.row.classno)"
-                       @dblclick.native="dblclickDeleteStudent(scope.row.sno,scope.row.classno)"
+            <el-button @click="deleteObject(scope.row.classno)"
                        type="danger" size="mini">删除
             </el-button>
             <el-button type="primary" size="mini">编辑</el-button>
@@ -164,7 +163,7 @@
         query: {
           total: 1,
           current: 1,
-          size: 2,
+          size: 5,
         },
         multipleSelection: [],
         delarr: [], //存放删除的数据
@@ -260,15 +259,45 @@
           this.delarr.push(this.multipleSelection[i].classno);
           console.log(this.delarr[i])
         }
+        if (this.delarr == null  || this.delarr == ""){
+          this.$message.error("请选择学期")
+        }else {
+          this.$confirm('此操作将永久删除选中的学期, 是否继续?', '警告', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'error'
+          }).then(() => {
+            axios.get("http://localhost:8081/deleteClassBatch/" + this.delarr).then(res => {
+              if (res.data == "success") {
+                this.reload();/*动态刷新表格*/
+                this.$message({
+                  type: 'success',
+                  message: '删除成功！'
+                })
+              } else {
+                this.$message.error("删除失败！")
+              }
+            })
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            });
+          });
+        }
+      },
 
+      //单行删除
+      deleteObject(row) {
+        alert(row)
         this.$confirm('此操作将永久删除选中的学期, 是否继续?', '警告', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'error'
         }).then(() => {
-          axios.get("http://localhost:8081/deleteClassBatch/" + this.delarr).then(res => {
-            alert(this.delarr)
+          axios.get("http://localhost:8081/deleteClassBatch/" + row).then(res => {
             if (res.data == "success"){
+              this.reload();/*动态刷新表格*/
               this.$message({
                 type: 'success',
                 message : '删除成功！'
@@ -283,25 +312,6 @@
             message: '已取消删除'
           });
         });
-      },
-
-      //单行删除
-      handleDelete(row) {
-        var _this = this;
-        _this.$http({
-          method: 'GET',
-          url: 'http://localhost:8888/advertise2/deleteAll?ids=' + row,
-          header: {
-            'content-type': 'application/json'
-          }
-        }).then(function(res) {
-          if (res.data.code == 0) {
-            alert('成功！');
-            _this.getTechSort();
-          } else {
-            alert('数据加载失败！');
-          }
-        })
       },
     },
     mounted() {

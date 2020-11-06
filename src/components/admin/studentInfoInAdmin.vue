@@ -144,7 +144,7 @@
                        @dblclick.native="dblclickDeleteStudent(scope.row.sno,scope.row.classno)"
                        type="danger" size="mini">删除
             </el-button>
-            <el-button type="primary" size="mini" >允许编辑</el-button>
+            <!--<el-button type="primary" size="mini" >允许编辑</el-button>-->
           </template>
         </el-table-column>
       </el-table>
@@ -244,7 +244,7 @@
         query: {
           total: 1,
           current: 1,
-          size: 2,
+          size: 5,
         },
         SelectForm: {
           sno: '',
