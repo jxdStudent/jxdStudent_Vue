@@ -1,11 +1,18 @@
 <template>
   <div class="Terminal" v-loading="loading">
+    <div style="margin-top: -20px;padding-bottom: 20px">
+    <el-row>
+      <el-col :span="2">
+        <span style="font-family: 'Microsoft YaHei';font-weight: bold;font-size: 20px">课程管理</span>
+      </el-col>
+    </el-row>
+    </div>
     <div class="select">
       <el-form :inline="true" :model="selectCourseForm" ref="selectCourseForm" class="demo-form-inline">
         <el-row>
           <el-col :span="8" offset="4">
             <el-form-item label="课程名称" prop="cname">
-              <el-input v-model="selectCourseForm.cname" placeholder="请输入课程名称"></el-input>
+              <el-input v-model="selectCourseForm.cname" @keyup.enter.native="onSelectID(selectCourseForm.cname,'selectCourseForm')" placeholder="请输入课程名称"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="onSelectID(selectCourseForm.cname,'selectCourseForm')">查询</el-button>
@@ -38,20 +45,25 @@
         <el-table-column
           prop="cno"
           label="课程编号"
+          align="center"
           sortable
           >
         </el-table-column>
         <el-table-column
           prop="cname"
           label="课程名称"
+          align="center"
           >
         </el-table-column>
         <el-table-column
-          label="操作"
+          label="操作" align="center"
           >
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-            <el-button type="text" size="small">编辑</el-button>
+            <el-button @click="deleteStudent(scope.row.sno,scope.row.classno)"
+                       @dblclick.native="dblclickDeleteStudent(scope.row.sno,scope.row.classno)"
+                       type="danger" size="mini">删除
+            </el-button>
+            <el-button type="primary" size="mini">编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -164,10 +176,11 @@
         onSelectID(cname,selectCourseForm){
           console.log('select!');
           this.getAllByPage(cname);
-          this.$refs[selectCourseForm].resetFields()
+          //this.$refs[selectCourseForm].resetFields()
         },
         onSelectAll(){
           this.getAllByPage("undefined");
+          this.$refs['selectCourseForm'].resetFields()
         }
       },
       mounted() {

@@ -12,12 +12,19 @@
         </el-aside>
         <el-container>
           <el-main>
+            <div style="margin-top: -20px;padding-bottom: 20px">
+            <el-row>
+              <el-col :span="2">
+                <span style="font-family: 'Microsoft YaHei';font-weight: bold;font-size: 20px">员工管理</span>
+              </el-col>
+            </el-row>
+            </div>
             <div class="select">
               <el-form :inline="true" :model="selectEmp" ref="selectEmp" class="demo-form-inline">
                 <el-row>
                   <el-col :span="8" offset="4">
                     <el-form-item label="员工编号" prop="empno">
-                      <el-input v-model="selectEmp.empno" placeholder="请输入员工编号"></el-input>
+                      <el-input v-model="selectEmp.empno" @keyup.enter.native="onSelect(selectEmp.empno,'selectEmp')" placeholder="请输入员工编号"></el-input>
                     </el-form-item>
                     <el-form-item>
                       <el-button type="primary" @click="onSelect(selectEmp.empno,'selectEmp')">查询</el-button>
@@ -49,29 +56,35 @@
                 <el-table-column
                   prop="empno"
                   label="员工编号"
+                  align="center"
                   sortable
                 >
                 </el-table-column>
                 <el-table-column
                   prop="ename"
                   label="员工姓名"
+                  align="center"
                 >
                 </el-table-column>
                 <el-table-column
                   prop="job"
                   label="员工工作"
+                  align="center"
                 >
                 </el-table-column>
-                <el-table-column prop="officaldate" label="入职日期">
+                <el-table-column prop="officaldate" align="center" label="入职日期">
                 </el-table-column>
-                <el-table-column prop="student.sno" label="学号">
+                <el-table-column prop="student.sno" align="center" label="学号">
                 </el-table-column>
-                <el-table-column prop="dept.dname" label="部门名称">
+                <el-table-column prop="dept.dname" align="center" label="部门名称">
                 </el-table-column>
-                <el-table-column label="操作">
+                <el-table-column label="操作" align="center">
                   <template slot-scope="scope">
-                    <el-button @click="allEmp(scope.row.deptno)" type="text" size="small">查看</el-button>
-                    <el-button type="text" size="small">编辑</el-button>
+                    <el-button @click="deleteStudent(scope.row.sno,scope.row.classno)"
+                               @dblclick.native="dblclickDeleteStudent(scope.row.sno,scope.row.classno)"
+                               type="danger" size="mini">删除
+                    </el-button>
+                    <el-button type="primary" size="mini">编辑</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -187,11 +200,12 @@
         console.log('select!');
         this.getAllByPage(empno);
         this.getAllEmpSize(empno);
-        this.$refs[selectEmp].resetFields()
+        //this.$refs[selectEmp].resetFields()
       },
       onSelectAll(){
         this.getAllEmpSize("undefined");
         this.getAllByPage("undefined");
+        this.$refs['selectEmp'].resetFields()
       }
     },
     mounted() {

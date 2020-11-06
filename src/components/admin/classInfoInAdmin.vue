@@ -1,19 +1,41 @@
 <template>
   <div class="Terminal" v-loading="loading">
+    <div style="margin-top: -20px;padding-bottom: 20px">
+    <el-row>
+      <el-col :span="2">
+        <span style="font-family: 'Microsoft YaHei';font-weight: bold;font-size: 20px">学期管理</span>
+      </el-col>
+    </el-row>
+    </div>
     <div class="select">
-      <el-form :inline="true" :model="selectClassForm" class="demo-form-inline">
+      <el-form :inline="true" :model="selectClassForm" ref="selectClassForm" class="demo-form-inline">
         <el-row>
-          <el-col :span="8" offset="4">
-            <el-form-item label="学期类型">
-              <el-input v-model="selectClassForm.classname" placeholder="请输入学期类型"></el-input>
+          <el-col :span="8" offset="1">
+            <el-form-item label="学期类型" prop="classname">
+              <el-input v-model="selectClassForm.classname" @keyup.enter.native="onSelectID(selectClassForm.classname)" placeholder="请输入学期类型"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="onSelectID(selectClassForm.classname)">查询</el-button>
             </el-form-item>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="3" offset="1">
+            <el-form-item>
+              <el-button type="primary" @click="onSelectAll()">显示全部</el-button>
+            </el-form-item>
+          </el-col>
+          <el-col :span="3">
             <el-form-item>
               <el-button type="primary" @click="dialogFormVisible = true">添加学期</el-button>
+            </el-form-item>
+          </el-col>
+          <el-col :span="3">
+            <el-form-item>
+                <el-button @click="delArray()" type="danger">批量删除</el-button>
+            </el-form-item>
+          </el-col>
+          <el-col :span="3">
+            <el-form-item>
+              <el-button @click="toggleSelection()">取消选择</el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -26,26 +48,36 @@
         border
         fit="fit"
         stripe="stripe"
+        ref="multipleTable"
+        @selection-change="handleSelectionChange"
         style="width: 100%"
         :default-sort="{prop: 'date', order: 'descending'}">
+        <el-table-column type="selection" width="55">
+        </el-table-column>
         <el-table-column
           prop="classno"
           label="学期编号"
+          align="center"
           sortable>
         </el-table-column>
         <el-table-column
           prop="classname"
+          align="center"
           label="学期类型">
         </el-table-column>
         <el-table-column
           prop="teacher.tname"
+          align="center"
           label="授课教师">
         </el-table-column>
         <el-table-column
-          label="操作">
+          label="操作" align="center">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-            <el-button type="text" size="small">编辑</el-button>
+            <el-button @click="deleteStudent(scope.row.sno,scope.row.classno)"
+                       @dblclick.native="dblclickDeleteStudent(scope.row.sno,scope.row.classno)"
+                       type="danger" size="mini">删除
+            </el-button>
+            <el-button type="primary" size="mini">编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -85,14 +117,14 @@
         <el-row>
           <el-col :span="12" offset="5">
             <el-form-item label="教授课程" :label-width="formLabelWidth">
-              <el-select v-model="addClassForm.course" multiple placeholder="请选择" class="addClassFormInput">
+              <el-select v-model="addClassForm.course" multiple collapse-tags placeholder="请选择" class="addClassFormInput">
                 <el-option
                   v-for="item in optionsForCourse"
                   :key="item.cno"
                   :label="item.cname"
                   :value="item.cno">
-                  <span style="float: left">{{ item.cno }}</span>
-                  <span style="float: right">{{item.cname}}</span>
+                  <!--<span style="float: left">{{ item.cno }}</span>-->
+                  <span style="float: left">{{item.cname}}</span>
                 </el-option>
               </el-select>
             </el-form-item>
@@ -134,6 +166,8 @@
           current: 1,
           size: 2,
         },
+        multipleSelection: [],
+        delarr: [], //存放删除的数据
         selectClassForm: {
           classname: "",
         },
@@ -204,6 +238,70 @@
         console.log('select!');
         this.getAllClassSize(classname)
         this.getAllByPage(classname)
+      },
+      onSelectAll(){
+        this.getAllClassSize()
+        this.getAllByPage()
+        this.$refs['selectClassForm'].resetFields()
+      },
+      toggleSelection() {
+        this.$refs.multipleTable.clearSelection();
+      },
+      handleSelectionChange(val) {
+        this.multipleSelection = val;
+      },
+      // 多选删除
+      delArray() {
+        //var _this = this;
+        const length = this.multipleSelection.length;
+
+        for (let i = 0; i < length; i++) {
+          // console.log(this.multipleSelection[i])
+          this.delarr.push(this.multipleSelection[i].classno);
+          console.log(this.delarr[i])
+        }
+
+        this.$confirm('此操作将永久删除选中的学期, 是否继续?', '警告', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'error'
+        }).then(() => {
+          axios.get("http://localhost:8081/deleteClassBatch/" + this.delarr).then(res => {
+            alert(this.delarr)
+            if (res.data == "success"){
+              this.$message({
+                type: 'success',
+                message : '删除成功！'
+              })
+            }else {
+              this.$message.error("删除失败！")
+            }
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
+      },
+
+      //单行删除
+      handleDelete(row) {
+        var _this = this;
+        _this.$http({
+          method: 'GET',
+          url: 'http://localhost:8888/advertise2/deleteAll?ids=' + row,
+          header: {
+            'content-type': 'application/json'
+          }
+        }).then(function(res) {
+          if (res.data.code == 0) {
+            alert('成功！');
+            _this.getTechSort();
+          } else {
+            alert('数据加载失败！');
+          }
+        })
       },
     },
     mounted() {

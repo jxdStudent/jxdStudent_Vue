@@ -1,11 +1,18 @@
 <template>
   <div class="Terminal" v-loading="loading">
+    <div style="margin-top: -20px;padding-bottom: 20px">
+    <el-row>
+      <el-col :span="2">
+        <span style="font-family: 'Microsoft YaHei';font-weight: bold;font-size: 20px">部门管理</span>
+      </el-col>
+    </el-row>
+    </div>
     <div class="select">
       <el-form :inline="true" :model="selectDeptForm" ref="selectDeptForm" class="demo-form-inline">
         <el-row>
           <el-col :span="8" offset="4">
             <el-form-item label="部门名称" prop="dname">
-              <el-input v-model="selectDeptForm.dname" placeholder="请输入部门名称"></el-input>
+              <el-input v-model="selectDeptForm.dname" @keyup.enter.native="onSelectID(selectDeptForm.dname,'selectDeptForm')" placeholder="请输入部门名称"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="onSelectID(selectDeptForm.dname,'selectDeptForm')">查询</el-button>
@@ -36,25 +43,33 @@
         <el-table-column
           prop="deptno"
           label="部门编号"
+          align="center"
           sortable
           >
         </el-table-column>
         <el-table-column
           prop="dname"
           label="部门名称"
+          align="center"
           >
         </el-table-column>
         <el-table-column
-          prop="count"
-          label="部门人数"
+          prop="emp.ename"
+          align="center"
+          label="部门经理"
           >
         </el-table-column>
         <el-table-column
           label="操作"
+          align="center"
           >
           <template slot-scope="scope">
-            <el-button @click="allEmp(scope.row.deptno)" type="text" size="small">查看</el-button>
-            <el-button type="text" size="small">编辑</el-button>
+            <el-button @click="allEmp(scope.row.deptno)" size="mini">查看</el-button>
+            <el-button type="primary" size="mini">编辑</el-button>
+            <el-button @click="deleteStudent(scope.row.sno,scope.row.classno)"
+                       @dblclick.native="dblclickDeleteStudent(scope.row.sno,scope.row.classno)"
+                       type="danger" size="mini">删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -81,6 +96,20 @@
         </el-row>
         <el-row>
           <el-col :span="12" offset="5">
+            <el-form-item label="经理编号" :label-width="formLabelWidth" prop="deptno">
+              <el-input v-model="addDeptForm.empno" autocomplete="off"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12" offset="5">
+            <el-form-item label="经理姓名" :label-width="formLabelWidth" prop="ename">
+              <el-input v-model="addDeptForm.ename" autocomplete="off"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12" offset="5">
             <el-form-item>
               <el-button @click="dialogFormVisible = false">取 消</el-button>
               <el-button type="primary" @click="addDept">确 定</el-button>
@@ -89,7 +118,6 @@
         </el-row>
       </el-form>
     </el-dialog>
-
   </div>
 </template>
 
@@ -118,7 +146,10 @@
             deptno: '',
           },
           addDeptForm : {
-            dname: ''
+            dname: '',
+            empno: '',
+            ename: ''
+
           },
           rules2: {
             dname: [
@@ -130,13 +161,15 @@
         }
       },
       methods:{
-        getAllByPage:function(dname){
-          axios.get("http://localhost:8081/getAllDeptInAdminByPage/" + this.query.current + "/" + this.query.size +
-                      "/" + dname).then(res=>{
-            this.tableData = res.data.records;
-            this.query.current = res.data.current;
-            this.query.size = res.data.size;
-            this.query.total = res.data.total;
+        getAllDeptSize: function (dname) {
+          axios.get("http://localhost:8081/getAllDeptInAdmin/" + dname).then(res => {
+            this.query.total = res.data.length;
+          })
+        },
+        getAllByPage: function (dname) {
+          axios.get("http://localhost:8081/getAllDeptInAdminByPage/" + this.query.current + "/" +
+            this.query.size + "/" + dname).then(res => {
+            this.tableData = res.data;
           })
         },
         allEmp: function(deptno) {
@@ -174,15 +207,19 @@
         onSelectID(dname,selectDeptForm){
           console.log('select!');
           this.getAllByPage(dname);
-          this.$refs[selectDeptForm].resetFields();
+          this.getAllDeptSize(dname);
+          //this.$refs[selectDeptForm].resetFields();
         },
         onSelectAll(){
           this.getAllByPage('undefined');
+          this.getAllDeptSize('undefined');
+          this.$refs['selectDeptForm'].resetFields();
         }
       },
       mounted() {
         //this.handleUserList()
         this.getAllByPage();
+        this.getAllDeptSize();
       }
     }
 </script>
