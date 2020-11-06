@@ -1,12 +1,19 @@
 <template>
   <div class="Terminal" v-loading="loading">
+    <div style="margin-top: -20px;padding-bottom: 20px">
+    <el-row>
+      <el-col :span="2">
+        <span style="font-family: 'Microsoft YaHei';font-weight: bold;font-size: 20px">学生管理</span>
+      </el-col>
+    </el-row>
+    </div>
     <!-- 查询操作 -->
     <div class="select">
       <el-form :inline="true" ref="SelectForm" :model="SelectForm" class="demo-form-inline">
         <el-row>
           <el-col :span="8">
             <el-form-item label="学生ID" prop="sno">
-              <el-input v-model="SelectForm.sno" placeholder="请输入学生ID"></el-input>
+              <el-input v-model="SelectForm.sno" @keyup.enter.native="onSelectID(SelectForm.sno,'SelectForm')" placeholder="请输入学生ID"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="onSelectID(SelectForm.sno,'SelectForm')">查询</el-button>
@@ -14,16 +21,16 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="学期" prop="classno">
-              <el-select v-model="SelectForm.classno" filterable placeholder="请选择学期">
-                <el-option v-for="item in options" :key="item.classno" :value="item.classno">
+              <el-select v-model="SelectForm.classno" @change="onSelectClass(SelectForm.classno,'SelectForm')" filterable placeholder="请选择学期">
+                <el-option v-for="item in options" :key="item.classno" :label="item.classname" :value="item.classno">
                   <span style="float: left">{{ item.classno }}</span>
                   <span style="float: right;color: #8492a6; font-size: 13px">{{item.classname}}</span>
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item>
+            <!--<el-form-item>
               <el-button type="primary" @click="onSelectClass(SelectForm.classno,'SelectForm')">查询</el-button>
-            </el-form-item>
+            </el-form-item>-->
           </el-col>
           <el-col :span="3" offset="1">
             <el-form :inline="true" class="demo-form-inline">
@@ -53,71 +60,91 @@
         <el-table-column
           prop="sno"
           label="学号"
+          align="center"
           sortable
           width="100">
         </el-table-column>
         <el-table-column
           prop="sname"
           label="姓名"
+          align="center"
           width="100">
         </el-table-column>
         <el-table-column
           prop="sex"
           label="性别"
+          align="center"
           width="100">
         </el-table-column>
         <el-table-column
           prop="nation"
           label="汉族"
+          align="center"
           width="100">
         </el-table-column>
         <el-table-column
           prop="birthday"
           label="出生日期"
+          align="left"
           width="100">
         </el-table-column>
         <el-table-column
           prop="address"
           label="地址"
+          align="left"
+          header-align="center"
+          show-overflow-tooltip
           width="200">
         </el-table-column>
         <el-table-column
           prop="marriage"
           label="已婚"
+          align="center"
           width="100">
         </el-table-column>
         <el-table-column
           prop="tel"
           label="电话"
+          align="right"
+          header-align="center"
           width="120">
         </el-table-column>
         <el-table-column
           prop="identity"
           label="身份证号"
+          align="right"
+          header-align="center"
           width="200">
         </el-table-column>
         <el-table-column
           prop="graduate"
           label="毕业院校"
+          align="left"
           width="120">
         </el-table-column>
         <el-table-column
           prop="major"
           label="专业"
+          align="center"
           width="120">
         </el-table-column>
         <el-table-column
           prop="classno"
           label="学期"
+          align="right"
           width="120">
         </el-table-column>
         <el-table-column
           fixed="right"
           label="操作"
+          align="center"
           width="200">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="text" size="small">删除</el-button>
-            <el-button type="text" size="small">允许编辑</el-button>
+            <el-button @click="deleteStudent(scope.row.sno,scope.row.classno)"
+                       @dblclick.native="dblclickDeleteStudent(scope.row.sno,scope.row.classno)"
+                       type="danger" size="mini">删除
+            </el-button>
+            <el-button type="primary" size="mini" >允许编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -180,7 +207,7 @@
 
 <script>
   import axios from "axios";
-
+  var time = null;
   export default {
     name: "studentInfoInAdmin",
     inject: ["reload"],
@@ -211,6 +238,7 @@
         }
       };
       return {
+        value:'',
         tableData: [],   //从后台获取数据
         options: [],
         query: {
@@ -299,17 +327,80 @@
       onSelectID(sno, SelectForm) {
         console.log('submit!');
         this.getAllByPage(sno, "undefined");
-        this.$refs[SelectForm].resetFields()
+        //this.$refs[SelectForm].resetFields()
       }
       ,
       onSelectClass(classno, SelectForm) {
         console.log('select!');
         this.getAllByPage("undefined", classno);
-        this.$refs[SelectForm].resetFields()
+        //this.$refs[SelectForm].resetFields()
       },
       onSelectAll() {
         this.getAllByPage("undefined", "undefined");
+        this.$refs['SelectForm'].resetFields()
       },
+      deleteStudent(sno, classno) {
+        clearTimeout(time);  //首先清除计时器
+        time = setTimeout(() => {
+          if (classno != 0) {
+            this.$message.error("无法删除！")
+          } else {
+            this.$confirm('此操作将永久删除学号为' + sno + '的学生, 是否继续?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              axios.get("http://localhost:8081/deleteStudent/" + sno).then(res => {
+                if (res.data == "success") {
+                  this.reload();/*动态刷新表格*/
+                  this.$message({type: "success", message: "删除成功！"});
+                } else {
+                  this.$message.error("删除失败服务异常")
+                }
+              })
+            }).catch(() => {
+              this.$message({
+                type: 'info',
+                message: '已取消删除'
+              });
+            });
+          }
+        }, 300);   //大概时间300ms
+      },
+      dblclickDeleteStudent(sno, classno) {
+        clearTimeout(time);  //清除
+        this.$confirm('此操作将永久删除学期为' + classno + '学号为' + sno + '的学生,该生可能正在上课, 是否继续?', '提示', {
+          title: '警告！！！',
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'error'
+        }).then(() => {
+          this.$confirm('再次确认，您确定要删除该生吗？', '警告！！！', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'error'
+          }).then(() => {
+            axios.get("http://localhost:8081/deleteStudent/" + sno).then(res => {
+              if (res.data == "success") {
+                this.reload();/*动态刷新表格*/
+                this.$message({type: "success", message: "删除成功！"});
+              } else {
+                this.$message.error("删除失败服务异常")
+              }
+            })
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            });
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
+      }
     }
     ,
     //生命周期钩子

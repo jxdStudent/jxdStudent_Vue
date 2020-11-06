@@ -15,11 +15,13 @@ import empInfoInAdmin from "../components/admin/empInfoInAdmin";
 import mgrIndex from "../components/mgrIndex";
 import addDeptEvaluate from "../components/addDeptEvaluate";
 import getDeptEvaluate from "../components/getDeptEvaluate";
+import editDeptEvaluate from "../components/editDeptEvaluate";
+
 import StudentScoreInAdmin from "../components/admin/StudentScoreInAdmin"
 import TeacherIndexInAdmin from "../components/admin/TeacherIndexInAdmin";
 import EmpEvaluate from "../components/EmpEvaluate";
 import EmpEvaluate_part from "../components/EmpEvaluate_part";
-
+import ScoreScore from "../components/ScoreScore";
 
 
 import axios from 'axios'
@@ -107,9 +109,19 @@ export default new Router({
       component: empInfoInAdmin
     },
     {
-      path: '/StudentScore',
+      path: '/studentScore',
       name: 'StudentScore',
       component: StudentScore
+    },
+    {
+      path: "/scoreScore",
+      name: "ScoreScore",
+      component: ScoreScore
+    },
+    {
+    path: '/editDeptEvaluate',
+    name: 'editDeptEvaluate',
+    component:editDeptEvaluate
     },
     {
       path: '/StudentScoreInAdmin',
