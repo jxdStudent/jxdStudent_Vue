@@ -16,7 +16,7 @@
           </el-row>
 
           <!--表单-->  <!--:span控制input长度-->
-          <el-form ref="form" :data="form"  :label-position="labelPosition" :label-width="width"  :inline="true">
+          <el-form ref="form" :data="form"  :label-position="labelPosition" :label-width="width"  :inline="true" >
 
             <el-row v-show="false" >
               <el-col :span="8" :offset="7">
@@ -146,22 +146,6 @@
             <el-row>
               <el-col :span="8" :offset="7">
                 <div class="grid-content bg-purple">
-                  <el-form-item label="整体评价：" prop="mark">
-                    <el-select v-model="form.mark" :disabled="!isEdit">
-                      <el-option value="1">1分</el-option>
-                      <el-option value="2">2分</el-option>
-                      <el-option value="3">3分</el-option>
-                      <el-option value="4">4分</el-option>
-                      <el-option value="5">5分</el-option>
-                    </el-select>
-                  </el-form-item>
-                </div>
-              </el-col>
-            </el-row>
-
-            <el-row>
-              <el-col :span="8" :offset="7">
-                <div class="grid-content bg-purple">
                   <el-form-item label="文字评价：" prop="commentc">
                     <el-input type="textarea" v-model="form.commentc" autosize
                               :disabled="!isEdit"></el-input>
@@ -203,7 +187,7 @@
           communicate: '',
           quality: '',
           characterc: '',
-          mark: '',
+          mark: 0,
           commentc: ''
         },
         //label-width和label-position一起使用可以设置表单左侧文字对齐
@@ -240,20 +224,20 @@
         if (this.isEdit == false) {
           this.$message("请先编辑内容");
         } else {
-          debugger
-          let formdata = this.form;
-          //提交信息
-          this.axios.post("updateDeptEvaluate", Qs.stringify(formdata)).then(res => {
-            if (res.data) {
-              this.$message("编辑信息成功");
-              this.isEdit = false;
+            debugger
+            let formdata = this.form;
+            //提交信息
+            this.axios.post("updateDeptEvaluate", Qs.stringify(formdata)).then(res => {
+              if (res.data) {
+                this.$message("编辑信息成功");
+                this.isEdit = false;
 
-              //页面跳转
-              this.$router.push({path: "/mgrIndex"})
-            } else {
-              this.$message("编辑信息失败");
-            }
-          });
+                //页面跳转
+                this.$router.push({path: "/mgrIndex"})
+              } else {
+                this.$message("编辑信息失败");
+              }
+            })
         }
       },
       getMsg(){

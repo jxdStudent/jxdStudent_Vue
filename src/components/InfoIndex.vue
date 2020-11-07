@@ -241,7 +241,6 @@
   import Qs from 'qs';
   import navMenu from './navMenu.vue';
   import EmpEvaluate from './EmpEvaluate.vue';
-  import $ from 'jquery';
 
   export default {
     name: "InfoIndex",
