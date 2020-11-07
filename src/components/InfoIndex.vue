@@ -2,11 +2,11 @@
   <div>
     <el-container>
       <el-header style="background-color: #42b983">
-        <navMenu v-bind:edit_student="edit_student"/>
+        <navMenu :edit_student="edit_student"/>
       </el-header>
 
 
-      <el-col :span="16" :offset="5">
+      <el-col :span="16" :offset="4">
 
         <el-container>
           <el-main>
@@ -22,7 +22,7 @@
                 <el-form ref="form" :model="form" :label-position="labelPosition"
                          label-width="100px" :inline="true" :rules="rules"
                          :hide-required-asterisk="isHide" label-suffix="：">
-                  <el-row>
+                  <el-row v-show="isStudent">
                     <el-col :span="10">
                       <div>
                         <!--prop对应的不单单是rules规则里面的验证项，同时对应着我们form-item下的v-model的值。prop绑定的类要与el-form-item下的v-model的值相对应。-->
@@ -169,11 +169,19 @@
                 <div v-if="isShowScore">
                 <el-table highlight-current-row :data="table_course_score"
                           border empty-text="加载失败，请稍后再试！">
-                  <el-table-column label="老师">{{tname}}</el-table-column>
+
+                  <!--评价老师-->
+                  <!--<el-table-column label="老师">{{tname}}</el-table-column>-->
+
                   <template v-for="(head,index) in table_course_head">
                     <el-table-column :prop="head.cno + ''" :label="head.cname"></el-table-column>
                   </template>
-                  <el-table-column prop="score_total" label="综合成绩"></el-table-column>
+
+                  <el-table-column
+                    prop="score_total"
+                    label="综合成绩"
+                  style="background-color: #409EFF">
+                  </el-table-column>
                 </el-table>
                 </div>
                 <div v-else>
@@ -189,31 +197,35 @@
 
           <!--头像-->
           <el-aside width="200px">
-            <!--<div class="div_img">
-            <img src="../assets/imgs/test.jpg" alt="" style="float: right">
-            </div>-->
+            <div v-if="form.photo">
+              <!--<img :src="this.form.photo" alt="">-->
+            <!--<img src="../assets/imgs/test.jpg" alt="" style="float: right">-->
+              <el-image :src="form.photo" style="width: 160px;margin-top: 60px"></el-image>
+            </div>
+            <div v-else style="margin-top: 60px;font-size:60px">
+              <i class="el-icon-picture"></i>
+              <p style="font-size: 20px">点击编辑上传图片</p>
+            </div>
 
-            <img :src="require('@/assets/imgs/' + this.form.photo)" alt="">
-            <!--<el-upload
-              class="avatar-uploader"
-              action=" 123"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload">
-            <img v-if="imageUrl" :src="imageUrl" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>-->
+            <!--<img :src="require('@/assets/imgs/' + this.form.photo)" alt="">-->
 
-            <%--用于显示图片--%>
-            <div id="show_img"></div>
-            <%--用于存储图片的路径--%>
-            <input type="hidden" id="imgPath">
-            <input type="text" value="asdfg" ref="test">
-            <form id="form_img" enctype="multipart/form-data">
-              <input id="photo" type="file" name="photo" @change="submit_img(index)" ref="input_img" style="display: none">
-              <button type="button" onclick="javascript:document.getElementById('photo').click()">上传</button>
-              <button type="button" id="btn_del">删除</button>
-            </form>
+
+            <!--图片上传-->
+            <el-upload
+              class="upload-demo"
+              action="http://localhost:8081/uploadImg"
+              :show-file-list="false"
+              :on-success="handleAvatarSuccess"
+              enctype="multipart/form-data"
+              :before-upload="beforeAvatarUpload"
+              name="photo"
+              v-if="isEdit">
+              <!--<img v-if="imageUrl" :src="imageUrl" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
+              <el-button size="small" type="primary">修改</el-button>
+            </el-upload>
+
+
 
          </el-aside>
 
@@ -241,9 +253,7 @@
       return {
 
         //学生个人数据
-        form: {
-          photo:''
-        },
+        form: {},
         //div_img:'require("../assets/imgs/" + this.form.photo)',
         //学生课程
         table_course_head: [],
@@ -285,7 +295,7 @@
           ],
           tel: [
             {required: true, message: '请输入联系电话', trigger: 'blur'},
-            {pattern: /^([1][3,4,5,6,7,8,9]\d{9}$)/, message: '请输入正确的联系电话', trigger: 'blur'}
+            {pattern: /^([1][3,4,5,6,7,8,9]\d{9})$/, message: '请输入正确的联系电话', trigger: 'blur'}
           ],
           identity: [
             {required: true, message: '请输入身份证号', trigger: 'blur'},
@@ -309,38 +319,40 @@
       }
     },
     methods: {
-      submit_img(){
-        if (this.val() == ""){
-          alert("aaa")
-          return;
-        }
-        //获取表单中要上传的数据
-        var formData = new FormData($("#form_img")[0]);
-        $.ajax({
-          url:"imgUpload",
-          data:formData,
-          type:"post",
-          cache:false,
-          contentType:false,  //告诉服务器数据的编码方式
-          processData:false,  //避免jQuery对formData进行额外的处理
-          dataType:"text",    //后台响应为字符串，后台响应字符串设置为text。或者不设置。如果响应的是json数据，name必须设置该属性为json
-          success:function (data) {
-            //data是后台图片存储的路径
-            //在div中显示图片
-            var imgObj = $("<img src='${pageContext.request.contextPath}/images/" + data + " 'width='100px'>");
-            $("#show_img").append(imgObj);
-            //$("#show_img").html(imgObj);
-
-            //存储文件名称
-            $("#imgPath").val(data);
-          },
-          error:function () {
-            layer.msg("图片上传失败");
+      handleAvatarSuccess(res, file) {
+        //this.imageUrl = URL.createObjectURL(file.raw);
+        this.imageUrl = URL.createObjectURL(file.raw);
+        this.axios.post("updateImgForStu/" + this.form.sno).then(res => {
+          if (res.data != "fail") {
+            this.form.photo = "http://localhost:8081/" + res.data;
+            this.$message({
+              type: 'success',
+              message: '上传成功'
+            })
+          } else {
+            this.$message.error("上传失败！")
           }
         })
       },
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg';
+        const isLt2M = file.size / 1024 / 1024 < 2;
 
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG 格式!');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        return isJPG && isLt2M;
+      },
 
+      addByEnterKey(e) {
+        //Enter键的代码就是13
+        if (e.keyCode == 13) {
+          this.onSubmit(this.form);
+        }
+      },
       //获取个人信息
       getAllInfo() {
         this.axios.get("getStudent/" + this.$store.getters.uid).then(res => {
@@ -349,10 +361,11 @@
           } else {
             res.data.marriage = "已婚";
           }
-          if (this.$store.getters.studentno){
+          if (this.$store.getters.studentNo){
             this.isStudent = false;
           }
           this.form = res.data;
+
         })
       },
       //获取课程信息
@@ -449,11 +462,9 @@
 
   }
 
-  .div_img {
-    position: absolute;
-    margin-left: 30px;
-    margin-top: 60px;
-
+  .el-img{
+    margin-top: 40px;
+    width: 50px;
   }
 
   img {
@@ -463,7 +474,7 @@
     background-color: #D3DCE6;
     color: #333;
     text-align: center;
-    line-height: 200px;
+    /*line-height: 200px;*/
   }
 
   .el-main {
@@ -472,4 +483,5 @@
     text-align: center;
     line-height: 160px;
   }
+
 </style>

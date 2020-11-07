@@ -71,7 +71,7 @@
           //点击查看评价，隐藏基本信息
           this.$parent.activeNames=[];
 
-          this.axios.get("getDeptEvaluate/" + this.$store.getters.studentno + "/" + index).then(res => {
+          this.axios.get("getDeptEvaluate/" + this.$store.getters.studentNo + "/" + index).then(res => {
             if (res.data) {
               var table_evaluate_json = [];
               table_evaluate_json.push(res.data);
