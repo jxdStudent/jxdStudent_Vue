@@ -13,15 +13,18 @@ import deptInfoInAdmin from "../components/admin/deptInfoInAdmin";
 import courseInfoInAdmin from "../components/admin/courseInfoInAdmin";
 import classInfoInAdmin from "../components/admin/classInfoInAdmin";
 import empInfoInAdmin from "../components/admin/empInfoInAdmin";
+import test from "../components/admin/test";
 import mgrIndex from "../components/mgrIndex";
 import addDeptEvaluate from "../components/addDeptEvaluate";
 import getDeptEvaluate from "../components/getDeptEvaluate";
+import getDeptStudentScore from "../components/getDeptStudentScore";
 import editDeptEvaluate from "../components/editDeptEvaluate";
 
 import StudentScoreInAdmin from "../components/admin/StudentScoreInAdmin"
 import TeacherIndexInAdmin from "../components/admin/TeacherIndexInAdmin";
 import EmpEvaluate from "../components/EmpEvaluate";
 import EmpEvaluate_part from "../components/EmpEvaluate_part";
+import addOfficialDate from "../components/addOfficialDate";
 
 
 import axios from 'axios'
@@ -119,6 +122,11 @@ export default new Router({
       component: StudentScore
     },
     {
+      path: '/getDeptStudentScore',
+      name: 'getDeptStudentScore',
+      component: getDeptStudentScore
+    },
+    {
     path: '/editDeptEvaluate',
     name: 'editDeptEvaluate',
     component:editDeptEvaluate
@@ -137,6 +145,16 @@ export default new Router({
       path: '/EmpEvaluate_part',
       name: 'EmpEvaluate_part',
       component: EmpEvaluate_part
+    },
+    {
+      path: '/addOfficialDate',
+      name: 'addOfficialDate',
+      component: addOfficialDate
+    },
+    {
+      path: '/test',
+      name: 'test',
+      component: test
     }
   ]
 })

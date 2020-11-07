@@ -10,7 +10,7 @@
     <div class="select">
       <el-form :inline="true" :model="selectTeacherForm" ref="selectTeacherForm" class="demo-form-inline">
         <el-row>
-          <el-col :span="8" offset="4">
+          <el-col :span="8" offset="1">
             <el-form-item label="教师ID" prop="tno">
               <el-input v-model="selectTeacherForm.tno"
                         @keyup.enter.native="onSelectID(selectTeacherForm.tno,'selectTeacherForm')"
@@ -20,14 +20,24 @@
               <el-button type="primary" @click="onSelectID(selectTeacherForm.tno,'selectTeacherForm')">查询</el-button>
             </el-form-item>
           </el-col>
-          <el-col :span="4" offset="1">
+          <el-col :span="3" offset="1">
             <el-form-item>
               <el-button type="primary" @click="onSelectAll()">显示全部</el-button>
             </el-form-item>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="3">
             <el-form-item>
               <el-button type="primary" @click="dialogFormVisible = true">添加老师</el-button>
+            </el-form-item>
+          </el-col>
+          <el-col :span="3">
+            <el-form-item>
+              <el-button @click="delArray()" type="danger">批量删除</el-button>
+            </el-form-item>
+          </el-col>
+          <el-col :span="3">
+            <el-form-item>
+              <el-button @click="toggleSelection()">取消选择</el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -42,8 +52,12 @@
         lazy
         load="load"
         stripe="stripe"
+        ref="multipleTable"
+        @selection-change="handleSelectionChange"
         style="width: 100%"
         :default-sort="{prop: 'date', order: 'descending'}">
+        <el-table-column type="selection" width="55">
+        </el-table-column>
         <el-table-column
           prop="tno"
           label="教师编号"
@@ -58,8 +72,7 @@
         <el-table-column
           label="操作" align="center">
           <template slot-scope="scope">
-            <el-button @click="deleteStudent(scope.row.sno,scope.row.classno)"
-                       @dblclick.native="dblclickDeleteStudent(scope.row.sno,scope.row.classno)"
+            <el-button @click="deleteObject(scope.row.tno)"
                        type="danger" size="mini">删除
             </el-button>
             <el-button type="primary" size="mini">编辑</el-button>
@@ -118,10 +131,12 @@
       };
       return {
         tableData: [],   //从后台获取数据
+        multipleSelection: [],
+        delarr: [], //存放删除的数据
         query: {
           total: 1,
           current: 1,
-          size: 2,
+          size: 5,
         },
         selectTeacherForm: {
           tno: '',
@@ -184,6 +199,76 @@
       handleCurrentChange(val) {
         this.query.current = val;
         this.getAllByPage()
+      },
+      //取消选择
+      toggleSelection() {
+        this.$refs.multipleTable.clearSelection();
+      },
+      handleSelectionChange(val) {
+        this.multipleSelection = val;
+      },
+      // 多选删除
+      delArray() {
+        //var _this = this;
+        const length = this.multipleSelection.length;
+
+        for (let i = 0; i < length; i++) {
+          // console.log(this.multipleSelection[i])
+          this.delarr.push(this.multipleSelection[i].tno);
+          console.log(this.delarr[i])
+        }
+        if (this.delarr == null  || this.delarr == ""){
+          this.$message.error("请选择教师")
+        }else {
+          this.$confirm('此操作将永久删除选中的教师, 是否继续?', '警告', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'error'
+          }).then(() => {
+            axios.get("http://localhost:8081/deleteTeacherBatch/" + this.delarr).then(res => {
+              if (res.data == "success") {
+                this.reload();/*动态刷新表格*/
+                this.$message({
+                  type: 'success',
+                  message: '删除成功！'
+                })
+              } else {
+                this.$message.error("删除失败！")
+              }
+            })
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            });
+          });
+        }
+      },
+
+      //单行删除
+      deleteObject(row) {
+        this.$confirm('此操作将永久删除选中的老师, 是否继续?', '警告', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'error'
+        }).then(() => {
+          axios.get("http://localhost:8081/deleteTeacherBatch/" + row).then(res => {
+            if (res.data == "success"){
+              this.reload();/*动态刷新表格*/
+              this.$message({
+                type: 'success',
+                message : '删除成功！'
+              })
+            }else {
+              this.$message.error("删除失败！")
+            }
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
       },
     },
     mounted() {

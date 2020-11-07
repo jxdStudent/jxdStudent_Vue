@@ -44,7 +44,7 @@
             v-for="(head,index) in table_course_head">
             <!--拼接''：格式转换--课程编号head.cno是number类型的，从后台接收的成绩json里cno是字符串，-->
             <el-table-column
-              :prop="head.cno + ''"
+            :prop="head.cno + ''"
               :label="head.cname"
             align="center">
             </el-table-column>
