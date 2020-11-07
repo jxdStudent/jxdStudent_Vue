@@ -2,7 +2,7 @@
   <div>
     <el-container>
       <el-header style="background-color: #42b983">
-        <navMenu :edit_student="edit_student"/>
+        <navMenu :edit_student="edit_student" :img="form.photo"/>
       </el-header>
 
 
@@ -200,7 +200,10 @@
             <div v-if="form.photo">
               <!--<img :src="this.form.photo" alt="">-->
             <!--<img src="../assets/imgs/test.jpg" alt="" style="float: right">-->
-              <el-image :src="form.photo" style="width: 160px;margin-top: 60px"></el-image>
+
+              <!--<el-image :src="form.photo" style="width: 160px;margin-top: 60px"></el-image>-->
+
+              <el-avatar style="width: 130px;height: 130px;margin-top: 60px;margin-bottom: 10px" :src="form.photo"></el-avatar>
             </div>
             <div v-else style="margin-top: 60px;font-size:60px">
               <i class="el-icon-picture"></i>
@@ -218,11 +221,10 @@
               :on-success="handleAvatarSuccess"
               enctype="multipart/form-data"
               :before-upload="beforeAvatarUpload"
-              name="photo"
-              v-if="isEdit">
+              name="photo">
               <!--<img v-if="imageUrl" :src="imageUrl" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
-              <el-button size="small" type="primary">修改</el-button>
+              <el-button size="small" type="primary">修改头像</el-button>
             </el-upload>
 
 
