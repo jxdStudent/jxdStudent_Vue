@@ -7,13 +7,16 @@
       <el-container>
         <el-aside width="200px">
           <el-menu
-            default-active="1"
+            :default-active="$route.path"
+            :unique-opened="true"
+            @select="handleSelect"
+            default-active="teacherIndex"
             class="el-menu-vertical-demo">
-            <el-menu-item index="1">
+            <el-menu-item index="teacherIndex">
               <i class="el-icon-menu"></i>
               <span slot="title">学生信息表</span>
             </el-menu-item>
-            <el-menu-item index="2">
+            <el-menu-item index="teacherIndex2">
               <i class="el-icon-document"></i>
               <span slot="title">学生成绩表</span>
             </el-menu-item>
@@ -151,6 +154,9 @@ export default {
       this.$store.dispatch("setSno", sno);
       this.$router.push({path: "/studentScore"});
     },
+    handleSelect(path){
+      this.$router.push(path)
+    }
   },
   mounted() {
     //html渲染完成后调用方法获取学生信息
