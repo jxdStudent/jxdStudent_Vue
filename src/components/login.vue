@@ -42,7 +42,9 @@
       }
     },
     methods: {
+
       submitForm: function () {
+        localStorage.setItem("uname",this.form.name)
         //提交操作
         axios.get("login/" + this.form.name + "/" + this.form.pwd).then(res => {
           //登录是否成功

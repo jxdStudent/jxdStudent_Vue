@@ -65,7 +65,7 @@
             <el-row>
               <el-col :span="8" :offset="7">
                 <div class="grid-content bg-purple">
-                  <el-form-item label="积极性：" prop="initiative" @click.native="getMark">
+                  <el-form-item label="积极性：" prop="initiative" >
                     <el-select v-model="form.initiative">
                       <el-option value="1">1分</el-option>
                       <el-option value="2">2分</el-option>
@@ -82,7 +82,7 @@
               <el-col :span="8" :offset="7">
                 <div class="grid-content bg-purple">
                   <el-form-item label="能力分数:" prop="ability" >
-                    <el-select v-model="form.ability" @click.native="getMark">
+                    <el-select v-model="form.ability" >
                       <el-option value="1">1分</el-option>
                       <el-option value="2">2分</el-option>
                       <el-option value="3">3分</el-option>
@@ -99,7 +99,7 @@
               <el-col :span="8" :offset="7">
                 <div class="grid-content bg-purple">
                   <el-form-item label="沟通交流：" prop="communicate">
-                    <el-select v-model="form.communicate" @click.native="getMark">
+                    <el-select v-model="form.communicate" >
                       <el-option value="1">1分</el-option>
                       <el-option value="2">2分</el-option>
                       <el-option value="3">3分</el-option>
@@ -114,7 +114,7 @@
             <el-row>
               <el-col :span="8" :offset="7">
                 <div class="grid-content bg-purple">
-                  <el-form-item label="人品分数："  prop="quality" @click="getMark">
+                  <el-form-item label="人品分数："  prop="quality" >
                     <el-select v-model="form.quality">
                       <el-option value="1">1分</el-option>
                       <el-option value="2">2分</el-option>
@@ -130,7 +130,7 @@
             <el-row>
               <el-col :span="8" :offset="7">
                 <div class="grid-content bg-purple">
-                  <el-form-item label="性格分数：" prop="characterc" @click="getMark">
+                  <el-form-item label="性格分数：" prop="characterc" >
                     <el-select v-model="form.characterc">
                       <el-option value="1">1分</el-option>
                       <el-option value="2">2分</el-option>
@@ -138,16 +138,6 @@
                       <el-option value="4">4分</el-option>
                       <el-option value="5">5分</el-option>
                     </el-select>
-                  </el-form-item>
-                </div>
-              </el-col>
-            </el-row>
-
-            <el-row>
-              <el-col :span="8" :offset="7">
-                <div class="grid-content bg-purple">
-                  <el-form-item label="整体评价：" prop="mark">
-                      <el-input type="text" v-model="form.mark" readonly></el-input>
                   </el-form-item>
                 </div>
               </el-col>
@@ -190,12 +180,12 @@
           empno:'',
           ename:'',
           type:'',
-          ability:0,
-          initiative:0,
-          communicate:0,
-          quality:0,
-          characterc:0,
-          mark:'',
+          ability:'',
+          initiative:'',
+          communicate:'',
+          quality:'',
+          characterc:'',
+          mark:0,
           commentc:''
         },
         //标题信息
@@ -276,13 +266,7 @@
         }else if(this.form.type == 3){
           this.msg = "新增工作三年评价信息"
         }
-      },
-      getMark(){
-        debugger
-        console.log(this.form.mark)
-        this.form.mark = (String)(parseInt(this.form.ability)+parseInt(this.form.initiative)+parseInt(this.form.communicate)+parseInt(this.form.quality)+parseInt(this.form.characterc));
       }
-
 
     },
     //加载执行
