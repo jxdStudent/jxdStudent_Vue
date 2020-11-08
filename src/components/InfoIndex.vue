@@ -184,8 +184,8 @@
                   </el-table-column>
                 </el-table>
                 </div>
-                <div v-else>
-                  <h1>暂未被评价</h1>
+                <div v-else style="color: red;font-size: 30px;font-family: 华文宋体">
+                  <p>暂未评价</p>
                 </div>
               </el-collapse-item>
 
@@ -203,7 +203,7 @@
 
               <!--<el-image :src="form.photo" style="width: 160px;margin-top: 60px"></el-image>-->
 
-              <el-avatar style="width: 130px;height: 130px;margin-top: 60px;margin-bottom: 10px" :src="form.photo"></el-avatar>
+              <el-image style="width: 130px;margin-top: 60px;margin-bottom: 10px" :src="form.photo"></el-image>
             </div>
             <div v-else style="margin-top: 60px;font-size:60px">
               <i class="el-icon-picture"></i>
@@ -482,7 +482,7 @@
     background-color: #E9EEF3;
     color: #333;
     text-align: center;
-    line-height: 160px;
+
   }
 
 </style>
