@@ -5,9 +5,9 @@
 
       border
       style="width: 100%">
-      <template slot="empty">
+    <!--  <template slot="empty">
         <span style="color:red;font-size: 30px;font-family: 华文宋体">尚未评价</span>
-      </template>
+      </template>-->
       <el-table-column
         prop="ability"
         label="能力">
@@ -48,7 +48,7 @@
     props: {
       //接收EmpEvaluate.vue传递过来的数据
       table_evaluate: {
-        type: Object,
+        type: Array,
         required: true
       }
     }

@@ -2,7 +2,7 @@
   <div>
     <el-container>
       <el-header style="background-color: #42b983">
-        <navMenu :edit_student="edit_student" :img="form.photo"/>
+        <navMenu :edit_student="edit_student" :img="imgUrl"/>
       </el-header>
 
 
@@ -184,8 +184,8 @@
                   </el-table-column>
                 </el-table>
                 </div>
-                <div v-else>
-                  <h1>暂未被评价</h1>
+                <div v-else style="color: red;font-size: 30px;font-family: 华文宋体">
+                  <p>暂未评价</p>
                 </div>
               </el-collapse-item>
 
@@ -197,17 +197,16 @@
 
           <!--头像-->
           <el-aside width="200px">
-            <div v-if="form.photo">
+            <div v-if="imgUrl">
               <!--<img :src="this.form.photo" alt="">-->
             <!--<img src="../assets/imgs/test.jpg" alt="" style="float: right">-->
-
               <!--<el-image :src="form.photo" style="width: 160px;margin-top: 60px"></el-image>-->
 
-              <el-avatar style="width: 130px;height: 130px;margin-top: 60px;margin-bottom: 10px" :src="form.photo"></el-avatar>
+              <el-image style="width: 130px;margin-top: 60px;margin-bottom: 10px" :src="imgUrl"></el-image>
             </div>
             <div v-else style="margin-top: 60px;font-size:60px">
               <i class="el-icon-picture"></i>
-              <p style="font-size: 20px">点击编辑上传图片</p>
+              <p style="font-size: 20px">请上传图片</p>
             </div>
 
             <!--<img :src="require('@/assets/imgs/' + this.form.photo)" alt="">-->
@@ -256,6 +255,10 @@
         //学生个人数据
         form: {},
         //div_img:'require("../assets/imgs/" + this.form.photo)',
+
+        //显示的图片
+        imgUrl:'',
+
         //学生课程
         table_course_head: [],
 
@@ -269,7 +272,7 @@
         labelPosition: 'right',
 
         //折叠面板默认开启
-        activeNames: ['学生基本信息'],
+        activeNames: [],
 
         //是否编辑
         isEdit: false,
@@ -322,19 +325,35 @@
     methods: {
       handleAvatarSuccess(res, file) {
         //this.imageUrl = URL.createObjectURL(file.raw);
-        this.imageUrl = URL.createObjectURL(file.raw);
-        this.axios.post("updateImgForStu/" + this.form.sno).then(res => {
-          if (res.data != "fail") {
-            this.form.photo = "http://localhost:8081/" + res.data;
-            this.$message({
-              type: 'success',
-              message: '上传成功'
-            })
-          } else {
-            this.$message.error("上传失败！")
-          }
-        })
+        if (this.$store.getters.studentNo) {
+          //登录身份为员工，上传图片到jxd_emp
+          this.axios.post("updateImgForEmp/" + this.$store.getters.studentNo).then(res => {
+            if (res.data != "fail") {
+              this.imgUrl = "http://localhost:8081/" + res.data;
+              this.$message({
+                type: 'success',
+                message: '上传成功'
+              })
+            } else {
+              this.$message.error("上传失败！")
+            }
+          })
+        }else{
+          //登录身份为学生，上传图片到jxd_student
+          this.axios.post("updateImgForStu/" + this.form.sno).then(res => {
+            if (res.data != "fail") {
+              this.imgUrl = "http://localhost:8081/" + res.data;
+              this.$message({
+                type: 'success',
+                message: '上传成功'
+              })
+            } else {
+              this.$message.error("上传失败！")
+            }
+          })
+        }
       },
+      //上传图片前对图片格式的要求
       beforeAvatarUpload(file) {
         const isJPG = file.type === 'image/jpeg';
         const isLt2M = file.size / 1024 / 1024 < 2;
@@ -347,15 +366,10 @@
         }
         return isJPG && isLt2M;
       },
-
-      addByEnterKey(e) {
-        //Enter键的代码就是13
-        if (e.keyCode == 13) {
-          this.onSubmit(this.form);
-        }
-      },
       //获取个人信息
       getAllInfo() {
+
+        //获取基本信息
         this.axios.get("getStudent/" + this.$store.getters.uid).then(res => {
           if (res.data.marriage == 0) {
             res.data.marriage = "未婚";
@@ -366,6 +380,15 @@
             this.isStudent = false;
           }
           this.form = res.data;
+
+          //员工登录，获取员工图片信息
+          if (this.$store.getters.studentNo){
+            this.axios.get("getEmpPhotoByEmpno/" + this.$store.getters.studentNo).then(res =>{
+              this.imgUrl = res.data.photo
+            })
+          }else{
+            this.imgUrl = this.form.photo
+          }
 
         })
       },
@@ -449,6 +472,13 @@
     width: 200px;
     font-size: medium;
   }
+  .el-input.is-disabled/deep/ .el-input__inner{
+    background-color: white;
+    border-color: white;
+    color: black;
+    cursor: not-allowed;
+    opacity:1;
+  }
 
   .el-select {
     width: 200px;
@@ -482,7 +512,7 @@
     background-color: #E9EEF3;
     color: #333;
     text-align: center;
-    line-height: 160px;
+
   }
 
 </style>

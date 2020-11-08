@@ -1,5 +1,5 @@
 <template>
-  <div id="app" >
+  <div id="app">
     <!--<img src="./assets/logo.png">-->
     <router-view v-if="isShow"></router-view>
   </div>
@@ -54,8 +54,16 @@ export default {
 }
 /*::-webkit-scrollbar {
   width: 0 !important;
+::-webkit-scrollbar {
+  width: 0px;
+  height: 10px;
 }
 ::-webkit-scrollbar {
   width: 0 !important;height: 0;
 }*/
+
+::-webkit-scrollbar-thumb {
+  background-color: #8c939d;
+  border-radius: 5px;
+}
 </style>

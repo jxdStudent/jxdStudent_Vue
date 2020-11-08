@@ -8,7 +8,8 @@
           </h1>
         </template>
 
-        <EmpEvaluate_part :table_evaluate="table_evaluate"></EmpEvaluate_part>
+        <EmpEvaluate_part :table_evaluate="table_evaluate" v-if="table_evaluate"></EmpEvaluate_part>
+        <p style="color:red;font-size: 30px;font-family: 华文宋体" v-else>暂未评价</p>
 
       </el-collapse-item>
 
@@ -19,8 +20,8 @@
           </h1>
         </template>
 
-          <EmpEvaluate_part :table_evaluate="table_evaluate"></EmpEvaluate_part>
-
+          <EmpEvaluate_part :table_evaluate="table_evaluate" v-if="table_evaluate"></EmpEvaluate_part>
+          <p style="color:red;font-size: 30px;font-family: 华文宋体" v-else>暂未评价</p>
       </el-collapse-item>
 
 
@@ -31,8 +32,8 @@
           </h1>
         </template>
 
-          <EmpEvaluate_part :table_evaluate="table_evaluate"></EmpEvaluate_part>
-
+          <EmpEvaluate_part :table_evaluate="table_evaluate" v-if="table_evaluate"></EmpEvaluate_part>
+          <p style="color:red;font-size: 30px;font-family: 华文宋体" v-else>暂未评价</p>
       </el-collapse-item>
 
 
@@ -43,8 +44,8 @@
           </h1>
         </template>
 
-          <EmpEvaluate_part :table_evaluate="table_evaluate"></EmpEvaluate_part>
-
+          <EmpEvaluate_part :table_evaluate="table_evaluate" v-if="table_evaluate"></EmpEvaluate_part>
+          <p style="color:red;font-size: 30px;font-family: 华文宋体" v-else>暂未评价</p>
       </el-collapse-item>
       </el-collapse>
     </div>
@@ -70,16 +71,16 @@
         getEvaluate(index) {
           //点击查看评价，隐藏基本信息
           this.$parent.activeNames=[];
-
-          this.axios.get("getDeptEvaluate/" + this.$store.getters.studentNo + "/" + index).then(res => {
-            if (res.data) {
-              var table_evaluate_json = [];
-              table_evaluate_json.push(res.data);
-              this.table_evaluate = table_evaluate_json;
-            }else{
-              this.table_evaluate =[]
-            }
-          })
+          if (index != "") {
+            this.axios.get("getDeptEvaluate/" + this.$store.getters.studentNo + "/" + index).then(res => {
+              //todo
+              if (res.data[0]) {
+                this.table_evaluate = res.data
+              } else {
+                this.table_evaluate = res.data[0]
+              }
+            })
+          }
         },
       },
       mounted(){

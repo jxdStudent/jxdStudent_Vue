@@ -31,10 +31,10 @@ import axios from 'axios'
 axios.defaults.baseURL = 'http://localhost:8081/'
 Vue.prototype.axios = axios
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
-  routes: [
+    routes: [
     {
       path: '/',
       name: 'login',
