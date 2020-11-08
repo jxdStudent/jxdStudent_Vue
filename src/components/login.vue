@@ -16,10 +16,10 @@
     <el-form ref="loginForm" :model="form" label-width="80px" class="login-box">
       <h3 class="login-title">欢迎登录</h3>
       <el-form-item label="账号" prop="uname">
-        <el-input type="text" placeholder="请输入账号" v-model="form.name"/>
+        <el-input type="text" placeholder="请输入账号" @keyup.enter.native="submitForm" v-model="form.name"/>
       </el-form-item>
       <el-form-item label="密码" prop="pwd">
-        <el-input type="password" placeholder="请输入密码" v-model="form.pwd"/>
+        <el-input type="password" placeholder="请输入密码" @keyup.enter.native="submitForm" v-model="form.pwd"/>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm" class="login-btn">登录</el-button>

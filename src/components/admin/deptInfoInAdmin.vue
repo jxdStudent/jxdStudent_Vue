@@ -28,16 +28,6 @@
               <el-button type="primary" @click="dialogFormVisible = true">添加部门</el-button>
             </el-form-item>
           </el-col>
-          <el-col :span="3">
-            <el-form-item>
-              <el-button @click="delArray()" type="danger">批量删除</el-button>
-            </el-form-item>
-          </el-col>
-          <el-col :span="3">
-            <el-form-item>
-              <el-button @click="toggleSelection()">取消选择</el-button>
-            </el-form-item>
-          </el-col>
         </el-row>
       </el-form>
     </div>
@@ -49,11 +39,10 @@
         fit="fit"
         stripe="stripe"
         ref="multipleTable"
-        @selection-change="handleSelectionChange"
         style="width: 100%"
         :default-sort="{prop: 'date', order: 'descending'}">
-        <el-table-column type="selection" width="55">
-        </el-table-column>
+        <!--<el-table-column type="selection" width="55">
+        </el-table-column>-->
         <el-table-column
           prop="deptno"
           label="部门编号"
@@ -80,9 +69,9 @@
           <template slot-scope="scope">
             <el-button @click="allEmp(scope.row.deptno)" size="mini">查看员工</el-button>
             <el-button type="primary" size="mini">编辑</el-button>
-            <el-button @click="deleteObject(scope.row.deptno)"
+            <!--<el-button @click="deleteObject(scope.row.deptno)"
                        type="danger" size="mini">删除
-            </el-button>
+            </el-button>-->
           </template>
         </el-table-column>
       </el-table>
@@ -232,7 +221,7 @@
           this.$refs['selectDeptForm'].resetFields();
         },
         //取消选择
-        toggleSelection() {
+        /*toggleSelection() {
           this.$refs.multipleTable.clearSelection();
         },
         handleSelectionChange(val) {
@@ -258,7 +247,7 @@
             }).then(() => {
               axios.get("http://localhost:8081/deleteDeptBatch/" + this.delarr).then(res => {
                 if (res.data == "success") {
-                  this.reload();/*动态刷新表格*/
+                  this.reload();/!*动态刷新表格*!/
                   this.$message({
                     type: 'success',
                     message: '删除成功！'
@@ -285,7 +274,7 @@
           }).then(() => {
             axios.get("http://localhost:8081/deleteDeptBatch/" + row).then(res => {
               if (res.data == "success"){
-                this.reload();/*动态刷新表格*/
+                this.reload();/!*动态刷新表格*!/
                 this.$message({
                   type: 'success',
                   message : '删除成功！'
@@ -300,7 +289,7 @@
               message: '已取消删除'
             });
           });
-        },
+        },*/
       },
       mounted() {
         //this.handleUserList()

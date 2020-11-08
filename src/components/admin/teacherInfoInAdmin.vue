@@ -27,7 +27,7 @@
           </el-col>
           <el-col :span="3">
             <el-form-item>
-              <el-button type="primary" @click="dialogFormVisible = true">添加老师</el-button>
+              <el-button type="primary" @click="openTeacher(null,'添加教师')">添加老师</el-button>
             </el-form-item>
           </el-col>
           <el-col :span="3">
@@ -72,10 +72,10 @@
         <el-table-column
           label="操作" align="center">
           <template slot-scope="scope">
-            <el-button @click="deleteObject(scope.row.tno)"
+            <el-button @click.native.prevent="deleteObject(scope.$index,scope.row.tno,tableData)"
                        type="danger" size="mini">删除
             </el-button>
-            <el-button type="primary" size="mini">编辑</el-button>
+            <el-button type="primary" size="mini" @click="openTeacher(scope.row,'编辑教师')">编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -91,7 +91,7 @@
     </div>
 
     <!--添加老师-->
-    <el-dialog title="添加老师" :visible.sync="dialogFormVisible">
+    <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <el-form :model="addTeacherForm" :rules="rules2" @close='closeDialog'>
         <el-row>
           <el-col :span="12" offset="5">
@@ -110,6 +110,27 @@
         </el-row>
       </el-form>
     </el-dialog>
+
+    <!--编辑-->
+    <!--<el-dialog :title="title" :visible.sync="dialogFormVisible">
+      <el-form :model="editTeacherForm" :rules="rules2" @close='closeDialog'>
+        <el-row>
+          <el-col :span="12" offset="5">
+            <el-form-item label="老师姓名" :label-width="formLabelWidth" prop="tname">
+              <el-input v-model="editTeacherForm.tname" autocomplete="off"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12" offset="5">
+            <el-form-item>
+              <el-button @click="dialogFormVisible = false">取 消</el-button>
+              <el-button type="primary" @click="editTeacher">确 定</el-button>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+    </el-dialog>-->
 
   </div>
 </template>
@@ -133,6 +154,7 @@
         tableData: [],   //从后台获取数据
         multipleSelection: [],
         delarr: [], //存放删除的数据
+        title:'',
         query: {
           total: 1,
           current: 1,
@@ -143,6 +165,10 @@
         },
         addTeacherForm: {
           tname: ''
+        },
+        editTeacherForm:{
+          tno: '',
+          tname:'',
         },
         rules2: {
           tname: [
@@ -163,19 +189,33 @@
           this.query.total = res.data.total;
         })
       },
+      openTeacher:function(row,title) {
+          this.title = title;
+        this.dialogFormVisible = true;
+        this.editTeacherForm.tno = row.tno;
+        this.addTeacherForm.tname = row.tname;
+      },
       addTeacher: function () {
         let data = this.addTeacherForm;
-        axios.post("/addTeacherInUser", Qs.stringify(data)).then(res => {
+        var url = "/addTeacherInUser";
+        var message = "添加成功";
+        if (this.title == "编辑教师"){
+          url = "/editTeacher";
+          this.editTeacherForm.tname = this.addTeacherForm.tname;
+          data = this.editTeacherForm;
+          message = "编辑成功";
+        }
+        axios.post(url, Qs.stringify(data)).then(res => {
           if (res.data == "success") {//添加成功
             this.reload();/*动态刷新表格*/
             this.dialogFormVisible = false;/*关闭弹出层*/
             this.$message({
               type: 'success',
-              message: '添加成功！'
+              message: message
             });
             //location.reload();
           } else {
-            this.$message.error('添加失败！');
+            this.$message.error('操作失败！');
           }
         })
       },
@@ -246,7 +286,7 @@
       },
 
       //单行删除
-      deleteObject(row) {
+      deleteObject(index,row,tableData) {
         this.$confirm('此操作将永久删除选中的老师, 是否继续?', '警告', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -254,7 +294,8 @@
         }).then(() => {
           axios.get("http://localhost:8081/deleteTeacherBatch/" + row).then(res => {
             if (res.data == "success"){
-              this.reload();/*动态刷新表格*/
+              //this.reload();/*动态刷新表格*/
+              tableData.splice(index, 1)
               this.$message({
                 type: 'success',
                 message : '删除成功！'

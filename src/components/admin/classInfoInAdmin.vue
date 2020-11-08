@@ -25,7 +25,7 @@
           </el-col>
           <el-col :span="3">
             <el-form-item>
-              <el-button type="primary" @click="dialogFormVisible = true">添加学期</el-button>
+              <el-button type="primary" @click="openClass(null,'添加课学期')">添加学期</el-button>
             </el-form-item>
           </el-col>
           <el-col :span="3">
@@ -71,12 +71,19 @@
           label="授课教师">
         </el-table-column>
         <el-table-column
+          prop="courseString"
+          header-align="center"
+          align="left"
+          show-overflow-tooltip
+          label="所授课程">
+        </el-table-column>
+        <el-table-column
           label="操作" align="center">
           <template slot-scope="scope">
-            <el-button @click="deleteObject(scope.row.classno)"
+            <el-button @click.native.prevent="deleteObject(scope.$index,scope.row.classno,tableData)"
                        type="danger" size="mini">删除
             </el-button>
-            <el-button type="primary" size="mini">编辑</el-button>
+            <el-button type="primary" size="mini" @click="openClass(scope.row,'编辑学期')">编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -89,10 +96,11 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="this.query.total">
       </el-pagination>
+<!--      style="position:fixed; bottom:15%;margin-left: 20%"-->
     </div>
 
     <!--添加学期-->
-    <el-dialog title="添加学期" :visible.sync="dialogFormVisible">
+    <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <el-form :model="addClassForm" :rules="rules2" @close='closeDialog'>
         <el-row>
           <el-col :span="12" offset="5">
@@ -160,6 +168,7 @@
       return {
         tableData: [],   //从后台获取数据
         options:[],
+        title:'',
         query: {
           total: 1,
           current: 1,
@@ -171,6 +180,13 @@
           classname: "",
         },
         addClassForm:{
+          classname:"",
+          cno:"",
+          tno:"",
+          course:""
+        },
+        editClassForm : {
+          classno: '',
           classname:"",
           cno:"",
           tno:"",
@@ -197,7 +213,21 @@
         axios.get("http://localhost:8081/getClassWithDeptByPage/" + this.query.current + "/" +
           this.query.size + "/" + classname).then(res => {
           this.tableData = res.data;
+          //this.courseShow = res.data.course;
+          /*for (let i = 0; i < res.data.length; i++) {
+            for (let j = 0; j < res.data[i].course.length; j++) {
+              this.courseShow[i] = res.data[i].course[j].cname;
+            }
+          }*/
         })
+      },
+      openClass:function(row,title) {
+        this.title = title;
+        this.dialogFormVisible = true;
+        this.editClassForm.classno = row.classno;
+        this.addClassForm.classname = row.classname;
+        this.addClassForm.tno = row.tno;
+        this.addClassForm.course = row.course;
       },
       addClass:function () {
         axios.post("/addClass/" + this.addClassForm.classname + "/" + this.addClassForm.tno +
@@ -288,8 +318,7 @@
       },
 
       //单行删除
-      deleteObject(row) {
-        alert(row)
+      deleteObject(index,row,tableData) {
         this.$confirm('此操作将永久删除选中的学期, 是否继续?', '警告', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -297,7 +326,8 @@
         }).then(() => {
           axios.get("http://localhost:8081/deleteClassBatch/" + row).then(res => {
             if (res.data == "success"){
-              this.reload();/*动态刷新表格*/
+              //this.reload();/*动态刷新表格*/
+              tableData.splice(index, 1)
               this.$message({
                 type: 'success',
                 message : '删除成功！'
