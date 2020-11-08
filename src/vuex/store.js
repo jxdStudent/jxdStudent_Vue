@@ -13,7 +13,9 @@ const store = new Vuex.Store({
     uname: null,
     role: null,
     uid: null,
-    studentNo: null
+    studentNo: null,
+    classNo: null,
+    sname: null,
   },
   mutations: {//定义事件，set方法，用于给数据赋值
     setUname: function (state, uname) {
@@ -27,6 +29,12 @@ const store = new Vuex.Store({
     },
     setSno: function (state, sno) {
       state.studentNo = sno;
+    },
+    setClassNo: function (state, classNo) {
+      state.classNo = classNo;
+    },
+    setSname: function (state,sname) {
+      state.sname = sname;
     }
   },
   actions: {//作用同mutations，用于提供给数据赋值
@@ -45,6 +53,12 @@ const store = new Vuex.Store({
     },
     setSno: function (context, sno) {
       context.commit("setSno", sno)
+    },
+    setClassNo: function (context, classNo) {
+      context.commit("setClassNo", classNo)
+    },
+    setSname: function (context, sname) {
+      context.commit("setSname", sname)
     }
   },
   getters: {
@@ -59,6 +73,12 @@ const store = new Vuex.Store({
     },
     studentNo: state => {
       return state.studentNo;
+    },
+    classNo: state => {
+      return state.classNo;
+    },
+    sname: state => {
+      return state.sname;
     }
   }
 })
