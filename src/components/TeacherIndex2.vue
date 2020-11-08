@@ -5,7 +5,7 @@
         <navMenu></navMenu>
       </el-header>
       <el-container>
-        <el-aside width="200px">
+        <el-aside width="150px">
           <el-menu
             :default-active="$route.path"
             :unique-opened="true"
@@ -32,6 +32,8 @@
             <template
               v-for="(item,index) in tableHead">
               <el-table-column
+                align="center"
+                sortable
                 :prop="item.column_name"
                 :label="item.column_comment"
                 :key="index"
@@ -46,12 +48,34 @@
               <template slot-scope="scope">
                 <el-button
                   size="mini"
-                  @click="toStudentScore(scope.row.sno)">评价
+                  @click="toStudentScore(scope.row.sno, scope.row.classno, scope.row.sname)">评价
                 </el-button>
                 <el-button
                   size="mini"
-                  @click="">转正
+                  @click="dialogVisible = true">毕业
                 </el-button>
+                <el-dialog
+                  :modal-append-to-body='false'
+                  title="毕业页面"
+                  :visible.sync="dialogVisible"
+                  width="40%">
+                  <el-row>
+                    <el-col :span="18" :offset="4">
+                      <el-form :model="form">
+                        <el-form-item label="是否毕业">
+                          <el-select v-model="form.graduated">
+                            <el-option label="已毕业" value="1"></el-option>
+                            <el-option label="未毕业" value="0"></el-option>
+                          </el-select>
+                        </el-form-item>
+                      </el-form>
+                    </el-col>
+                  </el-row>
+                  <span slot="footer" class="dialog-footer">
+                  <el-button @click="dialogVisible = false">取 消</el-button>
+                  <el-button type="primary" @click="submit_graduated">确 定</el-button>
+                </span>
+                </el-dialog>
               </template>
             </el-table-column>
           </el-table>
@@ -63,13 +87,28 @@
 
 <script>
 import navMenu from "./navMenu";
+import axios from "axios";
 
 export default {
   name: "TeacherIndex2",
   components: {navMenu},
   data() {
     return {
-      tableHead:[
+      tableHead: [],
+      tableData: [],
+      dialogVisible: false,
+      form: {
+        graduated: '1',
+      }
+    }
+  },
+  mounted() {
+    this.getTableHead();
+    this.getTableData();
+  },
+  methods: {
+    getTableHead() {
+      var table_head = [
         {
           column_name: "sno", column_comment: "学号"
         },
@@ -78,48 +117,37 @@ export default {
         },
         {
           column_name: "classno", column_comment: "班期"
-        },
-        {
-          column_name: "java", column_comment: "Java"
-        },
-        {
-          column_name: "html", column_comment: "Html"
-        },
-        {
-          column_name: "oracle", column_comment: "Oracle"
-        },
-        {
-          column_name: "total_score", column_comment: "总分"
-        },
-      ],
-      tableData: [
-        {
-          sno: 10001,
-          sname: "张三",
-          classno: 47,
-          java: 5,
-          html: 5,
-          oracle: 5,
-          total_score:15
         }
-      ]
-    }
-  },
-  methods: {
-    getAllStudentInfoWithScore() {
-
+      ];
+      axios.get("/getAllCourse").then(res => {
+        for (let i = 0; i < res.data.length; i++) {
+          var table_head_obj = {};
+          table_head_obj.column_name = res.data[i].cno + "";
+          table_head_obj.column_comment = res.data[i].cname;
+          table_head.push(table_head_obj);
+        }
+      })
+      this.tableHead = table_head;
     },
-    handleSelect(path){
+    getTableData() {
+      axios.get("/getAllStudentScoreWithInfo/" + this.$store.getters.uid).then(res => {
+        this.tableData = res.data;
+      })
+    },
+    handleSelect(path) {
       this.$router.push(path)
     },
-    toStudentScore(sno) {
+    toStudentScore(sno, classno, sname) {
       this.$store.dispatch("setSno", sno);
+      this.$store.dispatch("setClassNo", classno);
+      this.$store.dispatch("setSname", sname);
       this.$router.push({path: "/studentScore"});
     },
+    submit_graduated() {
+
+    }
   },
-  mounted() {
-    this.getAllStudentInfoWithScore();
-  }
+
 }
 </script>
 
