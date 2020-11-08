@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" >
     <!--<img src="./assets/logo.png">-->
     <router-view v-if="isShow"></router-view>
   </div>
@@ -52,10 +52,10 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
-::-webkit-scrollbar {
+/*::-webkit-scrollbar {
   width: 0 !important;
 }
 ::-webkit-scrollbar {
   width: 0 !important;height: 0;
-}
+}*/
 </style>

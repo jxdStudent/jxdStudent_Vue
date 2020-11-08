@@ -72,7 +72,7 @@
                   align="center"
                 >
                 </el-table-column>
-                <el-table-column prop="officaldate" align="center" label="入职日期">
+                <el-table-column prop="officialdate" align="center" label="入职日期">
                 </el-table-column>
                 <el-table-column prop="student.sno" align="center" label="学号">
                 </el-table-column>
