@@ -37,11 +37,11 @@
                       </el-form-item>
                     </el-form>
                   </el-col>
-                  <el-col :span="4">
+                  <!--<el-col :span="4">
                     <el-form-item>
                       <el-button type="primary" @click="dialogFormVisible = true">添加员工</el-button>
                     </el-form-item>
-                  </el-col>
+                  </el-col>-->
                 </el-row>
               </el-form>
             </div>
@@ -80,8 +80,7 @@
                 </el-table-column>
                 <el-table-column label="操作" align="center">
                   <template slot-scope="scope">
-                    <el-button @click="deleteStudent(scope.row.sno,scope.row.classno)"
-                               @dblclick.native="dblclickDeleteStudent(scope.row.sno,scope.row.classno)"
+                    <el-button @click.native.prevent="deleteObject(scope.$index,scope.row.empno,tableData)"
                                type="danger" size="mini">删除
                     </el-button>
                     <el-button type="primary" size="mini">编辑</el-button>
@@ -206,7 +205,33 @@
         this.getAllEmpSize("undefined");
         this.getAllByPage("undefined");
         this.$refs['selectEmp'].resetFields()
-      }
+      },
+      //单行删除
+      deleteObject(index,row,tableData) {
+        this.$confirm('此操作将永久删除选中的学期, 是否继续?', '警告', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'error'
+        }).then(() => {
+          axios.get("http://localhost:8081/deleteEmp/" + row).then(res => {
+            if (res.data == "success"){
+              //this.reload();/*动态刷新表格*/
+              tableData.splice(index, 1)
+              this.$message({
+                type: 'success',
+                message : '删除成功！'
+              })
+            }else {
+              this.$message.error("删除失败！")
+            }
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
+      },
     },
     mounted() {
       //this.getAllEmp();

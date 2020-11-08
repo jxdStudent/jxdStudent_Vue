@@ -85,8 +85,7 @@
           align="center"
         >
           <template slot-scope="scope">
-            <el-button @click="deleteStudent(scope.row.sno,scope.row.classno)"
-                       @dblclick.native="dblclickDeleteStudent(scope.row.sno,scope.row.classno)"
+            <el-button @click.native.prevent="deleteObject(scope.$index,scope.row.uid,tableData)"
                        type="danger" size="mini">删除
             </el-button>
             <el-button type="primary" size="mini">编辑</el-button>
@@ -182,15 +181,43 @@
           this.options = res.data;
         })
       },
+      //单行删除
+      deleteObject(index,row,tableData) {
+        this.$confirm('此操作将永久删除选中的账号, 是否继续?', '警告', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'error'
+        }).then(() => {
+          alert(row)
+          axios.get("http://localhost:8081/deleteAccount/" + row).then(res => {
+            if (res.data == "success"){
+              //this.reload();/*动态刷新表格*/
+              tableData.splice(index, 1)
+              this.$message({
+                type: 'success',
+                message : '删除成功！'
+              })
+            }else {
+              this.$message.error("删除失败！")
+            }
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
+      },
     },
     mounted() {
       //this.getAllAccount();
       //this.handleUserList()
       this.getAllByPage();
-    },
-    created() {
       this.getRole();
-    }
+    },
+    /*created() {
+      this.getRole();
+    }*/
   }
 </script>
 
