@@ -53,9 +53,12 @@ export default {
   margin-top: 60px;
 }
 ::-webkit-scrollbar {
-  width: 0 !important;
+  width: 0px;
+  height: 10px;
 }
-::-webkit-scrollbar {
-  width: 0 !important;height: 0;
+
+::-webkit-scrollbar-thumb {
+  background-color: #8c939d;
+  border-radius: 5px;
 }
 </style>
