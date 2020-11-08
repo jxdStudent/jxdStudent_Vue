@@ -1,272 +1,201 @@
 <template>
-  <div>
-    <h1 style="color: #42b983">员工评价信息<i class="header-icon el-icon-info"></i></h1>
-      <el-row :gutter="20">
-        <el-col :span="24" :offset="8">
-          <div class="grid-content bg-purple">
-
-                <!--表单-->  <!--:span控制input长度-->
-                <el-form ref="form" :data="form" :label-position="labelPosition" :inline="true">
-                  <el-row>
-                    <el-col :span="8">
-                      <div class="grid-content bg-purple">
-                      </div>
-                    </el-col>
-                    <el-col :span="8">
-                      <div class="grid-content bg-purple">
-                        <el-form-item label="婚否：">
-                          <el-select v-model="form.marriage" :disabled="!isEdit">
-                            <el-option value="未婚">未婚</el-option>
-                            <el-option value="已婚">已婚</el-option>
-                          </el-select>
-                        </el-form-item>
-                      </div>
-                    </el-col>
-                    <el-col :span="8">
-                      <div class="grid-content bg-purple">
-                      </div>
-                    </el-col>
-                  </el-row>
-
-                  <el-row>
-                    <el-col :span="8">
-                      <div class="grid-content bg-purple">
-                      </div>
-                    </el-col>
-                    <el-col :span="8">
-                      <div class="grid-content bg-purple">
-                        <el-form-item label="婚否：">
-                          <el-select v-model="form.marriage" :disabled="!isEdit">
-                            <el-option value="未婚">未婚</el-option>
-                            <el-option value="已婚">已婚</el-option>
-                          </el-select>
-                        </el-form-item>
-                      </div>
-                    </el-col>
-                    <el-col :span="8">
-                      <div class="grid-content bg-purple">
-                      </div>
-                    </el-col>
-                  </el-row>
-
-                  <el-row>
-                    <el-col :span="8">
-                      <div class="grid-content bg-purple">
-                      </div>
-                    </el-col>
-                    <el-col :span="8">
-                      <div class="grid-content bg-purple">
-                        <el-form-item label="婚否：">
-                          <el-select v-model="form.marriage" :disabled="!isEdit">
-                            <el-option value="未婚">未婚</el-option>
-                            <el-option value="已婚">已婚</el-option>
-                          </el-select>
-                        </el-form-item>
-                      </div>
-                    </el-col>
-                    <el-col :span="8">
-                      <div class="grid-content bg-purple">
-                      </div>
-                    </el-col>
-                  </el-row>
-
-                  <el-row>
-                    <el-col :span="8">
-                      <div class="grid-content bg-purple">
-                      </div>
-                    </el-col>
-                    <el-col :span="8">
-                      <div class="grid-content bg-purple">
-                        <el-form-item label="婚否：">
-                          <el-select v-model="form.marriage" :disabled="!isEdit">
-                            <el-option value="未婚">未婚</el-option>
-                            <el-option value="已婚">已婚</el-option>
-                          </el-select>
-                        </el-form-item>
-                      </div>
-                    </el-col>
-                    <el-col :span="8">
-                      <div class="grid-content bg-purple">
-                      </div>
-                    </el-col>
-                  </el-row>
-
-                  <el-row>
-                    <el-col :span="8">
-                      <div class="grid-content bg-purple">
-                      </div>
-                    </el-col>
-                    <el-col :span="8">
-                      <div class="grid-content bg-purple">
-                        <el-form-item label="婚否：">
-                          <el-select v-model="form.marriage" :disabled="!isEdit">
-                            <el-option value="未婚">未婚</el-option>
-                            <el-option value="已婚">已婚</el-option>
-                          </el-select>
-                        </el-form-item>
-                      </div>
-                    </el-col>
-                    <el-col :span="8">
-                      <div class="grid-content bg-purple">
-                      </div>
-                    </el-col>
-                  </el-row>
-
-
-                  <el-row>
-                    <el-col :span="8">
-                      <div class="grid-content bg-purple">
-                      </div>
-                    </el-col>
-                    <el-col :span="8">
-                      <div class="grid-content bg-purple">
-                        <el-form-item label="备注：">
-                        <el-input type="textarea" v-model="form.remark"
-                                  :disabled="!isEdit"></el-input>
-                      </el-form-item>
-                      </div>
-                    </el-col>
-                    <el-col :span="8">
-                      <div class="grid-content bg-purple">
-                      </div>
-                    </el-col>
-                  </el-row>
-
-                  <el-row>
-                    <el-col :span="10">
-                      <div class="grid-content bg-purple">
-                      </div>
-                    </el-col>
-                    <el-col :span="9">
-                      <div class="grid-content bg-purple">
-                        <el-form-item>
-                          <el-button type="primary" @click="isEdit = !isEdit" v-if="!isEdit">编辑</el-button>
-                          <el-button type="danger" @click="cancel_submit" v-else>取消编辑</el-button>
-                          <el-button type="primary" @click="onSubmit">保存</el-button>
-                        </el-form-item>
-                      </div>
-                    </el-col>
-                    <el-col :span="5">
-                      <div class="grid-content bg-purple">
-                      </div>
-                    </el-col>
-                  </el-row>
-
-                </el-form>
-          </div>
-        </el-col>
-      </el-row>
+  <div class="oDiv">
+    <div style="margin-top: 20px">
+      <el-button @click="delArray()" type="danger">批量删除</el-button>
+      <el-button @click="toggleSelection()">取消选择</el-button>
     </div>
+    <el-table
+      :data="tableData"
+      ref="multipleTable"
+      style="width: 100%"
+      max-height="250"
+      @selection-change="handleSelectionChange">
+      <el-table-column
+        type="selection"
+        width="55">
+      </el-table-column>
+      <el-table-column
+        fixed
+        prop="date"
+        label="日期"
+        width="150">
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        label="姓名"
+        width="120">
+      </el-table-column>
+      <el-table-column
+        prop="province"
+        label="省份"
+        width="120">
+      </el-table-column>
+      <el-table-column
+        prop="city"
+        label="市区"
+        width="120">
+      </el-table-column>
+      <el-table-column
+        prop="address"
+        label="地址"
+        width="300">
+      </el-table-column>
+      <el-table-column
+        prop="zip"
+        label="邮编"
+        width="120">
+      </el-table-column>
+      <el-table-column
+        fixed="right"
+        label="操作"
+        width="120">
+        <template slot-scope="scope">
+          <el-button
+            @click.native.prevent="deleteRow(scope.$index, tableData)"
+            type="text"
+            size="small">
+            移除
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <el-upload
+      class="avatar-uploader"
+      action="http://localhost:8081/uploadImg"
+      :show-file-list="false"
+      :on-success="handleAvatarSuccess"
+      enctype="multipart/form-data"
+      :before-upload="beforeAvatarUpload"
+      name="photo">
+      <!--<img v-if="imageUrl" :src="imageUrl" class="avatar">
+      <i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
+      <el-button size="small" type="primary">点击上传</el-button>
+    </el-upload>
+
+    <el-image :src="imgs" style="width: 240px;float: left;"></el-image>
+
+
+
+  </div>
 </template>
 
 <script>
-  import Qs from 'qs';
-
+  import axios from "axios";
   export default {
     name: "test",
-    data() {
+    data () {
       return {
-        //学生个人数据
-        form: {},
-        //表单右对齐
-        labelPosition: 'right',
-        //折叠面板默认开启
-        activeNames: ['学生信息'],
-        //是否编辑
-        isEdit: false,
-        //Todo  修改验证规则
-        rules: {
-          nation: [
-            {required: true, message: '请输入所属民族', trigger: 'blur'},
-            {type: 'String', message: '所属民族不能为数字', trigger: 'blur'}
-          ],
-        }
+        tableDataAmount: [],
+        imageUrl: '',
+        tableData: [{
+          date: '2016-05-03',
+          name: '王小虎1',
+          province: '上海',
+          city: '普陀区',
+          address: '上海市普陀区金沙江路 1518 弄',
+          zip: 200333
+        }, {
+          date: '2016-05-02',
+          name: '王小虎2',
+          province: '上海',
+          city: '普陀区',
+          address: '上海市普陀区金沙江路 1518 弄',
+          zip: 200333
+        }, {
+          date: '2016-05-04',
+          name: '王小虎3',
+          province: '上海',
+          city: '普陀区',
+          address: '上海市普陀区金沙江路 1518 弄',
+          zip: 200333
+        }],
+        imgs:'',
       }
     },
     methods: {
-      //获取个人信息
-      getAllInfo() {
-        //待做：将传递参数改为动态的学生id--从vuex中读取
-        this.axios.get("getStudent/10001").then(res => {
-          if (res.data.marriage == 0) {
-            res.data.marriage = "未婚"
+      deleteRow (index, rows) {
+        rows.splice(index, 1)
+      },
+      // 选择事件 得到选中的数据
+      handleSelectionChange (data) {
+        this.tableDataAmount = data
+      },
+      // 批量清除
+      delArray () {
+        var that = this
+        // 拿到选中的数据；
+        var val = this.tableDataAmount
+        // 如果选中数据存在
+        if (val) {
+          // 将选中数据遍历
+          val.forEach(function (item, index) {
+            // 遍历源数据
+            that.tableData.forEach(function (itemI, indexI) {
+              // 如果选中数据跟元数据某一条标识相等，删除对应的源数据
+              if (item.name === itemI.name) {
+                that.tableData.splice(indexI, 1)
+              }
+            })
+          })
+        }
+        // 清除选中状态
+        this.$refs.multipleTable.clearSelection()
+      },
+      handleAvatarSuccess(res, file) {
+        //this.imageUrl = URL.createObjectURL(file.raw);
+        this.imageUrl = URL.createObjectURL(file.raw);
+        axios.post("updateImgForStu/" + 10001).then(res => {
+          if (res.data != "fail") {
+            this.imgs = "http://localhost:8081/" + res.data;
+            alert(this.imgs)
+            this.$message({
+              type: 'success',
+              message: '上传成功'
+            })
           } else {
-            res.data.marriage = "已婚"
+            this.$message.error("上传失败！")
           }
-          this.form = res.data;
         })
       },
-      //取消编辑
-      cancel_submit() {
-        this.getAllInfo();
-        this.isEdit = !this.isEdit;
-      },
-      //修改信息提交
-      onSubmit() {
-        debugger
-        let data = this.form;
-        if (data.marriage == "未婚") {
-          data.marriage = 0;
-        } else {
-          data.marriage = 1;
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg';
+        const isLt2M = file.size / 1024 / 1024 < 2;
+
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG 格式!');
         }
-        //提交信息
-        this.axios.post("editStudent", Qs.stringify(data)).then(res => {
-          if (res.data) {
-            this.getAllInfo();
-            this.$message({
-              message: '编辑信息成功',
-              type: 'success'
-            });
-            this.isEdit = false;
-          } else {
-            this.$message({
-              message: '编辑信息失败',
-              type: 'success'
-            });
-          }
-        });
-      }
-    },
-    //加载执行
-    mounted() {
-      this.getAllInfo();
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        return isJPG && isLt2M;
+      },
     }
   }
 </script>
 
-<style scoped>
-  .el-input {
-    width: 180px;
-    font-size: medium;
+<style>
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
   }
-
-  .el-select {
-    width: 180px;
-    font-size: medium;
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
   }
-
-  /*.width_birthday{
-    width: 180px;
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
   }
-  .width_address{
-    width:150px;
-  }
-  .width_tel{
-    width:180px;
-  }
-
-  .width_major{
-    width:180px;
-  }
-  .width_school{
-    width:180px;
-  }*/
-  .width_mark {
-    width: 820px;
-  }
-
-  .width_idCard {
-    width: 200px;
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
   }
 </style>

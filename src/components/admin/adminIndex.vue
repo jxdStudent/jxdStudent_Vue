@@ -15,7 +15,7 @@
             <router-view></router-view>
             <!--            <student-info-in-admin></student-info-in-admin>-->
           </el-main>
-          <el-footer class="el-footer-style">Footer</el-footer>
+          <!--<el-footer class="el-footer-style">Footer</el-footer>-->
         </el-container>
       </el-container>
     </el-container>

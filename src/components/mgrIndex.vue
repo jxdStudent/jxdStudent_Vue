@@ -301,8 +301,8 @@
   .el-header {
     background-color: #409EFF;
     color: #333;
-    line-height: 90px;
-    margin-top: -50px;
+
+
   }
 
   .el-aside {

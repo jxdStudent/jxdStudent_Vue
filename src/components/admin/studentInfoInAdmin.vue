@@ -140,7 +140,7 @@
           align="center"
           width="200">
           <template slot-scope="scope">
-            <el-button @click="deleteStudent(scope.row.sno,scope.row.classno)"
+            <el-button @click.native.prevent="deleteStudent(scope.$index,scope.row.sno,scope.row.classno,tableData)"
                        @dblclick.native="dblclickDeleteStudent(scope.row.sno,scope.row.classno)"
                        type="danger" size="mini">删除
             </el-button>
@@ -339,7 +339,7 @@
         this.getAllByPage("undefined", "undefined");
         this.$refs['SelectForm'].resetFields()
       },
-      deleteStudent(sno, classno) {
+      deleteStudent(index,sno, classno,tableData) {
         clearTimeout(time);  //首先清除计时器
         time = setTimeout(() => {
           if (classno != 0) {
@@ -352,7 +352,8 @@
             }).then(() => {
               axios.get("http://localhost:8081/deleteStudent/" + sno).then(res => {
                 if (res.data == "success") {
-                  this.reload();/*动态刷新表格*/
+                  tableData.splice(index, 1)
+                  //this.reload();/*动态刷新表格*/
                   this.$message({type: "success", message: "删除成功！"});
                 } else {
                   this.$message.error("删除失败服务异常")

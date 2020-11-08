@@ -25,17 +25,7 @@
           </el-col>
           <el-col :span="3">
             <el-form-item>
-              <el-button type="primary" @click="dialogFormVisible = true">添加部门</el-button>
-            </el-form-item>
-          </el-col>
-          <el-col :span="3">
-            <el-form-item>
-              <el-button @click="delArray()" type="danger">批量删除</el-button>
-            </el-form-item>
-          </el-col>
-          <el-col :span="3">
-            <el-form-item>
-              <el-button @click="toggleSelection()">取消选择</el-button>
+              <el-button type="primary" @click="openClass(null,'添加部门')">添加部门</el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -49,11 +39,10 @@
         fit="fit"
         stripe="stripe"
         ref="multipleTable"
-        @selection-change="handleSelectionChange"
         style="width: 100%"
         :default-sort="{prop: 'date', order: 'descending'}">
-        <el-table-column type="selection" width="55">
-        </el-table-column>
+        <!--<el-table-column type="selection" width="55">
+        </el-table-column>-->
         <el-table-column
           prop="deptno"
           label="部门编号"
@@ -79,10 +68,10 @@
           >
           <template slot-scope="scope">
             <el-button @click="allEmp(scope.row.deptno)" size="mini">查看员工</el-button>
-            <el-button type="primary" size="mini">编辑</el-button>
-            <el-button @click="deleteObject(scope.row.deptno)"
+            <el-button type="primary" size="mini" @click="openClass(scope.row,'编辑部门')" >编辑</el-button>
+            <!--<el-button @click="deleteObject(scope.row.deptno)"
                        type="danger" size="mini">删除
-            </el-button>
+            </el-button>-->
           </template>
         </el-table-column>
       </el-table>
@@ -98,7 +87,7 @@
     </div>
 
     <!--添加部门-->
-    <el-dialog title="添加部门" :visible.sync="dialogFormVisible">
+    <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <el-form :model="addDeptForm" :rules="rules2" @close='closeDialog'>
         <el-row>
           <el-col :span="12" offset="5">
@@ -152,6 +141,7 @@
           tableData: [],   //从后台获取数据
           multipleSelection: [],
           delarr: [], //存放删除的数据
+          title:'',
           query:{
             total:1,
             current:1,
@@ -161,6 +151,13 @@
             deptno: '',
           },
           addDeptForm : {
+            dname: '',
+            empno: '',
+            ename: ''
+
+          },
+          editDeptForm : {
+            deptno:'',
             dname: '',
             empno: '',
             ename: ''
@@ -195,19 +192,41 @@
             }
           });
         },
+        openClass:function(row,title) {
+          this.title = title;
+          this.dialogFormVisible = true;
+          this.editDeptForm.deptno = row.deptno;
+          if (title == "编辑部门"){
+            this.addDeptForm.ename = row.emp.ename;
+            this.addDeptForm.dname = row.dname;
+            //this.addDeptForm.ename = row.ename;
+          }
+          //this.editDeptForm.cname = row.cname;
+        },
         addDept:function(){
-          axios.post("addDeptByAdmin/" + this.addDeptForm.dname + "/" + this.addDeptForm.empno + "/" +
+
+          let data = this.addDeptForm;
+          var url = "addDeptByAdmin";
+          var message = "添加成功";
+          if (this.title == "编辑部门"){
+            url = "editDeptByAdmin";
+            this.editDeptForm.cname = this.addDeptForm.cname;
+            data = this.editDeptForm;
+            message = "编辑成功！";
+          }
+
+          axios.post(url + "/" + this.addDeptForm.dname + "/" + this.addDeptForm.empno + "/" +
                       this.addDeptForm.ename).then(res => {
             if (res.data == "success") {//添加成功
               this.reload();/*动态刷新表格*/
               this.dialogFormVisible = false;/*关闭弹出层*/
               this.$message({
                 type: 'success',
-                message: '添加成功！'
+                message: message
               });
               //location.reload();
             } else {
-              this.$message.error('添加成功！');
+              this.$message.error('操作失败！');
             }
           })
         },
@@ -232,7 +251,7 @@
           this.$refs['selectDeptForm'].resetFields();
         },
         //取消选择
-        toggleSelection() {
+        /*toggleSelection() {
           this.$refs.multipleTable.clearSelection();
         },
         handleSelectionChange(val) {
@@ -258,7 +277,7 @@
             }).then(() => {
               axios.get("http://localhost:8081/deleteDeptBatch/" + this.delarr).then(res => {
                 if (res.data == "success") {
-                  this.reload();/*动态刷新表格*/
+                  this.reload();/!*动态刷新表格*!/
                   this.$message({
                     type: 'success',
                     message: '删除成功！'
@@ -285,7 +304,7 @@
           }).then(() => {
             axios.get("http://localhost:8081/deleteDeptBatch/" + row).then(res => {
               if (res.data == "success"){
-                this.reload();/*动态刷新表格*/
+                this.reload();/!*动态刷新表格*!/
                 this.$message({
                   type: 'success',
                   message : '删除成功！'
@@ -300,7 +319,7 @@
               message: '已取消删除'
             });
           });
-        },
+        },*/
       },
       mounted() {
         //this.handleUserList()

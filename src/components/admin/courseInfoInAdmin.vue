@@ -27,7 +27,7 @@
           </el-col>
           <el-col :span="4">
             <el-form-item>
-              <el-button type="primary" @click="dialogFormVisible = true">添加课程</el-button>
+              <el-button type="primary" @click="openCourse(null,'添加课程')">添加课程</el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -59,11 +59,10 @@
           label="操作" align="center"
           >
           <template slot-scope="scope">
-            <el-button @click="deleteStudent(scope.row.sno,scope.row.classno)"
-                       @dblclick.native="dblclickDeleteStudent(scope.row.sno,scope.row.classno)"
+            <el-button @click.native.prevent="deleteObject(scope.$index, scope.row.cno,tableData)"
                        type="danger" size="mini">删除
             </el-button>
-            <el-button type="primary" size="mini">编辑</el-button>
+            <el-button type="primary" size="mini" @click="openCourse(scope.row,'编辑课程')">编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -79,7 +78,7 @@
     </div>
 
     <!--添加课程-->
-    <el-dialog title="添加课程" :visible.sync="dialogFormVisible">
+    <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <el-form :model="addCourseForm" :rules="rules2" @close='closeDialog'>
         <el-row>
           <el-col :span="12" offset="5">
@@ -119,6 +118,7 @@
         };
         return {
           tableData: [],   //从后台获取数据
+          title:'',
           query:{
             total:1,
             current:1,
@@ -129,6 +129,10 @@
           },
           addCourseForm:{
             cname:'',
+          },
+          editCourseForm:{
+            cno:'',
+            cname:''
           },
           rules2: {
             cname: [
@@ -149,18 +153,33 @@
             this.query.total = res.data.total;
           })
         },
+        openCourse:function(row,title) {
+          this.title = title;
+          this.dialogFormVisible = true;
+          this.editCourseForm.cno = row.cno;
+          this.addCourseForm.cname = row.cname;
+        },
         addCourse:function () {
           let data = this.addCourseForm;
-          axios.post("/addCourse",Qs.stringify(data)).then(res => {
+          var url = "/addCourse";
+          var message = "添加成功";
+          if (this.title == "编辑课程"){
+            url = "/editCourse";
+            this.editCourseForm.cname = this.addCourseForm.cname;
+            data = this.editCourseForm;
+            message = "编辑成功";
+          }
+
+          axios.post(url,Qs.stringify(data)).then(res => {
             if (res.data == "success") {//添加成功
               this.reload();/*动态刷新表格*/
               this.dialogFormVisible = false;/*关闭弹出层*/
               this.$message({
                 type: 'success',
-                message: '添加成功！'
+                message: message
               });
             } else {
-              this.$message.error('添加成功！');
+              this.$message.error('编辑失败');
             }
           })
         },
@@ -181,7 +200,32 @@
         onSelectAll(){
           this.getAllByPage("undefined");
           this.$refs['selectCourseForm'].resetFields()
-        }
+        },
+        deleteObject(index,row,tableData) {
+          this.$confirm('此操作将永久删除选中的课程, 是否继续?', '警告', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'error'
+          }).then(() => {
+            axios.get("http://localhost:8081/deleteCourse/" + row).then(res => {
+              if (res.data == "success"){
+                tableData.splice(index, 1)
+                //this.reload();/*动态刷新表格*/
+                this.$message({
+                  type: 'success',
+                  message : '删除成功！'
+                })
+              }else {
+                this.$message.error("删除失败！")
+              }
+            })
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            });
+          });
+        },
       },
       mounted() {
         //this.getAllCourse();

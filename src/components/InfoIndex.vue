@@ -2,11 +2,11 @@
   <div>
     <el-container>
       <el-header style="background-color: #42b983">
-        <navMenu v-bind:edit_student="edit_student"/>
+        <navMenu :edit_student="edit_student" :img="imgUrl"/>
       </el-header>
 
 
-      <el-col :span="16" :offset="5">
+      <el-col :span="16" :offset="4">
 
         <el-container>
           <el-main>
@@ -22,7 +22,7 @@
                 <el-form ref="form" :model="form" :label-position="labelPosition"
                          label-width="100px" :inline="true" :rules="rules"
                          :hide-required-asterisk="isHide" label-suffix="：">
-                  <el-row>
+                  <el-row v-show="isStudent">
                     <el-col :span="10">
                       <div>
                         <!--prop对应的不单单是rules规则里面的验证项，同时对应着我们form-item下的v-model的值。prop绑定的类要与el-form-item下的v-model的值相对应。-->
@@ -169,15 +169,23 @@
                 <div v-if="isShowScore">
                 <el-table highlight-current-row :data="table_course_score"
                           border empty-text="加载失败，请稍后再试！">
-                  <el-table-column label="老师">{{tname}}</el-table-column>
+
+                  <!--评价老师-->
+                  <!--<el-table-column label="老师">{{tname}}</el-table-column>-->
+
                   <template v-for="(head,index) in table_course_head">
                     <el-table-column :prop="head.cno + ''" :label="head.cname"></el-table-column>
                   </template>
-                  <el-table-column prop="score_total" label="综合成绩"></el-table-column>
+
+                  <el-table-column
+                    prop="score_total"
+                    label="综合成绩"
+                  style="background-color: #409EFF">
+                  </el-table-column>
                 </el-table>
                 </div>
-                <div v-else>
-                  <h1>暂未被评价</h1>
+                <div v-else style="color: red;font-size: 30px;font-family: 华文宋体">
+                  <p>暂未评价</p>
                 </div>
               </el-collapse-item>
 
@@ -189,31 +197,36 @@
 
           <!--头像-->
           <el-aside width="200px">
-            <!--<div class="div_img">
-            <img src="../assets/imgs/test.jpg" alt="" style="float: right">
-            </div>-->
+            <div v-if="imgUrl">
+              <!--<img :src="this.form.photo" alt="">-->
+            <!--<img src="../assets/imgs/test.jpg" alt="" style="float: right">-->
+              <!--<el-image :src="form.photo" style="width: 160px;margin-top: 60px"></el-image>-->
 
-            <img :src="require('@/assets/imgs/' + this.form.photo)" alt="">
-            <!--<el-upload
-              class="avatar-uploader"
-              action=" 123"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload">
-            <img v-if="imageUrl" :src="imageUrl" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>-->
+              <el-image style="width: 130px;margin-top: 60px;margin-bottom: 10px" :src="imgUrl"></el-image>
+            </div>
+            <div v-else style="margin-top: 60px;font-size:60px">
+              <i class="el-icon-picture"></i>
+              <p style="font-size: 20px">请上传图片</p>
+            </div>
 
-            <%--用于显示图片--%>
-            <div id="show_img"></div>
-            <%--用于存储图片的路径--%>
-            <input type="hidden" id="imgPath">
-            <input type="text" value="asdfg" ref="test">
-            <form id="form_img" enctype="multipart/form-data">
-              <input id="photo" type="file" name="photo" @change="submit_img(index)" ref="input_img" style="display: none">
-              <button type="button" onclick="javascript:document.getElementById('photo').click()">上传</button>
-              <button type="button" id="btn_del">删除</button>
-            </form>
+            <!--<img :src="require('@/assets/imgs/' + this.form.photo)" alt="">-->
+
+
+            <!--图片上传-->
+            <el-upload
+              class="upload-demo"
+              action="http://localhost:8081/uploadImg"
+              :show-file-list="false"
+              :on-success="handleAvatarSuccess"
+              enctype="multipart/form-data"
+              :before-upload="beforeAvatarUpload"
+              name="photo">
+              <!--<img v-if="imageUrl" :src="imageUrl" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
+              <el-button size="small" type="primary">修改头像</el-button>
+            </el-upload>
+
+
 
          </el-aside>
 
@@ -240,10 +253,12 @@
       return {
 
         //学生个人数据
-        form: {
-          photo:''
-        },
+        form: {},
         //div_img:'require("../assets/imgs/" + this.form.photo)',
+
+        //显示的图片
+        imgUrl:'',
+
         //学生课程
         table_course_head: [],
 
@@ -257,7 +272,7 @@
         labelPosition: 'right',
 
         //折叠面板默认开启
-        activeNames: ['学生基本信息'],
+        activeNames: [],
 
         //是否编辑
         isEdit: false,
@@ -284,7 +299,7 @@
           ],
           tel: [
             {required: true, message: '请输入联系电话', trigger: 'blur'},
-            {pattern: /^([1][3,4,5,6,7,8,9]\d{9}$)/, message: '请输入正确的联系电话', trigger: 'blur'}
+            {pattern: /^([1][3,4,5,6,7,8,9]\d{9})$/, message: '请输入正确的联系电话', trigger: 'blur'}
           ],
           identity: [
             {required: true, message: '请输入身份证号', trigger: 'blur'},
@@ -308,50 +323,73 @@
       }
     },
     methods: {
-      submit_img(){
-        if (this.val() == ""){
-          alert("aaa")
-          return;
+      handleAvatarSuccess(res, file) {
+        //this.imageUrl = URL.createObjectURL(file.raw);
+        if (this.$store.getters.studentNo) {
+          //登录身份为员工，上传图片到jxd_emp
+          this.axios.post("updateImgForEmp/" + this.$store.getters.studentNo).then(res => {
+            if (res.data != "fail") {
+              this.imgUrl = "http://localhost:8081/" + res.data;
+              this.$message({
+                type: 'success',
+                message: '上传成功'
+              })
+            } else {
+              this.$message.error("上传失败！")
+            }
+          })
+        }else{
+          //登录身份为学生，上传图片到jxd_student
+          this.axios.post("updateImgForStu/" + this.form.sno).then(res => {
+            if (res.data != "fail") {
+              this.imgUrl = "http://localhost:8081/" + res.data;
+              this.$message({
+                type: 'success',
+                message: '上传成功'
+              })
+            } else {
+              this.$message.error("上传失败！")
+            }
+          })
         }
-        //获取表单中要上传的数据
-        var formData = new FormData($("#form_img")[0]);
-        $.ajax({
-          url:"imgUpload",
-          data:formData,
-          type:"post",
-          cache:false,
-          contentType:false,  //告诉服务器数据的编码方式
-          processData:false,  //避免jQuery对formData进行额外的处理
-          dataType:"text",    //后台响应为字符串，后台响应字符串设置为text。或者不设置。如果响应的是json数据，name必须设置该属性为json
-          success:function (data) {
-            //data是后台图片存储的路径
-            //在div中显示图片
-            var imgObj = $("<img src='${pageContext.request.contextPath}/images/" + data + " 'width='100px'>");
-            $("#show_img").append(imgObj);
-            //$("#show_img").html(imgObj);
-
-            //存储文件名称
-            $("#imgPath").val(data);
-          },
-          error:function () {
-            layer.msg("图片上传失败");
-          }
-        })
       },
+      //上传图片前对图片格式的要求
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg';
+        const isLt2M = file.size / 1024 / 1024 < 2;
 
-
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG 格式!');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        return isJPG && isLt2M;
+      },
       //获取个人信息
       getAllInfo() {
+
+        //获取基本信息
         this.axios.get("getStudent/" + this.$store.getters.uid).then(res => {
           if (res.data.marriage == 0) {
             res.data.marriage = "未婚";
           } else {
             res.data.marriage = "已婚";
           }
-          if (this.$store.getters.studentno){
+          if (this.$store.getters.studentNo){
             this.isStudent = false;
           }
           this.form = res.data;
+
+          //员工登录，获取员工图片信息
+          if (this.$store.getters.studentNo){
+            this.axios.get("getEmpPhotoByEmpno/" + this.$store.getters.studentNo).then(res =>{
+              this.imgUrl = res.data.photo
+            })
+          }else{
+            this.imgUrl = this.form.photo
+          }
+
         })
       },
       //获取课程信息
@@ -434,6 +472,13 @@
     width: 200px;
     font-size: medium;
   }
+  .el-input.is-disabled/deep/ .el-input__inner{
+    background-color: white;
+    border-color: white;
+    color: black;
+    cursor: not-allowed;
+    opacity:1;
+  }
 
   .el-select {
     width: 200px;
@@ -448,11 +493,9 @@
 
   }
 
-  .div_img {
-    position: absolute;
-    margin-left: 30px;
-    margin-top: 60px;
-
+  .el-img{
+    margin-top: 40px;
+    width: 50px;
   }
 
   img {
@@ -462,13 +505,14 @@
     background-color: #D3DCE6;
     color: #333;
     text-align: center;
-    line-height: 200px;
+    /*line-height: 200px;*/
   }
 
   .el-main {
     background-color: #E9EEF3;
     color: #333;
     text-align: center;
-    line-height: 160px;
+
   }
+
 </style>
