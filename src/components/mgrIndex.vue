@@ -5,7 +5,8 @@
         <NavMenu></NavMenu>
       </el-header>
     </el-container>
-
+    <el-container>
+      <el-container>
         <el-main>
 
           <!-- 模糊查询 -->

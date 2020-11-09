@@ -77,13 +77,14 @@
           show-overflow-tooltip
           label="所授课程">
         </el-table-column>
-        <!--<el-table-column
+        <el-table-column
           prop="courseno"
           header-align="center"
           align="left"
+          v-if="show"
           show-overflow-tooltip
           label="课程编号">
-        </el-table-column>-->
+        </el-table-column>
         <el-table-column
           label="操作" align="center">
           <template slot-scope="scope">
@@ -173,10 +174,25 @@
           callback();
         }
       };
+      var validateCno = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请选择课程类型'));
+        } else {
+          callback();
+        }
+      };
+      var validateTno = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请选择教师'));
+        } else {
+          callback();
+        }
+      };
       return {
         tableData: [],   //从后台获取数据
         options:[],
         title:'',
+        show:false,
         query: {
           total: 1,
           current: 1,
@@ -191,7 +207,7 @@
           classname:"",
           cno:"",
           tno:"",
-          course:"",
+          course:[],
           courseno:''
         },
         editClassForm : {
@@ -199,12 +215,18 @@
           classname:"",
           cno:"",
           tno:"",
-          course:"",
+          course:[],
           courseno:''
         },
         rules2: {
           classname: [
-            {validator: validateName, trigger: 'blur'}
+            {required: true, validator: validateName, trigger: 'blur'}
+          ],
+          cno: [
+            {required: true, validator: validateCno, trigger: 'blur'}
+          ],
+          tno: [
+            {required: true, validator: validateTno, trigger: 'blur'}
           ]
         },
         dialogFormVisible: false,
@@ -239,8 +261,12 @@
         //this.editClassForm.courseno = row.courseno;
         this.addClassForm.classname = row.classname;
         this.addClassForm.tno = row.tno;
-        //this.addClassForm.course = this.editClassForm.courseno;
-        debugger
+
+        /*axios.get("getCourseByClass/" + row.classno).then(res => {
+          this.addClassForm.course = res.data;
+        })*///option不可编辑
+
+        //this.addClassForm.course = row.courseno;
         //this.addClassForm.course = row.course;
       },
       addClass:function () {
@@ -251,6 +277,7 @@
           url = "editClass";
           message = "编辑成功";
         }else {
+          alert(this.addClassForm.course)
           this.editClassForm.classno = "undifinde";
         }
         axios.post(url + "/" + this.addClassForm.classname + "/" + this.addClassForm.tno +
@@ -374,6 +401,23 @@
           });
         });
       },
+      getAdminForLogin: function () {
+        if (4 == this.$store.state.role) {
+          this.$router.push("/classInfoInAdmin")
+        } else {
+          this.$router.go(-1)
+        }
+      },
+      getUserForLogin:function() {
+        axios.get("getUserForLogin/" + this.$store.getters.uid).then(res => {
+          if (res.data.role != 4) {
+            this.$router.go(-1)
+          }
+        })
+      },
+    },
+    created() {
+      this.getUserForLogin();
     },
     mounted() {
       //this.getAllCourse();

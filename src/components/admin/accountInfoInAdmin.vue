@@ -139,7 +139,7 @@
 
   export default {
     name: "accountInfoInAdmin",
-    inject:['reload'],
+    inject: ['reload'],
     data() {
       var validatePass = (rule, value, callback) => {
         if (!value) {
@@ -172,20 +172,21 @@
         selectByRole: {
           id: ''
         },
-        editPwd:{
-          uid:'',
-          pwd:'',
-          pwdCon:'',
-          role:''
+        editPwd: {
+          uid: '',
+          pwd: '',
+          pwdCon: '',
+          role: ''
         },
+        options:[],
         dialogFormVisible: false,
         formLabelWidth: '120px',
         resetFormRules: {
           pwd: [
-            { required: true, validator: validatePass, trigger: 'blur' }
+            {required: true, validator: validatePass, trigger: 'blur'}
           ],
           pwdCon: [
-            { required: true, validator: validatePass2, trigger: 'blur' }
+            {required: true, validator: validatePass2, trigger: 'blur'}
           ]
         },
       }
@@ -214,23 +215,22 @@
           this.query.total = res.data.total;
         })
       },
-      openUser:function(row) {
-          this.dialogFormVisible = true;
-          this.editPwd.uid = row.uid;
-          this.editPwd.role = row.role;
+      openUser: function (row) {
+        this.dialogFormVisible = true;
+        this.editPwd.uid = row.uid;
+        this.editPwd.role = row.role;
       },
-      editPwdCom:function() {
-        alert(this.editPwd.pwd+ "+" + this.editPwd.uid)
-        axios.post("editPwd/" + this.editPwd.pwd + "/" + this.editPwd.uid + "/" + this.editPwd.role).then(res => {
-          if (res.data == "success"){
+      editPwdCom: function () {
+        axios.post("editPwd/" + this.editPwd.pwd + "/" + this.editPwd.uid).then(res => {
+          if (res.data == "success") {
             this.reload();/*动态刷新表格*/
             //tableData.splice(index, 1)
             this.dialogFormVisible = false;
             this.$message({
               type: 'success',
-              message : '修改成功！'
+              message: '修改成功！'
             })
-          }else {
+          } else {
             this.$message.error("修改失败！")
           }
         })
@@ -265,7 +265,7 @@
         })
       },
       //单行删除
-      deleteObject(index,row,tableData) {
+      deleteObject(index, row, tableData) {
         this.$confirm('此操作将永久删除选中的账号, 是否继续?', '警告', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -273,14 +273,14 @@
         }).then(() => {
           alert(row)
           axios.get("http://localhost:8081/deleteAccount/" + row).then(res => {
-            if (res.data == "success"){
+            if (res.data == "success") {
               //this.reload();/*动态刷新表格*/
               tableData.splice(index, 1)
               this.$message({
                 type: 'success',
-                message : '删除成功！'
+                message: '删除成功！'
               })
-            }else {
+            } else {
               this.$message.error("删除失败！")
             }
           })
@@ -291,6 +291,23 @@
           });
         });
       },
+      getAdminForLogin: function () {
+        if (4 == this.$store.state.role) {
+          this.$router.push("/accountInfoInAdmin")
+        } else {
+          this.$router.go(-1)
+        }
+      },
+      getUserForLogin:function() {
+        axios.get("getUserForLogin/" + this.$store.getters.uid).then(res => {
+          if (res.data.role != 4) {
+            this.$router.go(-1)
+          }
+        })
+      },
+    },
+    created() {
+      this.getUserForLogin();
     },
     mounted() {
       //this.getAllAccount();
@@ -298,9 +315,6 @@
       this.getAllByPage();
       this.getRole();
     },
-    /*created() {
-      this.getRole();
-    }*/
   }
 </script>
 

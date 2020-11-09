@@ -144,6 +144,10 @@
                        @dblclick.native="dblclickDeleteStudent(scope.row.sno,scope.row.classno)"
                        type="danger" size="mini">删除
             </el-button>
+            <el-button
+              size="mini"
+              @click="toStudentScore(scope.row.sno, scope.row.classno, scope.row.sname)">学校
+            </el-button>
             <!--<el-button type="primary" size="mini" >允许编辑</el-button>-->
           </template>
         </el-table-column>
@@ -312,7 +316,13 @@
         axios.get("http://localhost:8081/getAllClass").then(res => {
           this.options = res.data;
         })
+      },toStudentScore(sno, classno, sname) {
+        this.$store.dispatch("setSno", sno);
+        this.$store.dispatch("setClassNo", classno);
+        this.$store.dispatch("setSname", sname);
+        this.$router.push({path: "/studentScoreGrow"});
       },
+
       handleSizeChange(val) {
         this.page = 1;
         this.query.size = val;
@@ -401,9 +411,25 @@
             message: '已取消删除'
           });
         });
-      }
-    }
-    ,
+      },
+      getAdminForLogin: function () {
+        if (4 == this.$store.state.role) {
+          this.$router.push("/studentInfoInAdmin")
+        } else {
+          this.$router.go(-1)
+        }
+      },
+      getUserForLogin:function() {
+        axios.get("getUserForLogin/" + this.$store.getters.uid).then(res => {
+          if (res.data.role != 4) {
+            this.$router.go(-1)
+          }
+        })
+      },
+    },
+    created() {
+      this.getUserForLogin();
+    },
     //生命周期钩子
     mounted() {
       //this.getAllDept()

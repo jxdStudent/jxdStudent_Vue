@@ -208,8 +208,8 @@ export default {
     //   })
     // },
     getTeacherForLogin:function() {
-      axios.get("getUserForLogin" + this.$store.getters.uid).then(res => {
-        if (res.data[0].role != 1) {
+      axios.get("getUserForLogin/" + this.$store.getters.uid).then(res => {
+        if (res.data.role != 1) {
           this.$router.go(-1)
         }
       })

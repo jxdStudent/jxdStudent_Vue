@@ -136,7 +136,7 @@
           },
           rules2: {
             cname: [
-              {validator: validateName, trigger: 'blur'}
+              {required: true, validator: validateName, trigger: 'blur'}
             ]
           },
           dialogFormVisible: false,
@@ -156,8 +156,13 @@
         openCourse:function(row,title) {
           this.title = title;
           this.dialogFormVisible = true;
-          this.editCourseForm.cno = row.cno;
-          this.addCourseForm.cname = row.cname;
+          if (title == "编辑课程"){
+            this.editCourseForm.cno = row.cno;
+            this.addCourseForm.cname = row.cname;
+          }else {
+            this.addCourseForm.cname = "";
+          }
+
         },
         addCourse:function () {
           let data = this.addCourseForm;
@@ -226,6 +231,23 @@
             });
           });
         },
+        getAdminForLogin: function () {
+          if (4 == this.$store.state.role) {
+            this.$router.push("/courseInfoInAdmin")
+          } else {
+            this.$router.go(-1)
+          }
+        },
+        getUserForLogin:function() {
+          axios.get("getUserForLogin/" + this.$store.getters.uid).then(res => {
+            if (res.data.role != 4) {
+              this.$router.go(-1)
+            }
+          })
+        },
+      },
+      created() {
+        this.getUserForLogin();
       },
       mounted() {
         //this.getAllCourse();

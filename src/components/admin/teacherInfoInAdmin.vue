@@ -192,8 +192,12 @@
       openTeacher:function(row,title) {
           this.title = title;
         this.dialogFormVisible = true;
-        this.editTeacherForm.tno = row.tno;
-        this.addTeacherForm.tname = row.tname;
+        if (title == "添加教师"){
+          this.addTeacherForm.tname = "";
+        }else {
+          this.editTeacherForm.tno = row.tno;
+          this.addTeacherForm.tname = row.tname;
+        }
       },
       addTeacher: function () {
         let data = this.addTeacherForm;
@@ -311,6 +315,23 @@
           });
         });
       },
+      getAdminForLogin: function () {
+        if (4 == this.$store.state.role) {
+          this.$router.push("/teacherInfoInAdmin")
+        } else {
+          this.$router.go(-1)
+        }
+      },
+      getUserForLogin:function() {
+        axios.get("getUserForLogin/" + this.$store.getters.uid).then(res => {
+          if (res.data.role != 4) {
+            this.$router.go(-1)
+          }
+        })
+      },
+    },
+    created() {
+      this.getUserForLogin();
     },
     mounted() {
       //this.getAllTeacher();
