@@ -63,6 +63,13 @@
           >
         </el-table-column>
         <el-table-column
+          prop="mgr"
+          v-if="show"
+          align="center"
+          label="经理编号"
+        >
+        </el-table-column>
+        <el-table-column
           label="操作"
           align="center"
           >
@@ -140,6 +147,7 @@
         return {
           tableData: [],   //从后台获取数据
           multipleSelection: [],
+          show:false,
           delarr: [], //存放删除的数据
           title:'',
           query:{
@@ -199,12 +207,11 @@
           if (title == "编辑部门"){
             this.addDeptForm.ename = row.emp.ename;
             this.addDeptForm.dname = row.dname;
-            //this.addDeptForm.ename = row.ename;
+            this.addDeptForm.empno = row.mgr;
           }
           //this.editDeptForm.cname = row.cname;
         },
         addDept:function(){
-
           let data = this.addDeptForm;
           var url = "addDeptByAdmin";
           var message = "添加成功";
@@ -216,7 +223,7 @@
           }
 
           axios.post(url + "/" + this.addDeptForm.dname + "/" + this.addDeptForm.empno + "/" +
-                      this.addDeptForm.ename).then(res => {
+                      this.addDeptForm.ename + "/" + this.editDeptForm.deptno).then(res => {
             if (res.data == "success") {//添加成功
               this.reload();/*动态刷新表格*/
               this.dialogFormVisible = false;/*关闭弹出层*/

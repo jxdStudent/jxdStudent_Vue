@@ -71,6 +71,7 @@
         <el-table-column
           prop="pwd"
           label="密码"
+          show-overflow-tooltip
           align="left"
         >
         </el-table-column>
