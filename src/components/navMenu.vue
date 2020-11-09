@@ -7,9 +7,17 @@
         <el-menu class="el-menu-demo" mode="horizontal">
           <el-submenu index="1">
             <template slot="title">
+              <span v-if="isShow"> <!--添加头像-->
+                  <el-avatar :size="50">
+                    <img src="../assets/imgs/title.png" alt="">
+                  </el-avatar>
+              </span>
+              <span v-else> <!--添加头像-->
                   <el-avatar :size="50">
                     <img :src="img" alt="">
                   </el-avatar>
+              </span>
+
             </template>
             <el-menu-item index="1-1" @click="change_pwd">修改密码</el-menu-item>
             <el-menu-item index="1-2" @click="edit">编辑资料</el-menu-item>
@@ -46,13 +54,12 @@
     </div>
   </div>
   <div style="float: right;font-size: 18px;padding: 15px 15px"><span>欢迎你,{{$store.state.uname}}</span></div>
-    <div style="float: left;font-size: 25px;padding: 15px 15px;font-weight: bold;font-family: 'Microsoft YaHei'">
       <img src="../assets/imgs/logo.png" style="float: left" width="45" alt="">
+    <div style="float: left;font-size: 25px;padding: 2px 10px;font-weight: bold;font-family: 'Microsoft YaHei'">
       <span>金桥学员成长跟踪系统</span>
     </div>
   </div>
 </template>
-
 <script>
     export default {
         name: "navMenu",
@@ -95,7 +102,8 @@
         return{
           dialogFormVisible: false,
           labelPosition:"right",
-
+          isShow:false,
+          imgUrl:null,
 
           form: {
             pwd_old:null,
@@ -118,10 +126,14 @@
         }
       },
       methods:{
+          getImgUrl(){
+            if (this.img == undefined){
+              this.isShow = !this.isShow
+            }
+          },
         change_pwd(){
           this.dialogFormVisible = true;
         },
-
         submit_change_pwd(form){
           this.axios.get("login/" + this.uid + "/" + this.form.pwd_old).then(res => {
 
@@ -171,7 +183,7 @@
         }
       },
       mounted() {
-
+        this.getImgUrl()
       }
     }
 </script>

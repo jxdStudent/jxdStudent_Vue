@@ -257,7 +257,7 @@
         //div_img:'require("../assets/imgs/" + this.form.photo)',
 
         //显示的图片
-        imgUrl:'',
+        imgUrl:null,
 
         //学生课程
         table_course_head: [],
@@ -326,6 +326,14 @@
       }
     },
     methods: {
+      getForLogin:function() {
+        this.axios.get("getUserForLogin/" + this.$store.getters.uid).then(res => {
+          if (res.data.role != 0 && res.data.role != 2) {
+            this.$router.go(-1)
+          }
+        })
+      },
+
       handleAvatarSuccess(res, file) {
         //this.imageUrl = URL.createObjectURL(file.raw);
         if (this.$store.getters.studentNo) {
@@ -400,7 +408,11 @@
             this.uid_change = this.$store.getters.uid
           }
 
+          this.getAllCourse();
+          this.getAllScore();
         })
+
+
       },
       //获取课程信息
       getAllCourse() {
@@ -466,12 +478,15 @@
         })
       }
     },
+    created() {
+      this.getForLogin();
+    },
     //加载执行
     mounted() {
       this.getAllInfo();
       //在获取基本信息之后执行，以便获取其中的班级编号classno
-      setTimeout(this.getAllCourse, 1000);
-      setTimeout(this.getAllScore, 1000);
+      //setTimeout(this.getAllCourse, 60);
+      //setTimeout(this.getAllScore, 60);
 
     }
   }

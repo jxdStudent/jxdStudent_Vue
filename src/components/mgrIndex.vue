@@ -1,12 +1,11 @@
 <template>
-  <div>
+  <div style="margin: auto">
     <el-container>
       <el-header>
         <NavMenu></NavMenu>
       </el-header>
     </el-container>
-    <el-container>
-      <el-container>
+
         <el-main>
 
           <!-- 模糊查询 -->
@@ -100,6 +99,7 @@
             <el-table-column
               fixed="right"
               label="操作"
+              align="center"
               >
               <template slot-scope="scope">
                 <el-button
@@ -232,7 +232,6 @@
       },
       //获取经理管理的员工（分页显示）
       getAllByPage:function(ename){
-        debugger
         //通过getters属性获取仓库中的值
         var mgr = this.$store.getters.uid;
 
