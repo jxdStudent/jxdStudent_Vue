@@ -5,12 +5,11 @@
         <navMenu></navMenu>
       </el-header>
       <el-container>
-        <el-aside width="200px">
+        <el-aside width="150px">
           <el-menu
             :default-active="$route.path"
             :unique-opened="true"
             @select="handleSelect"
-            default-active="teacherIndex"
             class="el-menu-vertical-demo">
             <el-menu-item index="teacherIndex">
               <i class="el-icon-menu"></i>
@@ -122,6 +121,7 @@
               header-align="center">
               <template slot-scope="scope">
                 <el-input
+                  @keyup.enter.native="submit"
                   maxlength="255"
                   show-word-limit
                   v-model="scope.row.sevaluate"
@@ -134,7 +134,7 @@
           </el-table>
           <br><br>
           <el-button type="primary" @click="submit">提交</el-button>
-          <el-button type="info" @click="reload">刷新</el-button>
+          &nbsp
           <el-button @click="back">返回</el-button>
         </el-main>
       </el-container>
@@ -152,7 +152,13 @@ export default {
   components: {navMenu},
   data() {
     return {
-      table_data: [],
+      table_data: [
+        {
+          sno: this.$store.getters.studentNo,
+          sname: this.$store.getters.sname,
+          classno: this.$store.getters.classNo
+        }
+      ],
       table_course_head: [],
       table_course_score: [],
       table_evaluate: [],
@@ -163,16 +169,19 @@ export default {
       }
     }
   },
+  mounted() {
+    this.getAllCourse();
+    this.getAllScore();
+    this.getSchoolEvaluate();
+    this.getStudentScore();
+  },
   methods: {
-    getStudent() {
-      var name = this.$store.getters.uname;
-      axios.get("/getStudentById/" + this.$store.getters.studentNo).then(res => {
-        this.table_data = res.data;
-      })
+    back() {
+      this.$router.go(-1);
     },
     //获取课程信息
     getAllCourse() {
-      axios.get("/getAllCourse/").then(res => {
+      axios.get("/getAllCourse/" + this.$store.getters.classNo).then(res => {
         this.table_course_head = res.data;
       })
     },
@@ -194,8 +203,8 @@ export default {
         this.dynamicForm.dynamics = res.data;
       })
     },
-    handleSelect(path){
-      this.$router.push(path)
+    handleChange(value) {
+      console.log(value);
     },
     handleCurrentChange(row, event, column) {
       console.log('改变', row, event, column, event.currentTarget)
@@ -203,8 +212,8 @@ export default {
     handleEdit(index, row) {
       console.log('修改', index, row);
     },
-    handleChange(value) {
-      console.log(value);
+    handleSelect(path){
+      this.$router.push(path)
     },
     submit() {
       var table_evaluate_obj = {};
@@ -237,19 +246,6 @@ export default {
         }
       })
     },
-    reload() {
-      this.$router.go(0);
-    },
-    back() {
-      this.$router.go(-1);
-    },
-  },
-  mounted() {
-    this.getStudent();
-    this.getAllCourse();
-    this.getAllScore();
-    this.getSchoolEvaluate();
-    this.getStudentScore();
   }
 }
 </script>

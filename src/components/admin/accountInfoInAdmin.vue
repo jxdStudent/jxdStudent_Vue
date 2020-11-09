@@ -71,6 +71,7 @@
         <el-table-column
           prop="pwd"
           label="密码"
+          show-overflow-tooltip
           align="left"
         >
         </el-table-column>
@@ -85,10 +86,10 @@
           align="center"
         >
           <template slot-scope="scope">
-            <el-button @click.native.prevent="deleteObject(scope.$index,scope.row.uid,tableData)"
+            <!--<el-button @click.native.prevent="deleteObject(scope.$index,scope.row.uid,tableData)"
                        type="danger" size="mini">删除
-            </el-button>
-            <el-button type="primary" size="mini">编辑</el-button>
+            </el-button>-->
+            <el-button type="primary" size="mini" @click="openUser(scope.row)">编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -102,6 +103,34 @@
         :total="this.query.total">
       </el-pagination>
     </div>
+
+    <!--修改密码-->
+    <el-dialog title="修改密码" :visible.sync="dialogFormVisible">
+      <el-form :model="editPwd" ref="editPwd" :rules="resetFormRules" @close='closeDialog'>
+        <el-row>
+          <el-col :span="12" offset="5">
+            <el-form-item label="新密码" :label-width="formLabelWidth" prop="pwd">
+              <el-input type="password" v-model="editPwd.pwd" autocomplete="off"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12" offset="5">
+            <el-form-item label="确认密码" :label-width="formLabelWidth" prop="pwdCon">
+              <el-input type="password" v-model="editPwd.pwdCon" autocomplete="off"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12" offset="5">
+            <el-form-item>
+              <el-button @click="dialogFormVisible = false">取 消</el-button>
+              <el-button type="primary" @click="editPwdCom">确 定</el-button>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -110,7 +139,26 @@
 
   export default {
     name: "accountInfoInAdmin",
+    inject:['reload'],
     data() {
+      var validatePass = (rule, value, callback) => {
+        if (!value) {
+          callback(new Error('请输入新密码'));
+        } else if (value.toString().length < 6 || value.toString().length > 18) {
+          callback(new Error('密码长度为6 - 18个字符'))
+        } else {
+          callback();
+        }
+      };
+      var validatePass2 = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请再次输入密码'));
+        } else if (value !== this.editPwd.pwd) {
+          callback(new Error('两次输入密码不一致!'));
+        } else {
+          callback();
+        }
+      };
       return {
         tableData: [],   //从后台获取数据
         query: {
@@ -124,8 +172,22 @@
         selectByRole: {
           id: ''
         },
+        editPwd:{
+          uid:'',
+          pwd:'',
+          pwdCon:'',
+          role:''
+        },
         dialogFormVisible: false,
-        formLabelWidth: '120px'
+        formLabelWidth: '120px',
+        resetFormRules: {
+          pwd: [
+            { required: true, validator: validatePass, trigger: 'blur' }
+          ],
+          pwdCon: [
+            { required: true, validator: validatePass2, trigger: 'blur' }
+          ]
+        },
       }
     },
     methods: {
@@ -150,6 +212,27 @@
           this.query.current = res.data.current;
           this.query.size = res.data.size;
           this.query.total = res.data.total;
+        })
+      },
+      openUser:function(row) {
+          this.dialogFormVisible = true;
+          this.editPwd.uid = row.uid;
+          this.editPwd.role = row.role;
+      },
+      editPwdCom:function() {
+        alert(this.editPwd.pwd+ "+" + this.editPwd.uid)
+        axios.post("editPwd/" + this.editPwd.pwd + "/" + this.editPwd.uid + "/" + this.editPwd.role).then(res => {
+          if (res.data == "success"){
+            this.reload();/*动态刷新表格*/
+            //tableData.splice(index, 1)
+            this.dialogFormVisible = false;
+            this.$message({
+              type: 'success',
+              message : '修改成功！'
+            })
+          }else {
+            this.$message.error("修改失败！")
+          }
         })
       },
       handleSizeChange(val) {

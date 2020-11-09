@@ -72,7 +72,7 @@
                   align="center"
                 >
                 </el-table-column>
-                <el-table-column prop="officaldate" align="center" label="入职日期">
+                <el-table-column prop="officialdate" align="center" label="入职日期">
                 </el-table-column>
                 <el-table-column prop="student.sno" align="center" label="学号">
                 </el-table-column>
@@ -83,7 +83,7 @@
                     <el-button @click.native.prevent="deleteObject(scope.$index,scope.row.empno,tableData)"
                                type="danger" size="mini">删除
                     </el-button>
-                    <el-button type="primary" size="mini">编辑</el-button>
+                    <el-button type="primary" size="mini" @click="openEmp(scope.row)">编辑</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -105,26 +105,32 @@
     </el-container>
 
     <!--添加员工-->
-    <!--<el-dialog title="添加员工" :visible.sync="dialogFormVisible">
-      <el-form :model="addEmpForm" :rules="rules2" @close='closeDialog'>
+    <el-dialog title="编辑员工" :visible.sync="dialogFormVisible">
+      <el-form :model="editEmpForm" :rules="rules2" @close='closeDialog'>
         <el-row>
           <el-col :span="12" offset="5">
-            <el-form-item label="员工姓名" :label-width="formLabelWidth" prop="cname">
-              <el-input v-model="addEmpForm.cname" autocomplete="off"></el-input>
+            <el-form-item label="员工编号" :label-width="formLabelWidth" prop="cname">
+              <el-input v-model="editEmpForm.empno" disabled autocomplete="off"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12" offset="5">
-            <el-form-item label="员工工作" :label-width="formLabelWidth" prop="cname">
-              <el-input v-model="addEmpForm.cname" autocomplete="off"></el-input>
+            <el-form-item label="员工姓名" :label-width="formLabelWidth" prop="cname">
+              <el-input v-model="editEmpForm.ename" disabled autocomplete="off"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12" offset="5">
             <el-form-item label="所在部门" :label-width="formLabelWidth" prop="cname">
-              <el-input v-model="addEmpForm.cname" autocomplete="off"></el-input>
+              <!--<el-input v-model="editEmpForm.deptno" autocomplete="off"></el-input>-->
+              <el-select v-model="editEmpForm.deptno" filterable placeholder="请选择学期">
+                <el-option v-for="item in options" :key="item.deptno" :label="item.dname" :value="item.deptno">
+                  <span style="float: left">{{ item.deptno }}</span>
+                  <span style="float: right;color: #8492a6; font-size: 13px">{{item.dname}}</span>
+                </el-option>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -132,13 +138,12 @@
           <el-col :span="12" offset="5">
             <el-form-item>
               <el-button @click="dialogFormVisible = false">取 消</el-button>
-              <el-button type="primary" @click="addCourse">确 定</el-button>
+              <el-button type="primary" @click="editEmp">确 定</el-button>
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
     </el-dialog>
--->
   </div>
 </template>
 
@@ -150,10 +155,12 @@
   export default {
     name: "empInfoInAdmin",
     components: {navMenu, navMenuSide},
+    inject: ["reload"],
     data() {
       return {
         tableData: [],   //从后台获取数据
         adminMenus: [],
+        options: [],
         query: {
           total: 1,
           current: 1,
@@ -161,10 +168,14 @@
         },
         selectEmp: {
           empno: ''
-        }
-        /*formInline: {
-          user: '',
-        }*/
+        },
+        editEmpForm:{
+          empno: '',
+          ename:'',
+          deptno:''
+        },
+        dialogFormVisible: false,
+        formLabelWidth: '120px'
       }
     },
     methods: {
@@ -184,6 +195,36 @@
         axios.get("http://localhost:8081/selectEmpWithDeptByPage/" + this.query.current + "/" +
           this.query.size + "/" + deptno + "/" + empno).then(res => {
           this.tableData = res.data;
+        })
+      },
+      openEmp:function(row){
+        if (row.job == "经理"){
+          this.$message.error("经理不可编辑");
+        }else {
+          this.dialogFormVisible = true;
+          this.editEmpForm.empno = row.empno;
+          this.editEmpForm.deptno = row.deptno;
+          this.editEmpForm.ename = row.ename;
+        }
+      },
+      editEmp:function() {
+        axios.get("editEmp/" + this.editEmpForm.empno + "/" + this.editEmpForm.deptno).then(res => {
+          if (res.data == "success") {//添加成功
+            this.reload();/*动态刷新表格*/
+            this.dialogFormVisible = false;/*关闭弹出层*/
+            this.$message({
+              type: 'success',
+              message: "编辑成功"
+            });
+            //location.reload();
+          } else {
+            this.$message.error('操作失败！');
+          }
+        })
+      },
+      getEmp() {
+        axios.get("getAllDept").then(res => {
+          this.options = res.data;
         })
       },
       handleSizeChange(val) {
@@ -237,6 +278,7 @@
       //this.getAllEmp();
       //this.handleUserList()
       this.getMenu();
+      this.getEmp();
       this.getAllEmpSize();
       this.getAllByPage();
     }

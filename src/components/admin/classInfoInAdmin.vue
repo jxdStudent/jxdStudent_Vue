@@ -25,7 +25,7 @@
           </el-col>
           <el-col :span="3">
             <el-form-item>
-              <el-button type="primary" @click="openClass(null,'添加课学期')">添加学期</el-button>
+              <el-button type="primary" @click="openClass(null,'添加学期')">添加学期</el-button>
             </el-form-item>
           </el-col>
           <el-col :span="3">
@@ -44,7 +44,7 @@
     <!-- 表格 -->
     <div class="store-table">
       <el-table
-        :data="tableData"
+        :data="tableData.slice((query.current-1)*query.size,query.current*query.size)"
         border
         fit="fit"
         stripe="stripe"
@@ -77,6 +77,13 @@
           show-overflow-tooltip
           label="所授课程">
         </el-table-column>
+        <!--<el-table-column
+          prop="courseno"
+          header-align="center"
+          align="left"
+          show-overflow-tooltip
+          label="课程编号">
+        </el-table-column>-->
         <el-table-column
           label="操作" align="center">
           <template slot-scope="scope">
@@ -100,8 +107,8 @@
     </div>
 
     <!--添加学期-->
-    <el-dialog :title="title" :visible.sync="dialogFormVisible">
-      <el-form :model="addClassForm" :rules="rules2" @close='closeDialog'>
+    <el-dialog :title="title" :visible.sync="dialogFormVisible" @close='closeDialog'>
+      <el-form :model="addClassForm" ref="addClassForm" :rules="rules2">
         <el-row>
           <el-col :span="12" offset="5">
             <el-form-item label="学期名称" :label-width="formLabelWidth" prop="classname">
@@ -111,7 +118,7 @@
         </el-row>
         <el-row>
           <el-col :span="12" offset="5">
-            <el-form-item label="授课老师" :label-width="formLabelWidth">
+            <el-form-item label="授课老师" prop="tno" :label-width="formLabelWidth">
               <el-select v-model="addClassForm.tno" placeholder="请选择授课老师" class="addClassFormInput">
                 <el-option v-for="item in options" :key="item.tno" :label="item.tname" :value="item.tno">
                   <span style="float: left">{{ item.tno }}</span>
@@ -123,7 +130,7 @@
         </el-row>
         <el-row>
           <el-col :span="12" offset="5">
-            <el-form-item label="教授课程" :label-width="formLabelWidth">
+            <el-form-item label="教授课程" prop="cno" :label-width="formLabelWidth">
               <el-select v-model="addClassForm.course" multiple collapse-tags placeholder="请选择" class="addClassFormInput">
                 <el-option
                   v-for="item in optionsForCourse"
@@ -157,6 +164,7 @@
   export default {
     name: "classInfoInAdmin",
     inject:['reload'],
+    //show:true,
     data() {
       var validateName = (rule, value, callback) => {
         if (value === '') {
@@ -183,14 +191,16 @@
           classname:"",
           cno:"",
           tno:"",
-          course:""
+          course:"",
+          courseno:''
         },
         editClassForm : {
           classno: '',
           classname:"",
           cno:"",
           tno:"",
-          course:""
+          course:"",
+          courseno:''
         },
         rules2: {
           classname: [
@@ -207,40 +217,53 @@
       getAllClassSize: function (classname) {
         axios.get("http://localhost:8081/getAllClassByPage/" + classname).then(res => {
           this.query.total = res.data.length;
+          this.tableData = res.data;
         })
       },
-      getAllByPage: function (classname) {
+      /*getAllByPage: function (classname) {
         axios.get("http://localhost:8081/getClassWithDeptByPage/" + this.query.current + "/" +
           this.query.size + "/" + classname).then(res => {
           this.tableData = res.data;
           //this.courseShow = res.data.course;
-          /*for (let i = 0; i < res.data.length; i++) {
+          /!*for (let i = 0; i < res.data.length; i++) {
             for (let j = 0; j < res.data[i].course.length; j++) {
               this.courseShow[i] = res.data[i].course[j].cname;
             }
-          }*/
+          }*!/
         })
-      },
+      },*/
       openClass:function(row,title) {
         this.title = title;
         this.dialogFormVisible = true;
         this.editClassForm.classno = row.classno;
+        //this.editClassForm.courseno = row.courseno;
         this.addClassForm.classname = row.classname;
         this.addClassForm.tno = row.tno;
-        this.addClassForm.course = row.course;
+        //this.addClassForm.course = this.editClassForm.courseno;
+        debugger
+        //this.addClassForm.course = row.course;
       },
       addClass:function () {
-        axios.post("/addClass/" + this.addClassForm.classname + "/" + this.addClassForm.tno +
-                  "/" + this.addClassForm.course).then(res => {
+        var url = "addClass";
+        var message = "添加成功";
+
+        if (this.title == "编辑学期"){
+          url = "editClass";
+          message = "编辑成功";
+        }else {
+          this.editClassForm.classno = "undifinde";
+        }
+        axios.post(url + "/" + this.addClassForm.classname + "/" + this.addClassForm.tno +
+                  "/" + this.addClassForm.course + "/" + this.editClassForm.classno).then(res => {
           if (res.data == "success") {//添加成功
             this.reload();/*动态刷新表格*/
             this.dialogFormVisible = false;/*关闭弹出层*/
             this.$message({
               type: 'success',
-              message: '添加成功！'
+              message: message
             });
           } else {
-            this.$message.error('添加成功！');
+            this.$message.error('操作失败！');
           }
         })
       },
@@ -272,12 +295,20 @@
         this.getAllClassSize()
         this.getAllByPage()
         this.$refs['selectClassForm'].resetFields()
+        //this.$refs.selectClassForm.resetFields()
       },
       toggleSelection() {
         this.$refs.multipleTable.clearSelection();
       },
       handleSelectionChange(val) {
         this.multipleSelection = val;
+      },
+      closeDialog:function(){
+        //this.addClassForm = '';   //下次编辑打开也没有
+        this.addClassForm.classname = '';
+        this.addClassForm.tno = '';
+        //this.addClassForm.course = '';
+        //this.$refs['addClassForm'].resetFields()  //下次添加打开还有
       },
       // 多选删除
       delArray() {
@@ -348,9 +379,9 @@
       //this.getAllCourse();
       //this.handleUserList()
       this.getAllClassSize();
-      this.getAllByPage();
       this.getTeacherForOptions();
       this.getCourseForOptions();
+      this.getAllByPage();
     }
   }
 </script>
