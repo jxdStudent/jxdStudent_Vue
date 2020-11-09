@@ -4,14 +4,20 @@
   <div class="navMenu">
     <el-row>
       <el-col>
-        <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+        <el-menu class="el-menu-demo" mode="horizontal">
           <el-submenu index="1">
             <template slot="title">
-                <div class="block"><!--添加头像-->
+              <span v-if="isShow"> <!--添加头像-->
+                  <el-avatar :size="50">
+                    <img src="../assets/imgs/title.png" alt="">
+                  </el-avatar>
+              </span>
+              <span v-else> <!--添加头像-->
                   <el-avatar :size="50">
                     <img :src="img" alt="">
                   </el-avatar>
-                </div>
+              </span>
+
             </template>
             <el-menu-item index="1-1" @click="change_pwd">修改密码</el-menu-item>
             <el-menu-item index="1-2" @click="edit">编辑资料</el-menu-item>
@@ -53,7 +59,6 @@
     </div>
   </div>
 </template>
-
 <script>
     export default {
         name: "navMenu",
@@ -96,7 +101,8 @@
         return{
           dialogFormVisible: false,
           labelPosition:"right",
-
+          isShow:false,
+          imgUrl:null,
 
           form: {
             pwd_old:null,
@@ -119,10 +125,14 @@
         }
       },
       methods:{
+          getImgUrl(){
+            if (this.img == undefined){
+              this.isShow = !this.isShow
+            }
+          },
         change_pwd(){
           this.dialogFormVisible = true;
         },
-
         submit_change_pwd(form){
           this.axios.get("login/" + this.uid + "/" + this.form.pwd_old).then(res => {
 
@@ -172,7 +182,7 @@
         }
       },
       mounted() {
-
+        this.getImgUrl()
       }
     }
 </script>

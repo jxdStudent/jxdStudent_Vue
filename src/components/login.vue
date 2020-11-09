@@ -65,10 +65,10 @@
             } else if (res.data.role == 1) {//20001
               this.$message({type :"success", message :"登录成功"})
               this.$router.push({path: "/TeacherIndex"});
-            } else if(res.data.role == 2){
+            } else if(res.data.role == 3){
               this.$message({type :"success", message :"登录成功"})
             this.$router.push({path: "/mgrIndex"});
-          }else if (res.data.role == 3){
+          }else if (res.data.role == 2){
               this.$message({type :"success", message :"登录成功"})
               this.$store.dispatch("setUserUid", this.form.name);
               //通过员工号获取学生号
