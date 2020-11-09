@@ -272,7 +272,7 @@
         labelPosition: 'right',
 
         //折叠面板默认开启
-        activeNames: [],
+        activeNames: '',
 
         //是否编辑
         isEdit: false,
