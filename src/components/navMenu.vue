@@ -53,9 +53,9 @@
       </el-dialog>
     </div>
   </div>
-  <div style="float: right;font-size: 18px;padding: 15px 15px"><span>欢迎你,{{$store.state.uname}}</span></div>
-      <img src="../assets/imgs/logo.png" style="float: left" width="45" alt="">
-    <div style="float: left;font-size: 25px;padding: 2px 10px;font-weight: bold;font-family: 'Microsoft YaHei'">
+  <div style="float: right;font-size: 18px;padding: 15px 15px;margin-top: 3px"><span>欢迎你,{{$store.state.uname}}</span></div>
+      <img src="../assets/imgs/logo.png" style="float: left;margin-top: 5px" width="45" alt="">
+    <div style="float: left;font-size: 25px;margin-top:5px;padding: 2px 10px;font-weight: bold;font-family: 'Microsoft YaHei'">
       <span>金桥学员成长跟踪系统</span>
     </div>
   </div>
