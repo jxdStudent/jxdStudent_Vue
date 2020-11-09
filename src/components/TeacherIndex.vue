@@ -208,13 +208,10 @@ export default {
     //   })
     // },
     getTeacherForLogin:function() {
-      axios.get("getTeacherForLogin").then(res => {
-        for (let i = 0; i < res.data.length; i++) {
-          if (res.data[i] == this.$store.getters.uid){
-            this.$router.push("/teacherIndex")
-          }
+      axios.get("getUserForLogin" + this.$store.getters.uid).then(res => {
+        if (res.data[0].role != 1) {
+          this.$router.go(-1)
         }
-        this.$router.go(-1)
       })
     },
     getAllByPage: function (sno, classno) {
