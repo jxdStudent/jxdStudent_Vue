@@ -144,10 +144,10 @@
                        @dblclick.native="dblclickDeleteStudent(scope.row.sno,scope.row.classno)"
                        type="danger" size="mini">删除
             </el-button>
-            <el-button
+            <!--<el-button
               size="mini"
               @click="toStudentScore(scope.row.sno, scope.row.classno, scope.row.sname)">学校
-            </el-button>
+            </el-button>-->
             <!--<el-button type="primary" size="mini" >允许编辑</el-button>-->
           </template>
         </el-table-column>

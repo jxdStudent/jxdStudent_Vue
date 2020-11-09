@@ -261,12 +261,24 @@
         //this.editClassForm.courseno = row.courseno;
         this.addClassForm.classname = row.classname;
         this.addClassForm.tno = row.tno;
+        var courseno = row.courseno.split(",");
+        var courseno_int = [];
+        courseno_int=courseno.map(function(data){
+          return +data;
+        });
+        for (var i = 0; i < courseno_int.length; i++) {
+          this.addClassForm.course.push(courseno_int[i]);//可解决readonly状态问题
+        }
+        /*this.addClassForm.course.push(row.course);
 
-        /*axios.get("getCourseByClass/" + row.classno).then(res => {
-          this.addClassForm.course = res.data;
+        axios.get("getCourseByClass/" + row.classno).then(res => {
+          //this.addClassForm.course = res.data;
+          //this.addClassForm.course.push(res.data);
+          for (let i = 0; i < res.data.length; i++) {
+            this.addClassForm.course.push(res.data[i]);
+          }
         })*///option不可编辑
-
-        //this.addClassForm.course = row.courseno;
+        //this.addClassForm.course.push(row.course);
         //this.addClassForm.course = row.course;
       },
       addClass:function () {
@@ -334,7 +346,7 @@
         //this.addClassForm = '';   //下次编辑打开也没有
         this.addClassForm.classname = '';
         this.addClassForm.tno = '';
-        //this.addClassForm.course = '';
+        this.addClassForm.course = [];
         //this.$refs['addClassForm'].resetFields()  //下次添加打开还有
       },
       // 多选删除

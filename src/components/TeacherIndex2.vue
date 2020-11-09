@@ -222,7 +222,7 @@ export default {
           column_name: "classno", column_comment: "班期"
         }
       ];
-      axios.get("/getAllCourse").then(res => {
+      axios.get("/getAllCourse/").then(res => {
         for (let i = 0; i < res.data.length; i++) {
           var table_head_obj = {};
           table_head_obj.column_name = res.data[i].cno + "";
