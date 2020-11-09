@@ -2,11 +2,11 @@
   <div>
     <el-container>
       <el-header style="background-color: #42b983">
-        <navMenu :edit_student="edit_student" :img="imgUrl"/>
+        <navMenu :edit_student="edit_student" :img="imgUrl" :uid="uid_change"/>
       </el-header>
 
 
-      <el-col :span="16" :offset="4">
+      <div style="width: 1000px;margin: auto">
 
         <el-container>
           <el-main>
@@ -232,7 +232,7 @@
 
         </el-container>
 
-      </el-col>
+      </div>
     </el-container>
 
   </div>
@@ -267,6 +267,9 @@
 
         //老师姓名
         tname: null,
+
+        //修改密码
+        uid_change:null,
 
         //表单对齐
         labelPosition: 'right',
@@ -388,6 +391,13 @@
             })
           }else{
             this.imgUrl = this.form.photo
+          }
+
+          //根据登录角色传递登录用户id
+          if (this.$store.getters.studentNo){
+            this.uid_change = this.$store.getters.studentNo
+          } else{
+            this.uid_change = this.$store.getters.uid
           }
 
         })
