@@ -5,21 +5,38 @@
         <navMenu></navMenu>
       </el-header>
       <el-container>
-        <el-aside width="150px">
+        <el-aside width="200px">
           <el-menu
             :default-active="$route.path"
             :unique-opened="true"
             @select="handleSelect"
+            @open="handleOpen"
+            @close="handleClose"
             default-active="teacherIndex"
             class="el-menu-vertical-demo">
             <el-menu-item index="teacherIndex">
-              <i class="el-icon-menu"></i>
+              <i class="el-icon-user"></i>
               <span slot="title">学生信息表</span>
             </el-menu-item>
             <el-menu-item index="teacherIndex2">
               <i class="el-icon-document"></i>
               <span slot="title">学生成绩表</span>
             </el-menu-item>
+            <el-submenu index="">
+              <template slot="title">
+                <i class="el-icon-s-unfold"></i>
+                <span>工作追踪表</span>
+              </template>
+              <el-menu-item index="">
+                <i class="el-icon-s-custom"></i>工作1年
+              </el-menu-item>
+              <el-menu-item index="">
+                <i class="el-icon-s-custom"></i>工作2年
+              </el-menu-item>
+              <el-menu-item index="">
+                <i class="el-icon-s-custom"></i>工作3年
+              </el-menu-item>
+            </el-submenu>
           </el-menu>
         </el-aside>
         <el-main>
@@ -124,25 +141,13 @@
               </el-table-column>
               <el-table-column
                 fixed="right"
-                label="综合评价"
-                width="320"
+                label="操作"
+                width="120"
                 align="center">
                 <template slot-scope="scope">
                   <el-button
                     size="mini"
-                    @click="toStudentScore(scope.row.sno, scope.row.classno, scope.row.sname)">学校
-                  </el-button>
-                  <el-button
-                    size="mini"
-                    @click="">工作1
-                  </el-button>
-                  <el-button
-                    size="mini"
-                    @click="">工作2
-                  </el-button>
-                  <el-button
-                    size="mini"
-                    @click="">工作3
+                    @click="toStudentScore(scope.row.sno, scope.row.classno, scope.row.sname)">评价
                   </el-button>
                 </template>
               </el-table-column>
@@ -228,13 +233,11 @@ export default {
     onSelectID(sno, SelectForm) {
       console.log('submit!');
       this.getAllByPage(sno, "undefined");
-      //this.$refs[SelectForm].resetFields()
     }
     ,
     onSelectClass(classno, SelectForm) {
       console.log('select!');
       this.getAllByPage("undefined", classno);
-      //this.$refs[SelectForm].resetFields()
     },
     handleSizeChange(val) {
       this.page = 1;
@@ -244,7 +247,13 @@ export default {
     handleCurrentChange(val) {
       this.query.current = val;
       this.getAllByPage()
-    }
+    },
+    handleOpen(key, keyPath) {
+      console.log(key, keyPath);
+    },
+    handleClose(key, keyPath) {
+      console.log(key, keyPath);
+    },
   }
 }
 </script>

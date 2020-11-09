@@ -52,13 +52,5 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
-::-webkit-scrollbar {
-::-webkit-scrollbar {
-  width: 0px;
-  height: 10px;
-}*/
 
-::-webkit-scrollbar-thumb {
-  background-color: #8c939d;
-  border-radius: 5px;
 </style>

@@ -5,20 +5,35 @@
         <navMenu></navMenu>
       </el-header>
       <el-container>
-        <el-aside width="150px">
+        <el-aside width="200px">
           <el-menu
             :default-active="$route.path"
             :unique-opened="true"
             @select="handleSelect"
             class="el-menu-vertical-demo">
             <el-menu-item index="teacherIndex">
-              <i class="el-icon-menu"></i>
+              <i class="el-icon-user"></i>
               <span slot="title">学生信息表</span>
             </el-menu-item>
             <el-menu-item index="teacherIndex2">
-              <i class="el-icon-document"></i>
+              <i class="el-icon-s-unfold"></i>
               <span slot="title">学生成绩表</span>
             </el-menu-item>
+            <el-submenu index="">
+              <template slot="title">
+                <i class="el-icon-location"></i>
+                <span>工作追踪表</span>
+              </template>
+              <el-menu-item index="">
+                <i class="el-icon-s-custom"></i>工作1年
+              </el-menu-item>
+              <el-menu-item index="">
+                <i class="el-icon-s-custom"></i>工作2年
+              </el-menu-item>
+              <el-menu-item index="">
+                <i class="el-icon-s-custom"></i>工作3年
+              </el-menu-item>
+            </el-submenu>
           </el-menu>
         </el-aside>
         <el-main>
@@ -245,6 +260,12 @@ export default {
           this.$message("服务错误");
         }
       })
+    },
+    handleOpen(key, keyPath) {
+      console.log(key, keyPath);
+    },
+    handleClose(key, keyPath) {
+      console.log(key, keyPath);
     },
   }
 }
