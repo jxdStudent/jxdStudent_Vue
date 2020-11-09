@@ -93,11 +93,11 @@ export default {
     }
   },
   methods: {
+    //获取学生的学号，姓名，班期
     getStudent() {
       var sno = this.$route.query.sno;
       axios.get("/getStudentById/" + sno).then(res => {
         this.table_data = res.data;
-        debugger
         this.getSchoolEvaluate(this.table_data[0].tno)
       })
     },
@@ -116,7 +116,6 @@ export default {
     },
     //获取该学生的学校评价
     getSchoolEvaluate(tno){
-      debugger
       console.log(tno);
       var sno = this.$route.query.sno;
 

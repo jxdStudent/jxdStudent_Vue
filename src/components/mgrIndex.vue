@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="margin: auto">
     <el-container>
       <el-header>
         <NavMenu></NavMenu>
@@ -232,7 +232,6 @@
       },
       //获取经理管理的员工（分页显示）
       getAllByPage:function(ename){
-        debugger
         //通过getters属性获取仓库中的值
         var mgr = this.$store.getters.uid;
 
@@ -302,8 +301,8 @@
   .el-header {
     background-color: #409EFF;
     color: #333;
-    line-height: 90px;
-    margin-top: -50px;
+
+
   }
 
   .el-aside {
