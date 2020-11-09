@@ -5,8 +5,7 @@
         <NavMenu></NavMenu>
       </el-header>
     </el-container>
-    <el-container>
-      <el-container>
+
         <el-main>
 
           <!-- 模糊查询 -->
@@ -100,7 +99,8 @@
             <el-table-column
               fixed="right"
               label="操作"
-              align="center">
+              align="center"
+              >
               <template slot-scope="scope">
                 <el-button
                   size="mini"
@@ -302,8 +302,8 @@
   .el-header {
     background-color: #409EFF;
     color: #333;
-
-
+    line-height: 90px;
+    margin-top: -50px;
   }
 
   .el-aside {

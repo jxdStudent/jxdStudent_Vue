@@ -33,6 +33,12 @@
             label="班期"
             align="center">
           </el-table-column>
+          <el-table-column
+            v-if="false"
+            prop="tno"
+            label="老师编号"
+            align="center">
+          </el-table-column>
         </el-table>
         <el-table
           :data="table_course_score"
@@ -77,14 +83,13 @@ import axios from "axios"
 import navMenu from "./navMenu";
 
 export default {
-  name: "StudentScore",
   components: {navMenu},
   data() {
     return {
       table_data: [],
       table_course_head: [],
       table_course_score: [],
-      table_evaluate: []
+      table_evaluate: [],
     }
   },
   methods: {
@@ -93,6 +98,7 @@ export default {
       axios.get("/getStudentById/" + sno).then(res => {
         this.table_data = res.data;
         debugger
+        this.getSchoolEvaluate(this.table_data[0].tno)
       })
     },
     //获取课程信息
@@ -102,10 +108,20 @@ export default {
       })
     },
     //获取该学生的课程成绩
-    getAllScore() {
+    getAllScore(){
       var sno = this.$route.query.sno;
       axios.get("/getAllScore/" + sno).then(res => {
         this.table_course_score = res.data;
+      })
+    },
+    //获取该学生的学校评价
+    getSchoolEvaluate(tno){
+      debugger
+      console.log(tno);
+      var sno = this.$route.query.sno;
+
+      axios.get("getSchoolEvaluate/" + sno+"/"+tno).then(res => {
+        this.table_evaluate = res.data;
       })
     },
     //返回首页
