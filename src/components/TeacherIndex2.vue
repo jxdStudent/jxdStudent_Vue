@@ -99,6 +99,7 @@
               stripe
               style="width: 100%"
               :default-sort="{prop: 'sno'}">
+
               <template
                 v-for="(item,index) in tableHead">
                 <el-table-column

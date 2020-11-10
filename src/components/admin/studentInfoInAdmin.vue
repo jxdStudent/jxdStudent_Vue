@@ -100,7 +100,7 @@
         </el-table-column>
         <el-table-column
           prop="nation"
-          label="汉族"
+          label="民族"
           align="center"
           width="100">
         </el-table-column>
@@ -120,7 +120,7 @@
         </el-table-column>
         <el-table-column
           prop="marriage"
-          label="已婚"
+          label="婚姻状态"
           align="center"
           width="100">
         </el-table-column>
