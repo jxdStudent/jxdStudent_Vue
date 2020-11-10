@@ -63,7 +63,6 @@
         <el-table-column
           prop="classno"
           label="学期编号"
-          v-if="showClose"
           align="center"
           sortable>
         </el-table-column>

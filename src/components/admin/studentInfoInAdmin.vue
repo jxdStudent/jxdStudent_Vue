@@ -54,6 +54,7 @@
         border
         lazy
         load="load"
+        height="335px"
         stripe="stripe"
         style="width: 100%;overflow:auto"
         :default-sort="{prop: 'date', order: 'descending'}">
@@ -364,6 +365,7 @@
       ,
       onSelectID(sno, SelectForm) {
         console.log('submit!');
+        this.SelectForm.classno = "";
         this.getAllByPage(sno, "undefined");
         //this.$refs[SelectForm].resetFields()
       }

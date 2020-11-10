@@ -9,7 +9,7 @@
       </el-row>
     </div>
     <el-row>
-      <el-col :span="8" offset="1">
+      <el-col :span="8" offset="3">
         <el-form :inline="true" :model="selectById" ref="selectById" class="demo-form-inline">
           <el-form-item label="用户ID" prop="id">
             <el-input v-model="selectById.id" @keyup.enter.native="onSelectId(selectById.id,'selectById')"
@@ -37,13 +37,13 @@
           </el-form-item>-->
         </el-form>
       </el-col>
-      <el-col :span="4">
+      <!--<el-col :span="4">
         <el-form :inline="true" :model="selectByName" ref="selectByName" class="demo-form-inline">
           <el-form-item>
             <el-button type="primary" @click="onSelectAll()">显示全部</el-button>
           </el-form-item>
         </el-form>
-      </el-col>
+      </el-col>-->
     </el-row>
     <!-- 表格 -->
     <div class="store-table">
@@ -248,6 +248,7 @@
         this.getAllByPage()
       },
       onSelectId(id, selectById) {
+        this.selectByRole.id = "";
         console.log('onSelectId!');
         this.getAllByPage(id, "undefined")
         //this.$refs[selectById].resetFields()
