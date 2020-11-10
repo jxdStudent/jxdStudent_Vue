@@ -289,6 +289,7 @@
       onSelectID(sno, SelectForm) {
         console.log('submit!');
         this.SelectForm.classno = ""
+        this.getTableHead();
         this.getAllByPage(sno, "undefined");
         this.getTableSize(sno, "undefined");
       }
