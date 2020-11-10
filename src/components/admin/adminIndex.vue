@@ -2,7 +2,7 @@
   <div>
     <el-container>
       <el-header>
-        <nav-menu></nav-menu>
+        <nav-menu :uid="this.$store.getters.uid"></nav-menu>
       </el-header>
       <el-container class="el-container">
         <el-aside width="15%">
