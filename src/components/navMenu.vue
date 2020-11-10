@@ -47,7 +47,7 @@
           </el-col>
         </el-row>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button @click="cancel_submit('form')">取 消</el-button>
           <el-button type="primary" @click="submit_change_pwd('form')">确 定</el-button>
         </div>
       </el-dialog>
@@ -57,7 +57,7 @@
       <img src="../assets/imgs/logo.png" style="float: left;margin-top: 5px" width="45" alt="">
     <div style="float: left;font-size: 25px;margin-top:5px;padding: 2px 10px;font-weight: bold;font-family: 'Microsoft YaHei'">
       <span>金桥学员成长跟踪系统</span>
-    </div><!--那啊啊-->
+    </div>
   </div>
 </template>
 <script>
@@ -127,12 +127,18 @@
       },
       methods:{
           getImgUrl(){
-            if (this.img == undefined){
+            if (this.img != undefined && this.img != null){
+              this.isShow = this.isShow
+            }else {
               this.isShow = !this.isShow
             }
           },
         change_pwd(){
           this.dialogFormVisible = true;
+        },
+        cancel_submit(form){
+          this.$refs[form].resetFields();
+          this.dialogFormVisible = false
         },
         submit_change_pwd(form){
           this.axios.get("login/" + this.uid + "/" + this.form.pwd_old).then(res => {
@@ -183,7 +189,8 @@
         }
       },
       mounted() {
-        this.getImgUrl()
+        setTimeout(this.getImgUrl, 60);
+        //this.getImgUrl()
       }
     }
 </script>
