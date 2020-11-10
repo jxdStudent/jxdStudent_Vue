@@ -292,29 +292,34 @@
         //this.addClassForm.course = row.course;
       },
       addClass:function () {
-        var url = "addClass";
-        var message = "添加成功";
-
-        if (this.title == "编辑学期"){
-          url = "editClass";
-          message = "编辑成功";
+        if (this.addClassForm.classname == "" || this.addClassForm.tno == "" || this.addClassForm.course == "") {
+          this.$message.error('请输入信息！');
         }else {
-          alert(this.addClassForm.course)
-          this.editClassForm.classno = "undifinde";
-        }
-        axios.post(url + "/" + this.addClassForm.classname + "/" + this.addClassForm.tno +
-                  "/" + this.addClassForm.course + "/" + this.editClassForm.classno).then(res => {
-          if (res.data == "success") {//添加成功
-            this.reload();/*动态刷新表格*/
-            this.dialogFormVisible = false;/*关闭弹出层*/
-            this.$message({
-              type: 'success',
-              message: message
-            });
+
+          var url = "addClass";
+          var message = "添加成功";
+
+          if (this.title == "编辑学期") {
+            url = "editClass";
+            message = "编辑成功";
           } else {
-            this.$message.error('操作失败！');
+            alert(this.addClassForm.course)
+            this.editClassForm.classno = "undifinde";
           }
-        })
+          axios.post(url + "/" + this.addClassForm.classname + "/" + this.addClassForm.tno +
+            "/" + this.addClassForm.course + "/" + this.editClassForm.classno).then(res => {
+            if (res.data == "success") {//添加成功
+              this.reload();/*动态刷新表格*/
+              this.dialogFormVisible = false;/*关闭弹出层*/
+              this.$message({
+                type: 'success',
+                message: message
+              });
+            } else {
+              this.$message.error('操作失败！');
+            }
+          })
+        }
       },
       getTeacherForOptions : function() {
         axios.get("getAllTeacher").then(res => {

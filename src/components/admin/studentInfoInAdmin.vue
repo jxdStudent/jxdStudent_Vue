@@ -198,7 +198,7 @@
           <el-col :span="12" offset="5">
             <el-form-item label="所在学期" :label-width="formLabelWidth" prop="classno">
               <!--<el-input v-model="addStudentForm.classno" autocomplete="off"></el-input>-->
-              <el-select v-model="addStudentForm.classno" filterable placeholder="请选择学期">
+              <el-select v-model="addStudentForm.classno" style="width: 240px" filterable placeholder="请选择学期">
                 <el-option v-for="item in options" :key="item.classno" :value="item.classno">
                   <span style="float: left">{{ item.classno }}</span>
                   <span style="float: right;color: #8492a6; font-size: 13px">{{item.classname}}</span>
@@ -318,6 +318,9 @@
         })
       },
       addStudent: function () {
+        if (this.addStudentForm.stuname == ""  || this.addStudentForm.sex == "" || this.addStudentForm.classno == "" ) {
+          this.$message.error('请输入信息！');
+        }else {
         axios.post("addStudentInUser/" + this.addStudentForm.stuname +
           "/" + this.addStudentForm.sex + "/" + this.addStudentForm.classno).then(res => {
           if (res.data == "success") {//添加成功
@@ -329,9 +332,10 @@
             });
             //location.reload();
           } else {
-            this.$message.error('添加成功！');
+            this.$message.error('添加失败！');
           }
         })
+        }
       },
       closeDialog(addStudentForm) {
 

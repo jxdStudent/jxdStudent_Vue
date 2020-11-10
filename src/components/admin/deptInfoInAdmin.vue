@@ -250,28 +250,33 @@
           //this.editDeptForm.cname = row.cname;
         },
         addDept:function(){
-          var url = "addDeptByAdmin/";
-          var message = "添加成功";
-          if (this.title == "编辑部门"){
-            url = "editDeptByAdmin/";
-            this.editDeptForm.cname = this.addDeptForm.cname;
-            //data = this.editDeptForm;
-            message = "编辑成功！";
-          }
-          axios.post(url + this.addDeptForm.dname + "/" + this.addDeptForm.empno + "/" +
-                      this.addDeptForm.ename + "/" + this.editDeptForm.deptno).then(res => {
-            if (res.data == "success") {//添加成功
-              this.reload();/*动态刷新表格*/
-              this.dialogFormVisible = false;/*关闭弹出层*/
-              this.$message({
-                type: 'success',
-                message: message
-              });
-              //location.reload();
-            } else {
-              this.$message.error('操作失败！');
+          if (this.addDeptForm.dname == ""  || this.addDeptForm.empno == "" || this.addDeptForm.ename == "") {
+            this.$message.error('请输入信息！');
+          }else {
+
+            var url = "addDeptByAdmin/";
+            var message = "添加成功";
+            if (this.title == "编辑部门") {
+              url = "editDeptByAdmin/";
+              this.editDeptForm.cname = this.addDeptForm.cname;
+              //data = this.editDeptForm;
+              message = "编辑成功！";
             }
-          })
+            axios.post(url + this.addDeptForm.dname + "/" + this.addDeptForm.empno + "/" +
+              this.addDeptForm.ename + "/" + this.editDeptForm.deptno).then(res => {
+              if (res.data == "success") {//添加成功
+                this.reload();/*动态刷新表格*/
+                this.dialogFormVisible = false;/*关闭弹出层*/
+                this.$message({
+                  type: 'success',
+                  message: message
+                });
+                //location.reload();
+              } else {
+                this.$message.error('操作失败！');
+              }
+            })
+          }
         },
         handleSizeChange(val) {
           this.page = 1;

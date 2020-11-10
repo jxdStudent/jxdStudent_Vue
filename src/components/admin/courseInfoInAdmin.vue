@@ -175,28 +175,32 @@
 
         },
         addCourse:function () {
-          let data = this.addCourseForm;
-          var url = "/addCourse";
-          var message = "添加成功";
-          if (this.title == "编辑课程"){
-            url = "/editCourse";
-            this.editCourseForm.cname = this.addCourseForm.cname;
-            data = this.editCourseForm;
-            message = "编辑成功";
-          }
-
-          axios.post(url,Qs.stringify(data)).then(res => {
-            if (res.data == "success") {//添加成功
-              this.reload();/*动态刷新表格*/
-              this.dialogFormVisible = false;/*关闭弹出层*/
-              this.$message({
-                type: 'success',
-                message: message
-              });
-            } else {
-              this.$message.error('编辑失败');
+          if (this.addCourseForm.cname == "") {
+            this.$message.error('请输入信息！');
+          }else {
+            let data = this.addCourseForm;
+            var url = "/addCourse";
+            var message = "添加成功";
+            if (this.title == "编辑课程") {
+              url = "/editCourse";
+              this.editCourseForm.cname = this.addCourseForm.cname;
+              data = this.editCourseForm;
+              message = "编辑成功";
             }
-          })
+
+            axios.post(url, Qs.stringify(data)).then(res => {
+              if (res.data == "success") {//添加成功
+                this.reload();/*动态刷新表格*/
+                this.dialogFormVisible = false;/*关闭弹出层*/
+                this.$message({
+                  type: 'success',
+                  message: message
+                });
+              } else {
+                this.$message.error('编辑失败');
+              }
+            })
+          }
         },
         handleSizeChange(val) {
           this.page = 1;

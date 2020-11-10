@@ -210,28 +210,32 @@
         }
       },
       addTeacher: function () {
-        let data = this.addTeacherForm;
-        var url = "/addTeacherInUser";
-        var message = "添加成功";
-        if (this.title == "编辑教师"){
-          url = "/editTeacher";
-          this.editTeacherForm.tname = this.addTeacherForm.tname;
-          data = this.editTeacherForm;
-          message = "编辑成功";
-        }
-        axios.post(url, Qs.stringify(data)).then(res => {
-          if (res.data == "success") {//添加成功
-            this.reload();/*动态刷新表格*/
-            this.dialogFormVisible = false;/*关闭弹出层*/
-            this.$message({
-              type: 'success',
-              message: message
-            });
-            //location.reload();
-          } else {
-            this.$message.error('操作失败！');
+        if (this.addTeacherForm.tname == "") {
+          this.$message.error('请输入信息！');
+        }else {
+          let data = this.addTeacherForm;
+          var url = "/addTeacherInUser";
+          var message = "添加成功";
+          if (this.title == "编辑教师") {
+            url = "/editTeacher";
+            this.editTeacherForm.tname = this.addTeacherForm.tname;
+            data = this.editTeacherForm;
+            message = "编辑成功";
           }
-        })
+          axios.post(url, Qs.stringify(data)).then(res => {
+            if (res.data == "success") {//添加成功
+              this.reload();/*动态刷新表格*/
+              this.dialogFormVisible = false;/*关闭弹出层*/
+              this.$message({
+                type: 'success',
+                message: message
+              });
+              //location.reload();
+            } else {
+              this.$message.error('操作失败！');
+            }
+          })
+        }
       },
       closeDialog(addTeacherForm) {
         this.$refs[addTeacherForm].resetFields();
