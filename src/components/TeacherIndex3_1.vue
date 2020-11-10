@@ -8,7 +8,7 @@
         <el-aside width="200px">
           <el-menu
             :default-active="$route.path"
-            default-active="teacherIndex2"
+            default-active="teacherIndex3_1"
             :unique-opened="true"
             @select="handleSelect"
             @open="handleOpen"
@@ -22,7 +22,7 @@
               <i class="el-icon-document"></i>
               <span slot="title">学生成绩表</span>
             </el-menu-item>
-            <el-submenu index="">
+            <el-submenu index="submenu">
               <template slot="title">
                 <i class="el-icon-s-unfold"></i>
                 <span>工作追踪表</span>
@@ -99,54 +99,75 @@
               stripe
               style="width: 100%"
               :default-sort="{prop: 'sno'}">
-              <template
-                v-for="(item,index) in tableHead">
-                <el-table-column
-                  align="center"
-                  sortable
-                  :prop="item.column_name"
-                  :label="item.column_comment"
-                  :key="index"
-                  v-if="item.column_name != 'id'">
-                </el-table-column>
-              </template>
               <el-table-column
-                fixed="right"
-                label="操作"
-                width="180"
+                prop="sno"
+                label="学号"
+                sortable
+                width="120"
                 align="center">
-                <template slot-scope="scope">
-                  <el-button
-                    size="mini"
-                    @click="toStudentScore(scope.row.sno, scope.row.classno, scope.row.sname)">评价
-                  </el-button>
-                  <el-button
-                    size="mini"
-                    @click="dialogOpen(scope.row.sno, scope.row.sname)">毕业
-                  </el-button>
-                  <el-dialog
-                    :modal-append-to-body='false'
-                    title="毕业页面"
-                    :visible.sync="dialogVisible"
-                    width="40%">
-                    <el-row>
-                      <el-col :span="18" :offset="4">
-                        <el-form :model="form">
-                          <el-form-item label="是否毕业">
-                            <el-select v-model="form.graduated">
-                              <el-option label="已毕业" value="1"></el-option>
-                              <el-option label="未毕业" value="0"></el-option>
-                            </el-select>
-                          </el-form-item>
-                        </el-form>
-                      </el-col>
-                    </el-row>
-                    <span slot="footer" class="dialog-footer">
-                  <el-button @click="dialogVisible = false">取 消</el-button>
-                  <el-button type="primary" @click="setGraduated" :disabled="form.graduate">确 定</el-button>
-                </span>
-                  </el-dialog>
-                </template>
+              </el-table-column>
+              <el-table-column
+                prop="empno"
+                label="工号"
+                sortable
+                width="120"
+                align="center">
+              </el-table-column>
+              <el-table-column
+                prop="ename"
+                label="姓名"
+                sortable
+                width="120"
+                align="center">
+              </el-table-column>
+              <el-table-column
+                prop="dname"
+                label="部门"
+                sortable
+                width="120"
+                align="center">
+              </el-table-column>
+              <el-table-column
+                prop="ability"
+                label="能力"
+                sortable
+                width="120"
+                align="center">
+              </el-table-column>
+              <el-table-column
+                prop="initiative"
+                label="积极性"
+                sortable
+                width="120"
+                align="center">
+              </el-table-column>
+              <el-table-column
+                prop="communicate"
+                label="沟通交流"
+                sortable
+                width="120"
+                align="center">
+              </el-table-column>
+              <el-table-column
+                prop="quality"
+                label="人品"
+                sortable
+                width="120"
+                align="center">
+              </el-table-column>
+              <el-table-column
+                prop="characterc"
+                label="性格"
+                sortable
+                width="120"
+                align="center">
+              </el-table-column>
+              <el-table-column
+                prop="mark"
+                label="整体分数"
+                sortable
+                width="120"
+                align="center">
               </el-table-column>
             </el-table>
             <el-pagination
@@ -170,19 +191,11 @@ import navMenu from "./navMenu";
 import axios from "axios";
 
 export default {
-  name: "TeacherIndex2",
+  name: "TeacherIndex3_1",
   components: {navMenu},
   data() {
     return {
-      tableHead: [],
       tableData: [],
-      dialogVisible: false,
-      dialogSno: '',
-      dialogSname: '',
-      form: {
-        graduated: '',
-        graduate: 0,
-      },
       options: [],
       query: {
         total: 1,
@@ -201,7 +214,6 @@ export default {
   },
   mounted() {
     this.getTableSize("undefined", "undefined");
-    this.getTableHead();
     this.getAllByPage("undefined", "undefined");
     this.getClass();
   },
@@ -214,40 +226,22 @@ export default {
       })
     },
     getTableSize: function (sno, classno) {
-      axios.get("getStudentTableSize/" + this.$store.getters.uid +
+      var year = 1;
+      axios.get("getEmpTableSize/" + this.$store.getters.uid +
         "/" + sno +
-        "/" + classno).then(res=>{
+        "/" + classno +
+        "/" + year).then(res=>{
         this.query.total = res.data;
       })
     },
-    getTableHead() {
-      var table_head = [
-        {
-          column_name: "sno", column_comment: "学号"
-        },
-        {
-          column_name: "sname", column_comment: "姓名"
-        },
-        {
-          column_name: "classno", column_comment: "班期"
-        }
-      ];
-      axios.get("getAllCourse/" + this.SelectForm.classno).then(res => {
-        for (let i = 0; i < res.data.length; i++) {
-          var table_head_obj = {};
-          table_head_obj.column_name = res.data[i].cno + "";
-          table_head_obj.column_comment = res.data[i].cname;
-          table_head.push(table_head_obj);
-        }
-      })
-      this.tableHead = table_head;
-    },
     getAllByPage: function (sno, classno) {
-      axios.get("getAllStudentScoreWithInfoByPage/" + this.$store.getters.uid +
+      var year = 1;//第三年
+      axios.get("getAllDeptEvaluateWithInfoByPage/" + this.$store.getters.uid +
         "/" + this.query.current +
         "/" + this.query.size +
         "/" + sno +
-        "/" + classno).then(res => {
+        "/" + classno +
+        "/" + year).then(res => {
         this.tableData = res.data;
       })
     },
@@ -274,53 +268,14 @@ export default {
       this.query.current = val;
       this.getAllByPage()
     },
-
     handleSelect(path) {
       this.$router.push(path)
-    },
-    toStudentScore(sno, classno, sname) {
-      this.$store.dispatch("setSno", sno);
-      this.$store.dispatch("setClassNo", classno);
-      this.$store.dispatch("setSname", sname);
-      this.$router.push({path: "/studentScore"});
     },
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
     },
     handleClose(key, keyPath) {
       console.log(key, keyPath);
-    },
-    dialogOpen(sno, sname) {
-      this.isGraduated(sno);
-      this.dialogVisible = true;
-      this.dialogSno = sno;
-      this.dialogSname = sname;
-    },
-    isGraduated(sno) {
-      axios.get("isGraduated/" + sno).then(res => {
-        if(res.data == 1) {
-          this.form.graduated = "已毕业";
-          this.form.graduate = 1;
-        } else {
-          this.form.graduated = "未毕业";
-          this.form.graduate = 0;
-        }
-      })
-    },
-    setGraduated() {
-      if (this.form.graduated == "1") {
-        axios.get("setGraduated/" + this.dialogSno + "/" + this.dialogSname).then(res => {
-          if (res.data == "success") {
-            this.$message({
-              message: '该同学已成功毕业!',
-              type: 'success'
-            });
-            this.dialogVisible = false;
-          } else {
-            this.$message.error('服务器错误,请联系管理员解决!');
-          }
-        })
-      }
     }
   },
 }
@@ -331,5 +286,4 @@ export default {
   background-color: #409EFF;
   color: #333;
 }
-
 </style>
