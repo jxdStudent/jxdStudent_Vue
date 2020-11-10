@@ -193,6 +193,9 @@
     },
     methods: {
       getAllByPage: function (uid, role) {
+        if (uid == ""){
+          uid = "undefined";
+        }
         axios.get("/getAllAccountInAdminByPage/" + this.query.current + "/" + this.query.size +
           "/" + uid + "/" + role).then(res => {
           for (let i = 0; i < res.data.records.length; i++) {

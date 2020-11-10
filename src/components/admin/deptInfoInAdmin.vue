@@ -10,7 +10,7 @@
     <div class="select">
       <el-form :inline="true" :model="selectDeptForm" ref="selectDeptForm" class="demo-form-inline">
         <el-row>
-          <el-col :span="8" offset="4">
+          <el-col :span="8" offset="6">
             <el-form-item label="部门名称" prop="dname">
               <el-input v-model="selectDeptForm.dname" @keyup.enter.native="onSelectID(selectDeptForm.dname,'selectDeptForm')" placeholder="请输入部门名称"></el-input>
             </el-form-item>
@@ -18,11 +18,11 @@
               <el-button type="primary" @click="onSelectID(selectDeptForm.dname,'selectDeptForm')">查询</el-button>
             </el-form-item>
           </el-col>
-          <el-col :span="4" offset="1">
+          <!--<el-col :span="4" offset="1">
             <el-form-item>
               <el-button type="primary" @click="onSelectAll()">显示全部</el-button>
             </el-form-item>
-          </el-col>
+          </el-col>-->
           <el-col :span="4">
             <el-form-item>
               <el-button type="primary" @click="openClass(null,'添加部门')">添加部门</el-button>
@@ -44,7 +44,14 @@
         <!--<el-table-column type="selection" width="55">
         </el-table-column>-->
         <el-table-column
+          label="序号"
+          type='index' :index='(index)=>{return (index+1) + (this.query.current-1)*this.query.size}'
+          align="center"
+          width="70px"
+        ></el-table-column>
+        <el-table-column
           prop="deptno"
+          v-if="showClose"
           label="部门编号"
           align="center"
           sortable
@@ -94,26 +101,26 @@
     </div>
 
     <!--添加部门-->
-    <el-dialog :title="title" :visible.sync="dialogFormVisible">
-      <el-form :model="addDeptForm" :rules="rules2" @close='closeDialog'>
+    <el-dialog :title="title" :visible.sync="dialogFormVisible" @close='closeDialog("addDeptForm")'>
+      <el-form :model="addDeptForm" ref="addDeptForm" :rules="rules2">
         <el-row>
           <el-col :span="12" offset="5">
             <el-form-item label="部门名称" :label-width="formLabelWidth" prop="dname">
-              <el-input v-model="addDeptForm.dname" autocomplete="off"></el-input>
+              <el-input v-model="addDeptForm.dname" placeholder="请输入部门名称" autocomplete="off"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12" offset="5">
             <el-form-item label="经理编号" :label-width="formLabelWidth" prop="empno">
-              <el-input v-model="addDeptForm.empno" autocomplete="off"></el-input>
+              <el-input v-model="addDeptForm.empno" placeholder="请输入经理编号" autocomplete="off"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12" offset="5">
             <el-form-item label="经理姓名" :label-width="formLabelWidth" prop="ename">
-              <el-input v-model="addDeptForm.ename" autocomplete="off"></el-input>
+              <el-input v-model="addDeptForm.ename" placeholder="请输入经理姓名" autocomplete="off"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -202,11 +209,17 @@
       },
       methods:{
         getAllDeptSize: function (dname) {
+          if (dname == ""){
+            dname = "undefined";
+          }
           axios.get("http://localhost:8081/getAllDeptInAdmin/" + dname).then(res => {
             this.query.total = res.data.length;
           })
         },
         getAllByPage: function (dname) {
+          if (dname == ""){
+            dname = "undefined";
+          }
           axios.get("http://localhost:8081/getAllDeptInAdminByPage/" + this.query.current + "/" +
             this.query.size + "/" + dname).then(res => {
             this.tableData = res.data;
@@ -364,6 +377,9 @@
             }
           })
         },
+        closeDialog(addDeptForm){
+          this.$refs[addDeptForm].resetFields();
+        }
       },
       created() {
         this.getUserForLogin();

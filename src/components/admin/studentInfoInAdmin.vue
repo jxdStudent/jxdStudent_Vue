@@ -11,9 +11,9 @@
     <div class="select">
       <el-form :inline="true" ref="SelectForm" :model="SelectForm" class="demo-form-inline">
         <el-row>
-          <el-col :span="8">
-            <el-form-item label="学生ID" prop="sno">
-              <el-input v-model="SelectForm.sno" @keyup.enter.native="onSelectID(SelectForm.sno,'SelectForm')" placeholder="请输入学生ID"></el-input>
+          <el-col :span="8" offset="2">
+            <el-form-item label="学生姓名" prop="sno">
+              <el-input v-model="SelectForm.sno" placeholder="请输入学生姓名" @keyup.enter.native="onSelectID(SelectForm.sno,'SelectForm')" ></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="onSelectID(SelectForm.sno,'SelectForm')">查询</el-button>
@@ -32,13 +32,13 @@
               <el-button type="primary" @click="onSelectClass(SelectForm.classno,'SelectForm')">查询</el-button>
             </el-form-item>-->
           </el-col>
-          <el-col :span="3" offset="1">
+          <!--<el-col :span="3" offset="1">
             <el-form :inline="true" class="demo-form-inline">
               <el-form-item>
                 <el-button type="primary" @click="onSelectAll()">显示全部</el-button>
               </el-form-item>
             </el-form>
-          </el-col>
+          </el-col>-->
           <el-col :span="4">
             <el-form-item>
               <el-button type="primary" @click="dialogFormVisible = true">添加学生</el-button>
@@ -57,9 +57,30 @@
         stripe="stripe"
         style="width: 100%;overflow:auto"
         :default-sort="{prop: 'date', order: 'descending'}">
+        <!--<el-table-column prop ='index' label="序号" min-width="209">
+          <span>{{(this.current - 1) * this.size + scope.$index + 1}}</span>
+
+        </el-table-column>-->
+        <!--<el-table-column
+          label="序号"
+          type='index'
+          align="center"
+          width="70px">
+          &lt;!&ndash;<template slot-scope="scope">
+            {{(this.query.current - 1) * this.query.size + scope.$index + 1}}
+            &lt;!&ndash;{{scope.$index+1}}&ndash;&gt;
+          </template>&ndash;&gt;
+        </el-table-column>-->
+        <el-table-column
+          label="序号"
+          type='index' :index='(index)=>{return (index+1) + (this.query.current-1)*this.query.size}'
+          align="center"
+          width="70px"
+        ></el-table-column>
         <el-table-column
           prop="sno"
           label="学号"
+          v-if="showClose"
           align="center"
           sortable
           width="100">
@@ -164,12 +185,12 @@
     </div>
 
     <!--添加学生-->
-    <el-dialog title="添加学生" :visible.sync="dialogFormVisible">
-      <el-form :model="addStudentForm" :rules="rules2" @close='closeDialog'>
+    <el-dialog title="添加学生" :visible.sync="dialogFormVisible" @close='closeDialog("addStudentForm")'>
+      <el-form :model="addStudentForm" ref="addStudentForm" :rules="rules2" >
         <el-row>
           <el-col :span="12" offset="5">
             <el-form-item label="学生姓名" :label-width="formLabelWidth" prop="stuname">
-              <el-input v-model="addStudentForm.stuname" autocomplete="off"></el-input>
+              <el-input v-model="addStudentForm.stuname" placeholder="请输入学生姓名" autocomplete="off"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -277,6 +298,9 @@
     },
     methods: {
       getAllByPage: function (sno, classno) {
+        if (sno == ""){
+          sno = "undefined";
+        }
         axios.get("http://localhost:8081/getAllStudentInAdminByPage/" + this.query.current + "/" + this.query.size +
           "/" + sno + "/" + classno).then(res => {
           for (let i = 0; i < res.data.records.length; i++) {
@@ -309,8 +333,13 @@
           }
         })
       },
-      closeDialog() {
-        this.addStudentForm = '';//清空数据
+      closeDialog(addStudentForm) {
+
+        this.$refs[addStudentForm].resetFields();
+
+        /*this.addStudentForm.stuname = '';//清空数据
+        this.addStudentForm.classno = '';//清空数据
+        this.addStudentForm.sex = '';//清空数据*/
       },
       getClass() {
         axios.get("http://localhost:8081/getAllClass").then(res => {
@@ -345,18 +374,15 @@
         this.$refs['SelectForm'].resetFields()
       },
       deleteStudent(index,sno, classno,tableData) {
-        clearTimeout(time);  //首先清除计时器
-        time = setTimeout(() => {
-          if (classno != 0) {
-            this.$message.error("无法删除！")
-          } else {
             this.$confirm('此操作将永久删除学号为' + sno + '的学生, 是否继续?', '提示', {
               confirmButtonText: '确定',
               cancelButtonText: '取消',
               type: 'warning'
             }).then(() => {
               axios.get("http://localhost:8081/deleteStudent/" + sno).then(res => {
-                if (res.data == "success") {
+                if (res.data == "no"){
+                  this.$message.error("该学生不可删除!")
+                }else if (res.data == "success") {
                   tableData.splice(index, 1)
                   //this.reload();/*动态刷新表格*/
                   this.$message({type: "success", message: "删除成功！"});
@@ -370,8 +396,6 @@
                 message: '已取消删除'
               });
             });
-          }
-        }, 300);   //大概时间300ms
       },
       dblclickDeleteStudent(sno, classno) {
         clearTimeout(time);  //清除
