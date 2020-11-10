@@ -5,6 +5,9 @@ import InfoIndex from "../components/InfoIndex"
 import adminIndex from "../components/admin/adminIndex";
 import TeacherIndex from "../components/TeacherIndex";
 import TeacherIndex2 from "../components/TeacherIndex2";
+import TeacherIndex3_1 from "../components/TeacherIndex3_1";
+import TeacherIndex3_2 from "../components/TeacherIndex3_2";
+import TeacherIndex3_3 from "../components/TeacherIndex3_3";
 import StudentScore from "../components/StudentScore";
 import studentInfoInAdmin from "../components/admin/studentInfoInAdmin";
 import accountInfoInAdmin from "../components/admin/accountInfoInAdmin";
@@ -91,6 +94,21 @@ export default new Router({
       path: '/teacherIndex2',
       name: 'teacherIndex2',
       component: TeacherIndex2
+    },
+    {
+      path: '/teacherIndex3_1',
+      name: 'teacherIndex3_1',
+      component: TeacherIndex3_1
+    },
+    {
+      path: '/teacherIndex3_2',
+      name: 'teacherIndex3_2',
+      component: TeacherIndex3_2
+    },
+    {
+      path: '/teacherIndex3_3',
+      name: 'teacherIndex3_3',
+      component: TeacherIndex3_3
     },
     {
       path: '/InfoIndex',

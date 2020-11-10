@@ -7,11 +7,9 @@
         <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
           <el-submenu index="1">
             <template slot="title">
-                <div class="block"><!--添加头像-->
                   <el-avatar :size="50">
                     <img :src="img" alt="">
                   </el-avatar>
-                </div>
             </template>
             <el-menu-item index="1-1">修改密码</el-menu-item>
             <el-menu-item index="1-2" @click="edit">编辑资料</el-menu-item>

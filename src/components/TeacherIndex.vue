@@ -8,11 +8,11 @@
         <el-aside width="200px">
           <el-menu
             :default-active="$route.path"
+            default-active="teacherIndex"
             :unique-opened="true"
             @select="handleSelect"
             @open="handleOpen"
             @close="handleClose"
-            default-active="teacherIndex"
             class="el-menu-vertical-demo">
             <el-menu-item index="teacherIndex">
               <i class="el-icon-user"></i>
@@ -27,13 +27,16 @@
                 <i class="el-icon-s-unfold"></i>
                 <span>工作追踪表</span>
               </template>
-              <el-menu-item index="">
+              <el-menu-item
+                index="teacherIndex3_1">
                 <i class="el-icon-s-custom"></i>工作1年
               </el-menu-item>
-              <el-menu-item index="">
+              <el-menu-item
+                index="teacherIndex3_2">
                 <i class="el-icon-s-custom"></i>工作2年
               </el-menu-item>
-              <el-menu-item index="">
+              <el-menu-item
+                index="teacherIndex3_3">
                 <i class="el-icon-s-custom"></i>工作3年
               </el-menu-item>
             </el-submenu>
@@ -41,21 +44,48 @@
         </el-aside>
         <el-main>
           <div>
-            <el-form :inline="true" ref="SelectForm" :model="SelectForm" class="demo-form-inline">
+            <el-form
+              :inline="true"
+              ref="SelectForm"
+              :model="SelectForm"
+              class="demo-form-inline">
               <el-col :span="8">
-                <el-form-item label="学生ID" prop="sno">
-                  <el-input v-model="SelectForm.sno" @keyup.enter.native="onSelectID(SelectForm.sno,'SelectForm')" placeholder="请输入学生ID"></el-input>
+                <el-form-item
+                  label="学生ID"
+                  prop="sno">
+                  <el-input
+                    v-model="SelectForm.sno"
+                    @keyup.enter.native="onSelectID(SelectForm.sno,'SelectForm')"
+                    placeholder="请输入学生ID">
+                  </el-input>
                 </el-form-item>
                 <el-form-item>
-                  <el-button type="primary" @click="onSelectID(SelectForm.sno,'SelectForm')">查询</el-button>
+                  <el-button
+                    type="primary"
+                    @click="onSelectID(SelectForm.sno,'SelectForm')">查询
+                  </el-button>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="学期" prop="classno">
-                  <el-select v-model="SelectForm.classno" @change="onSelectClass(SelectForm.classno,'SelectForm')" filterable placeholder="请选择学期">
-                    <el-option v-for="item in options" :key="item.classno" :label="item.classname" :value="item.classno">
-                      <span style="float: left">{{ item.classno }}</span>
-                      <span style="float: right;color: #8492a6; font-size: 13px">{{item.classname}}</span>
+                <el-form-item
+                  label="学期"
+                  prop="classno">
+                  <el-select
+                    v-model="SelectForm.classno"
+                    @change="onSelectClass(SelectForm.classno,'SelectForm')"
+                    filterable placeholder="请选择学期">
+                    <el-option
+                      v-for="item in options"
+                      :key="item.classno"
+                      :label="item.classname"
+                      :value="item.classno">
+                      <span style="float: left">
+                        {{ item.classno }}
+                      </span>
+                      <span
+                        style="float: right;color: #8492a6; font-size: 13px">
+                        {{item.classname}}
+                      </span>
                     </el-option>
                   </el-select>
                 </el-form-item>
@@ -191,31 +221,23 @@ export default {
       },
     }
   },
-  mounted() {
-    //html渲染完成后调用方法获取学生信息
-    // this.getAllStudent();
-    this.getAllByPage("undefined", "undefined");
-    this.getClass();
-  },
   created() {
     this.getTeacherForLogin();
   },
+  mounted() {
+    this.getAllByPage("undefined", "undefined");
+    this.getClass();
+  },
   methods: {
-    //获取学生基本信息渲染到表格中
-    // getAllStudent() {
-    //   axios.get("/getAllStudents/" + this.$store.getters.uid).then(res => {
-    //     this.tableData = res.data;
-    //   })
-    // },
     getTeacherForLogin:function() {
-      axios.get("getUserForLogin" + this.$store.getters.uid).then(res => {
-        if (res.data[0].role != 1) {
+      axios.get("getUserForLogin/" + this.$store.getters.uid).then(res => {
+        if (res.data.role != 1) {
           this.$router.go(-1)
         }
       })
     },
     getAllByPage: function (sno, classno) {
-      axios.get("http://localhost:8081/getAllStudentByPage/" + this.$store.getters.uid +
+      axios.get("getAllStudentByPage/" + this.$store.getters.uid +
         "/" + this.query.current +
         "/" + this.query.size +
         "/" + sno +
@@ -236,7 +258,7 @@ export default {
       this.$router.push({path: "/studentScore"});
     },
     getClass() {
-      axios.get("http://localhost:8081/getClassByTeacher/" + this.$store.getters.uid).then(res => {
+      axios.get("getClassByTeacher/" + this.$store.getters.uid).then(res => {
         this.options = res.data;
       })
     },

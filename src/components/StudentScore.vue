@@ -24,13 +24,16 @@
                 <i class="el-icon-location"></i>
                 <span>工作追踪表</span>
               </template>
-              <el-menu-item index="">
+              <el-menu-item
+                index="teacherIndex3_1">
                 <i class="el-icon-s-custom"></i>工作1年
               </el-menu-item>
-              <el-menu-item index="">
+              <el-menu-item
+                index="teacherIndex3_2">
                 <i class="el-icon-s-custom"></i>工作2年
               </el-menu-item>
-              <el-menu-item index="">
+              <el-menu-item
+                index="teacherIndex3_3">
                 <i class="el-icon-s-custom"></i>工作3年
               </el-menu-item>
             </el-submenu>
@@ -148,7 +151,8 @@
             </el-table-column>
           </el-table>
           <br><br>
-          <el-button type="primary" @click="submit">提交</el-button>
+          <el-button type="primary" @click="submit">提交
+          </el-button>
           &nbsp
           <el-button @click="back">返回</el-button>
         </el-main>
@@ -184,6 +188,9 @@ export default {
       }
     }
   },
+  created() {
+    this.getTeacherForLogin();
+  },
   mounted() {
     this.getAllCourse();
     this.getAllScore();
@@ -191,30 +198,34 @@ export default {
     this.getStudentScore();
   },
   methods: {
-    back() {
-      this.$router.go(-1);
+    getTeacherForLogin:function() {
+      axios.get("getUserForLogin/" + this.$store.getters.uid).then(res => {
+        if (res.data.role != 1) {
+          this.$router.go(-1)
+        }
+      })
     },
     //获取课程信息
     getAllCourse() {
-      axios.get("/getAllCourse/" + this.$store.getters.classNo).then(res => {
+      axios.get("getAllCourse/" + this.$store.getters.classNo).then(res => {
         this.table_course_head = res.data;
       })
     },
     //获取该学生的课程成绩
     getAllScore() {
-      axios.get("/getAllScore/" + this.$store.getters.studentNo).then(res => {
+      axios.get("getAllScore/" + this.$store.getters.studentNo).then(res => {
         this.table_course_score = res.data;
       })
     },
     //获取学校评价
     getSchoolEvaluate() {
-      axios.get("/getSchoolEvaluate/" + this.$store.getters.studentNo +
+      axios.get("getSchoolEvaluate/" + this.$store.getters.studentNo +
         "/" + this.$store.getters.uid).then(res => {
         this.table_evaluate = res.data;
       })
     },
     getStudentScore() {
-      axios.get("/getStudentScore/" + this.$store.getters.studentNo).then(res => {
+      axios.get("getStudentScore/" + this.$store.getters.studentNo).then(res => {
         this.dynamicForm.dynamics = res.data;
       })
     },
@@ -233,7 +244,7 @@ export default {
     submit() {
       var table_evaluate_obj = {};
       table_evaluate_obj = this.table_evaluate[0];
-      this.axios.post("/editSchoolEvaluate", qs.stringify(table_evaluate_obj)).then(res => {
+      this.axios.post("editSchoolEvaluate", qs.stringify(table_evaluate_obj)).then(res => {
         if (res.data == "success") {
           this.$router.go(0);
         }
@@ -252,7 +263,7 @@ export default {
         dynamic_with_sno_str += "_";
       }
       dynamic_with_sno_str = dynamic_with_sno_str.substr(0, dynamic_with_sno_str.length - 1);
-      this.axios.get("/updateStudentScore/" + dynamic_with_sno_str).then(res => {
+      this.axios.get("updateStudentScore/" + dynamic_with_sno_str).then(res => {
         if (res.data == "success") {
           this.dialogVisible = false;
           this.$router.go(0);
@@ -266,6 +277,9 @@ export default {
     },
     handleClose(key, keyPath) {
       console.log(key, keyPath);
+    },
+    back() {
+      this.$router.go(-1);
     },
   }
 }
