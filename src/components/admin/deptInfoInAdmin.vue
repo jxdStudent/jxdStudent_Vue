@@ -10,7 +10,7 @@
     <div class="select">
       <el-form :inline="true" :model="selectDeptForm" ref="selectDeptForm" class="demo-form-inline">
         <el-row>
-          <el-col :span="8" offset="1">
+          <el-col :span="8" offset="4">
             <el-form-item label="部门名称" prop="dname">
               <el-input v-model="selectDeptForm.dname" @keyup.enter.native="onSelectID(selectDeptForm.dname,'selectDeptForm')" placeholder="请输入部门名称"></el-input>
             </el-form-item>
@@ -18,12 +18,12 @@
               <el-button type="primary" @click="onSelectID(selectDeptForm.dname,'selectDeptForm')">查询</el-button>
             </el-form-item>
           </el-col>
-          <el-col :span="3" offset="1">
+          <el-col :span="4" offset="1">
             <el-form-item>
               <el-button type="primary" @click="onSelectAll()">显示全部</el-button>
             </el-form-item>
           </el-col>
-          <el-col :span="3">
+          <el-col :span="4">
             <el-form-item>
               <el-button type="primary" @click="openClass(null,'添加部门')">添加部门</el-button>
             </el-form-item>
@@ -105,7 +105,7 @@
         </el-row>
         <el-row>
           <el-col :span="12" offset="5">
-            <el-form-item label="经理编号" :label-width="formLabelWidth" prop="deptno">
+            <el-form-item label="经理编号" :label-width="formLabelWidth" prop="empno">
               <el-input v-model="addDeptForm.empno" autocomplete="off"></el-input>
             </el-form-item>
           </el-col>
@@ -144,6 +144,20 @@
             callback();
           }
         };
+        var validateEmpno = (rule, value, callback) => {
+          if (value === '') {
+            callback(new Error('请输入经理编号'));
+          } else {
+            callback();
+          }
+        };
+        var validateEname = (rule, value, callback) => {
+          if (value === '') {
+            callback(new Error('请输入经理名称'));
+          } else {
+            callback();
+          }
+        };
         return {
           tableData: [],   //从后台获取数据
           multipleSelection: [],
@@ -173,8 +187,14 @@
           },
           rules2: {
             dname: [
-              {validator: validateName, trigger: 'blur'}
-            ]
+              {required: true,validator: validateName, trigger: 'blur'}
+            ],
+            empno: [
+              {required: true,validator: validateEmpno, trigger: 'blur'}
+            ],
+            ename: [
+              {required: true,validator: validateEname, trigger: 'blur'}
+            ],
           },
           dialogFormVisible: false,
           formLabelWidth: '120px'
@@ -203,8 +223,13 @@
         openClass:function(row,title) {
           this.title = title;
           this.dialogFormVisible = true;
-          this.editDeptForm.deptno = row.deptno;
-          if (title == "编辑部门"){
+          if (title == "添加部门"){
+            this.editDeptForm.deptno = "undefined";
+            this.addDeptForm.ename = "";
+            this.addDeptForm.dname = "";
+            this.addDeptForm.empno = "";
+          }else {
+            this.editDeptForm.deptno = row.deptno;
             this.addDeptForm.ename = row.emp.ename;
             this.addDeptForm.dname = row.dname;
             this.addDeptForm.empno = row.mgr;
@@ -212,17 +237,15 @@
           //this.editDeptForm.cname = row.cname;
         },
         addDept:function(){
-          let data = this.addDeptForm;
-          var url = "addDeptByAdmin";
+          var url = "addDeptByAdmin/";
           var message = "添加成功";
           if (this.title == "编辑部门"){
-            url = "editDeptByAdmin";
+            url = "editDeptByAdmin/";
             this.editDeptForm.cname = this.addDeptForm.cname;
-            data = this.editDeptForm;
+            //data = this.editDeptForm;
             message = "编辑成功！";
           }
-
-          axios.post(url + "/" + this.addDeptForm.dname + "/" + this.addDeptForm.empno + "/" +
+          axios.post(url + this.addDeptForm.dname + "/" + this.addDeptForm.empno + "/" +
                       this.addDeptForm.ename + "/" + this.editDeptForm.deptno).then(res => {
             if (res.data == "success") {//添加成功
               this.reload();/*动态刷新表格*/
@@ -327,6 +350,23 @@
             });
           });
         },*/
+        getAdminForLogin: function () {
+          if (4 == this.$store.state.role) {
+            this.$router.push("/deptInfoInAdmin")
+          } else {
+            this.$router.go(-1)
+          }
+        },
+        getUserForLogin:function() {
+          axios.get("getUserForLogin/" + this.$store.getters.uid).then(res => {
+            if (res.data.role != 4) {
+              this.$router.go(-1)
+            }
+          })
+        },
+      },
+      created() {
+        this.getUserForLogin();
       },
       mounted() {
         //this.handleUserList()

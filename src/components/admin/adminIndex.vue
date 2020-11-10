@@ -2,7 +2,7 @@
   <div>
     <el-container>
       <el-header>
-        <nav-menu></nav-menu>
+        <nav-menu :uid="this.$store.getters.uid"></nav-menu>
       </el-header>
       <el-container class="el-container">
         <el-aside width="15%">
@@ -51,6 +51,23 @@
           this.tableData = res.data;
         })
       },
+      getAdminForLogin: function () {
+        if (4 == this.$store.state.role) {
+          this.$router.push("/adminIndex")
+        } else {
+          this.$router.go(-1)
+        }
+      },
+      getUserForLogin:function() {
+        axios.get("getUserForLogin/" + this.$store.getters.uid).then(res => {
+          if (res.data.role != 4) {
+            this.$router.go(-1)
+          }
+        })
+      },
+    },
+    created() {
+      this.getUserForLogin();
     },
     //生命周期钩子
     mounted() {

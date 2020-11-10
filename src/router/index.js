@@ -16,17 +16,15 @@ import deptInfoInAdmin from "../components/admin/deptInfoInAdmin";
 import courseInfoInAdmin from "../components/admin/courseInfoInAdmin";
 import classInfoInAdmin from "../components/admin/classInfoInAdmin";
 import empInfoInAdmin from "../components/admin/empInfoInAdmin";
-import test from "../components/admin/test";
 import mgrIndex from "../components/mgrIndex";
 import addDeptEvaluate from "../components/addDeptEvaluate";
 import getDeptEvaluate from "../components/getDeptEvaluate";
 import getDeptStudentScore from "../components/getDeptStudentScore";
 import editDeptEvaluate from "../components/editDeptEvaluate";
-import StudentScoreInAdmin from "../components/admin/StudentScoreInAdmin"
-import TeacherIndexInAdmin from "../components/admin/TeacherIndexInAdmin";
 import EmpEvaluate from "../components/EmpEvaluate";
 import EmpEvaluate_part from "../components/EmpEvaluate_part";
 import addOfficialDate from "../components/addOfficialDate";
+
 
 
 import axios from 'axios'
@@ -46,7 +44,7 @@ export default new Router({
       path: '/adminIndex',
       name: 'adminIndex',
       component: adminIndex,
-      redirect:"/TeacherIndexInAdmin",
+      redirect:"/studentInfoInAdmin",
       children: [
         {
           path: '/studentInfoInAdmin',
@@ -77,11 +75,6 @@ export default new Router({
           path: '/accountInfoInAdmin',
           name: 'accountInfoInAdmin',
           component: accountInfoInAdmin
-        },
-        {
-          path: '/TeacherIndexInAdmin',
-          name: 'TeacherIndexInAdmin',
-          component: TeacherIndexInAdmin,
         }
       ]
     },
@@ -151,11 +144,6 @@ export default new Router({
     component:editDeptEvaluate
     },
     {
-      path: '/StudentScoreInAdmin',
-      name: 'StudentScoreInAdmin',
-      component: StudentScoreInAdmin
-    },
-    {
       path: '/EmpEvaluate',
       name: 'EmpEvaluate',
       component: EmpEvaluate
@@ -169,11 +157,6 @@ export default new Router({
       path: '/addOfficialDate',
       name: 'addOfficialDate',
       component: addOfficialDate
-    },
-    {
-      path: '/test',
-      name: 'test',
-      component: test
     }
   ]
 })

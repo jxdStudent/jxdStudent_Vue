@@ -110,20 +110,20 @@
         <el-row>
           <el-col :span="12" offset="5">
             <el-form-item label="员工编号" :label-width="formLabelWidth" prop="cname">
-              <el-input v-model="editEmpForm.empno" disabled autocomplete="off"></el-input>
+              <el-input v-model="editEmpForm.empno" readonly autocomplete="off"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12" offset="5">
             <el-form-item label="员工姓名" :label-width="formLabelWidth" prop="cname">
-              <el-input v-model="editEmpForm.ename" disabled autocomplete="off"></el-input>
+              <el-input v-model="editEmpForm.ename" readonly autocomplete="off"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12" offset="5">
-            <el-form-item label="所在部门" :label-width="formLabelWidth" prop="cname">
+            <el-form-item label="所在部门" :label-width="formLabelWidth" prop="deptno">
               <!--<el-input v-model="editEmpForm.deptno" autocomplete="off"></el-input>-->
               <el-select v-model="editEmpForm.deptno" filterable placeholder="请选择学期">
                 <el-option v-for="item in options" :key="item.deptno" :label="item.dname" :value="item.deptno">
@@ -175,7 +175,12 @@
           deptno:''
         },
         dialogFormVisible: false,
-        formLabelWidth: '120px'
+        formLabelWidth: '120px',
+        rules2: {
+          deptno: [
+            {required: true}
+          ],
+        },
       }
     },
     methods: {
@@ -273,6 +278,23 @@
           });
         });
       },
+      /*getAdminForLogin: function () {
+        if (4 == this.$store.state.role) {
+          this.$router.push("/empInfoInAdmin")
+        } else {
+          this.$router.go(-1)
+        }
+      },*/
+      getUserForLogin:function() {
+        axios.get("getUserForLogin/" + this.$store.getters.uid).then(res => {
+          if (res.data.role != 4) {
+            this.$router.go(-1)
+          }
+        })
+      },
+    },
+    created() {
+      this.getUserForLogin();
     },
     mounted() {
       //this.getAllEmp();

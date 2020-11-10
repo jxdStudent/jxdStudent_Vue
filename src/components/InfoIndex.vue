@@ -2,11 +2,11 @@
   <div>
     <el-container>
       <el-header style="background-color: #42b983">
-        <navMenu :edit_student="edit_student" :img="imgUrl"/>
+        <navMenu :edit_student="edit_student" :img="imgUrl" :uid="uid_change"/>
       </el-header>
 
 
-      <el-col :span="16" :offset="4">
+      <div style="width: 1000px;margin: auto">
 
         <el-container>
           <el-main>
@@ -232,7 +232,7 @@
 
         </el-container>
 
-      </el-col>
+      </div>
     </el-container>
 
   </div>
@@ -257,7 +257,7 @@
         //div_img:'require("../assets/imgs/" + this.form.photo)',
 
         //显示的图片
-        imgUrl:'',
+        imgUrl:null,
 
         //学生课程
         table_course_head: [],
@@ -267,6 +267,9 @@
 
         //老师姓名
         tname: null,
+
+        //修改密码
+        uid_change:null,
 
         //表单对齐
         labelPosition: 'right',
@@ -323,6 +326,14 @@
       }
     },
     methods: {
+      getForLogin:function() {
+        this.axios.get("getUserForLogin/" + this.$store.getters.uid).then(res => {
+          if (res.data.role != 0 && res.data.role != 2) {
+            this.$router.go(-1)
+          }
+        })
+      },
+
       handleAvatarSuccess(res, file) {
         //this.imageUrl = URL.createObjectURL(file.raw);
         if (this.$store.getters.studentNo) {
@@ -390,7 +401,18 @@
             this.imgUrl = this.form.photo
           }
 
+          //根据登录角色传递登录用户id
+          if (this.$store.getters.studentNo){
+            this.uid_change = this.$store.getters.studentNo
+          } else{
+            this.uid_change = this.$store.getters.uid
+          }
+
+          this.getAllCourse();
+          this.getAllScore();
         })
+
+
       },
       //获取课程信息
       getAllCourse() {
@@ -456,12 +478,15 @@
         })
       }
     },
+    created() {
+      this.getForLogin();
+    },
     //加载执行
     mounted() {
       this.getAllInfo();
       //在获取基本信息之后执行，以便获取其中的班级编号classno
-      setTimeout(this.getAllCourse, 1000);
-      setTimeout(this.getAllScore, 1000);
+      //setTimeout(this.getAllCourse, 60);
+      //setTimeout(this.getAllScore, 60);
 
     }
   }
