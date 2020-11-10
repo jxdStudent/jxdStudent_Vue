@@ -2,7 +2,7 @@
   <div>
     <el-container>
       <el-header>
-        <nav-menu :uid="this.$store.getters.uid"></nav-menu>
+        <nav-menu :edit_student="edit_student" :uid="this.$store.getters.uid"></nav-menu>
       </el-header>
       <el-container class="el-container">
         <el-aside width="15%">
@@ -64,6 +64,9 @@
             this.$router.go(-1)
           }
         })
+      },
+      edit_student() {
+        this.$message.error("暂未开放此功能")
       },
     },
     created() {
