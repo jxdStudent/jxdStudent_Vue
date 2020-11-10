@@ -316,11 +316,6 @@
         axios.get("http://localhost:8081/getAllClass").then(res => {
           this.options = res.data;
         })
-      },toStudentScore(sno, classno, sname) {
-        this.$store.dispatch("setSno", sno);
-        this.$store.dispatch("setClassNo", classno);
-        this.$store.dispatch("setSname", sname);
-        this.$router.push({path: "/studentScoreGrow"});
       },
 
       handleSizeChange(val) {
