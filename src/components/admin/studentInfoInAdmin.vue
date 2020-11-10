@@ -199,7 +199,7 @@
           <el-col :span="12" offset="5">
             <el-form-item label="所在学期" :label-width="formLabelWidth" prop="classno">
               <!--<el-input v-model="addStudentForm.classno" autocomplete="off"></el-input>-->
-              <el-select v-model="addStudentForm.classno" style="width: 240px" filterable placeholder="请选择学期">
+              <el-select v-model="addStudentForm.classno" filterable placeholder="请选择学期">
                 <el-option v-for="item in options" :key="item.classno" :value="item.classno">
                   <span style="float: left">{{ item.classno }}</span>
                   <span style="float: right;color: #8492a6; font-size: 13px">{{item.classname}}</span>
