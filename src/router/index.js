@@ -24,6 +24,7 @@ import editDeptEvaluate from "../components/editDeptEvaluate";
 import EmpEvaluate from "../components/EmpEvaluate";
 import EmpEvaluate_part from "../components/EmpEvaluate_part";
 import addOfficialDate from "../components/addOfficialDate";
+import studentScoreBySno from "../components/studentScoreBySno";
 
 
 
@@ -157,6 +158,11 @@ export default new Router({
       path: '/addOfficialDate',
       name: 'addOfficialDate',
       component: addOfficialDate
+    },
+    {
+      path: '/studentScoreBySno',
+      name: 'studentScoreBySno',
+      component: studentScoreBySno
     }
   ]
 })
