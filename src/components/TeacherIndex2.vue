@@ -40,6 +40,10 @@
                 <i class="el-icon-s-custom"></i>工作3年
               </el-menu-item>
             </el-submenu>
+            <el-menu-item index="teacherAllStudent">
+              <i class="el-icon-s-grid"></i>
+              <span slot="title">学生总览表</span>
+            </el-menu-item>
           </el-menu>
         </el-aside>
         <el-main>
@@ -126,6 +130,7 @@
                 <el-table-column
                   align="center"
                   sortable
+                  width="120"
                   :prop="item.column_name"
                   :label="item.column_comment"
                   :key="index"
@@ -307,6 +312,8 @@ export default {
       if (classno == "") {
         classno = "undefined";
       }
+      this.getTableHead();
+      this.getTableSize(sname, isgraduated, classno);
       this.getAllByPage(sname, isgraduated, classno);
     },
     handleSizeChange(val) {

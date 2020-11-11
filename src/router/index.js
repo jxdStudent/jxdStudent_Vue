@@ -24,9 +24,8 @@ import editDeptEvaluate from "../components/editDeptEvaluate";
 import EmpEvaluate from "../components/EmpEvaluate";
 import EmpEvaluate_part from "../components/EmpEvaluate_part";
 import addOfficialDate from "../components/addOfficialDate";
-import allStudent from "../components/allStudent";
+import TeacherAllStudent from "../components/TeacherAllStudent";
 import allStudentGrow from "../components/admin/allStudentGrow";
-
 
 
 import axios from 'axios'
@@ -166,9 +165,9 @@ export default new Router({
       component: addOfficialDate
     },
     {
-      path: '/allStudent',
-      name: 'allStudent',
-      component: allStudent
+      path: '/teacherAllStudent',
+      name: 'teacherAllStudent',
+      component: TeacherAllStudent
     }
 
   ]
