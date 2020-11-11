@@ -26,6 +26,7 @@ import EmpEvaluate_part from "../components/EmpEvaluate_part";
 import addOfficialDate from "../components/addOfficialDate";
 import TeacherAllStudent from "../components/TeacherAllStudent";
 import allStudentGrow from "../components/admin/allStudentGrow";
+import studentScoreBySno from "../components/studentScoreBySno";
 
 
 import axios from 'axios'
@@ -168,6 +169,11 @@ export default new Router({
       path: '/teacherAllStudent',
       name: 'teacherAllStudent',
       component: TeacherAllStudent
+    },
+    {
+      path: '/studentScoreBySno',
+      name: 'studentScoreBySno',
+      component: studentScoreBySno
     }
 
   ]

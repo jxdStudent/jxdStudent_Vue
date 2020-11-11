@@ -1,5 +1,12 @@
 <template>
   <div>
+    <div style="margin-top: -20px;padding-bottom: 20px;margin-left: -20px">
+      <el-row>
+        <el-col :span="4">
+          <span style="font-family: 'Microsoft YaHei';font-weight: bold;font-size: 20px">学员成长跟踪表</span>
+        </el-col>
+      </el-row>
+    </div>
     <div class="select">
       <el-form :inline="true" ref="SelectForm" :model="SelectForm" class="demo-form-inline">
         <el-row>
@@ -289,7 +296,7 @@
       onSelectID(sno, SelectForm) {
         console.log('submit!');
         this.SelectForm.classno = ""
-        this.getTableHead();
+        this.getTableHead();  /*你好*/
         this.getAllByPage(sno, "undefined");
         this.getTableSize(sno, "undefined");
       }

@@ -8,7 +8,7 @@
           </h1>
         </template>
 
-        <EmpEvaluate_part :table_evaluate="table_evaluate" v-if="table_evaluate"></EmpEvaluate_part>
+        <EmpEvaluate_part :isYear="isYear" :table_evaluate="table_evaluate" v-if="table_evaluate"></EmpEvaluate_part>
         <p style="color:red;font-size: 30px;font-family: 华文宋体" v-else>暂未评价</p>
 
       </el-collapse-item>
@@ -20,7 +20,7 @@
           </h1>
         </template>
 
-          <EmpEvaluate_part :table_evaluate="table_evaluate" v-if="table_evaluate"></EmpEvaluate_part>
+          <EmpEvaluate_part :isYear="isYear" :table_evaluate="table_evaluate" v-if="table_evaluate"></EmpEvaluate_part>
           <p style="color:red;font-size: 30px;font-family: 华文宋体" v-else>暂未评价</p>
       </el-collapse-item>
 
@@ -32,7 +32,7 @@
           </h1>
         </template>
 
-          <EmpEvaluate_part :table_evaluate="table_evaluate" v-if="table_evaluate"></EmpEvaluate_part>
+          <EmpEvaluate_part :isYear="isYear" :table_evaluate="table_evaluate" v-if="table_evaluate"></EmpEvaluate_part>
           <p style="color:red;font-size: 30px;font-family: 华文宋体" v-else>暂未评价</p>
       </el-collapse-item>
 
@@ -44,7 +44,7 @@
           </h1>
         </template>
 
-          <EmpEvaluate_part :table_evaluate="table_evaluate" v-if="table_evaluate"></EmpEvaluate_part>
+          <EmpEvaluate_part :isYear="isYear" :table_evaluate="table_evaluate" v-if="table_evaluate"></EmpEvaluate_part>
           <p style="color:red;font-size: 30px;font-family: 华文宋体" v-else>暂未评价</p>
       </el-collapse-item>
       </el-collapse>
@@ -62,6 +62,8 @@
           return{
             //员工的评价
             table_evaluate:[],
+            //第几年的评价
+            isYear:null,
             //折叠面板
             activeNames:[]
           }
@@ -72,6 +74,7 @@
           //点击查看评价，隐藏基本信息
           this.$parent.activeNames=[];
           if (index != "") {
+            this.isYear = index;
             this.axios.get("getDeptEvaluate/" + this.$store.getters.studentNo + "/" + index).then(res => {
               //todo
               if (res.data[0]) {
