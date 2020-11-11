@@ -112,7 +112,7 @@
 <script>
 
   export default {
-    name: "EmpEvaluate_part",
+    name: "EmpEvaluate_part2",
     data() {
       return {
         mgr:null,
@@ -122,7 +122,7 @@
     },
     props: {
       //接收EmpEvaluate.vue传递过来的数据
-      table_evaluate: {
+      table_evaluate2: {
         type: Array,
         required: true
       },

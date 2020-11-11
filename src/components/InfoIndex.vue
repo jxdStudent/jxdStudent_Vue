@@ -6,9 +6,9 @@
       </el-header>
 
 
-      <div style="width: 1000px;margin: auto">
+      <div style="width: 900px;margin: auto">
         <!--折叠面板-->
-        <el-collapse accordion v-model="activeNames">
+            <el-collapse v-model="activeNames">
           <el-collapse-item name="学生基本信息">
             <template slot="title">
               <h1 style="color: #42b983">{{ $store.state.uname }}&nbsp;&&nbsp;基本信息<i
@@ -290,14 +290,15 @@
                   </el-row>
 
                   <el-row>
-                    <el-col :span="10">
-
-                      <el-form-item label="备注" prop="remark">
-                        <el-input type="textarea" v-model="form.remark" class="width_mark"
+                        <el-col span="10">
+                          <div style="float: left;margin-left: 48px">备注：</div>
+                          <div style="margin-left: 100px;">
+                            <el-form-item prop="remark" >
+                              <el-input type="textarea" v-model="form.remark"  style="width: 500px"
                                   maxlength="255" :autosize="{ minRows: 2}"
                                   :disabled="!isEdit" show-word-limit></el-input>
                       </el-form-item>
-
+                          </div>
                     </el-col>
                   </el-row>
 
@@ -455,6 +456,8 @@ export default {
     }
   },
   methods: {
+      getForLogin:function() {
+      },
     //上传图片成功
     handleAvatarSuccess(res, file) {
       //this.imageUrl = URL.createObjectURL(file.raw);
@@ -620,9 +623,9 @@ export default {
       })
     }
   },
-  created() {
+    /*created() {
     this.getForLogin();
-  },
+    },*/
   //加载执行
   mounted() {
     this.getAllInfo();
@@ -740,5 +743,11 @@ table, td {
   width: 240px;
 }
 
-
+  .el-table{
+    /*width: 410px!important;*/
+    border: #000000;
+  }
+  table{
+    width: 900px;
+  }
 </style>
