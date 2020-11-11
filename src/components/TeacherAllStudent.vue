@@ -283,7 +283,7 @@
       },
       getTableHead() {
         var table_head = [];
-        axios.get("getAllCourse/" + this.SelectForm.classno).then(res => {
+        axios.get("getAllCourseByTeacher/" + this.SelectForm.classno).then(res => {
           for (let i = 0; i < res.data.length; i++) {
             var table_head_obj = {};
             table_head_obj.column_name = res.data[i].cno + "";
@@ -338,7 +338,8 @@
         console.log(key, keyPath);
       },
       handleEdit(row) {
-        this.$message.error("此处跳转至" + row.sname + "学生信息页面")
+        this.$message.error("此处跳转至" + row.sname + "学生信息页面");
+
       },
     },
   }
