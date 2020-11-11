@@ -504,7 +504,6 @@ export default {
     },
     //获取个人信息
     getAllInfo() {
-
       //获取基本信息
       this.axios.get("getStudent/" + this.$store.getters.selectStuNo).then(res => {
         if (res.data.marriage == 0) {

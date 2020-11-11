@@ -118,6 +118,13 @@
                 sortable>
               </el-table-column>
               <el-table-column
+                prop="empno"
+                v-if="showClose"
+                label="员工编号"
+                align="center"
+                sortable>
+              </el-table-column>
+              <el-table-column
                 prop="classno"
                 label="学期"
                 align="center"
@@ -338,8 +345,14 @@
         console.log(key, keyPath);
       },
       handleEdit(row) {
-        this.$message.error("此处跳转至" + row.sname + "学生信息页面");
-
+        this.$message({type:"success",message: "进入学生" + row.sname + "个人信息页面"})
+        //存储学号
+        this.$store.dispatch("setSelectStuNo", row.sno);
+        //存储员工
+        this.$store.dispatch("setSno", row.empno);
+        this.$router.push({
+          path: "/teacherOneStudent",
+        });
       },
     },
   }
