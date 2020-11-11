@@ -6,9 +6,9 @@
       </el-header>
 
 
-      <div style="width: 1000px;margin: auto">
+      <div style="width: 900px;margin: auto">
             <!--折叠面板-->
-            <el-collapse accordion v-model="activeNames">
+            <el-collapse v-model="activeNames">
               <el-collapse-item name="学生基本信息">
                 <template slot="title">
                   <h1 style="color: #42b983">{{$store.state.uname}}&nbsp;&&nbsp;基本信息<i class="header-icon el-icon-info"></i>
@@ -277,14 +277,15 @@
                       </el-row>
 
                       <el-row>
-                        <el-col :span="10">
-
-                            <el-form-item label="备注" prop="remark">
-                              <el-input type="textarea" v-model="form.remark" class="width_mark"
+                        <el-col span="10">
+                          <div style="float: left;margin-left: 48px">备注：</div>
+                          <div style="margin-left: 100px;">
+                            <el-form-item prop="remark" >
+                              <el-input type="textarea" v-model="form.remark"  style="width: 500px"
                                         maxlength="255" :autosize="{ minRows: 2}"
                                         :disabled="!isEdit" show-word-limit></el-input>
                             </el-form-item>
-
+                          </div>
                         </el-col>
                       </el-row>
 
@@ -294,7 +295,7 @@
                         <el-button type="primary" @click="onSubmit('form')" v-if="isEdit">保存</el-button>
                       </el-form-item>
                     </el-form>
-                  </el-collapse-item>
+
               </el-main>
 
               <!--头像-->
@@ -446,14 +447,14 @@
     },
     methods: {
       //登录控制
-      getForLogin:function() {
+      /*getForLogin:function() {
         this.axios.get("getUserForLogin/" + this.$store.getters.uid).then(res => {
           if (res.data.role != 0 && res.data.role != 2) {
             debugger
             this.$router.go(-1)
           }
         })
-      },
+      },*/
 
       //上传图片成功
       handleAvatarSuccess(res, file) {
@@ -620,9 +621,9 @@
         })
       }
     },
-    created() {
+    /*created() {
       this.getForLogin();
-    },
+    },*/
     //加载执行
     mounted() {
       this.getAllInfo();
@@ -727,7 +728,13 @@
     width: 240px;
   }
 
-
+  .el-table{
+    /*width: 410px!important;*/
+    border: #000000;
+  }
+  table{
+    width: 900px;
+  }
 
 
 </style>

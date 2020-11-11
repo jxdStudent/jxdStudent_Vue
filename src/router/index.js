@@ -23,6 +23,9 @@ import getDeptStudentScore from "../components/getDeptStudentScore";
 import editDeptEvaluate from "../components/editDeptEvaluate";
 import EmpEvaluate from "../components/EmpEvaluate";
 import EmpEvaluate_part from "../components/EmpEvaluate_part";
+import EmpEvaluate_part1 from "../components/EmpEvaluate_part1";
+import EmpEvaluate_part2 from "../components/EmpEvaluate_part2";
+import EmpEvaluate_part3 from "../components/EmpEvaluate_part3";
 import addOfficialDate from "../components/addOfficialDate";
 import TeacherAllStudent from "../components/TeacherAllStudent";
 import allStudentGrow from "../components/admin/allStudentGrow";
@@ -159,6 +162,21 @@ export default new Router({
       path: '/EmpEvaluate_part',
       name: 'EmpEvaluate_part',
       component: EmpEvaluate_part
+    },
+    {
+      path: '/EmpEvaluate_part1',
+      name: 'EmpEvaluate_part1',
+      component: EmpEvaluate_part1
+    },
+    {
+      path: '/EmpEvaluate_part2',
+      name: 'EmpEvaluate_part2',
+      component: EmpEvaluate_part2
+    },
+    {
+      path: '/EmpEvaluate_part3',
+      name: 'EmpEvaluate_part3',
+      component: EmpEvaluate_part3
     },
     {
       path: '/addOfficialDate',

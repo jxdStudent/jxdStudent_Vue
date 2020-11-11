@@ -71,10 +71,13 @@
       methods:{
           //根据打开的第几行，传递index，查找第几年的评价
         getEvaluate(index) {
+          var index_now = "";
+          for (let i = 0; i < index.length; i++) {
+            index_now=index[i]
+          }
           //点击查看评价，隐藏基本信息
-          this.$parent.activeNames=[];
           if (index != "") {
-            this.isYear = index;
+            this.isYear = index_now;
             this.axios.get("getDeptEvaluate/" + this.$store.getters.studentNo + "/" + index).then(res => {
               //todo
               if (res.data[0]) {
