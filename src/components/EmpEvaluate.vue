@@ -4,7 +4,7 @@
       <el-collapse-item name="0">
         <template slot="title">
           <h1 style="color: #42b983">
-            {{$store.state.uname}}&nbsp;&&nbsp;转正评价<i class="header-icon el-icon-info"></i>
+            &nbsp;&nbsp;转正评价<i class="header-icon el-icon-info"></i>
           </h1>
         </template>
 
@@ -16,7 +16,7 @@
         <el-collapse-item name="1">
         <template slot="title">
           <h1 style="color: #42b983">
-            {{$store.state.uname}}&nbsp;&&nbsp;第一年评价<i class="header-icon el-icon-info"></i>
+            &nbsp;&nbsp;第一年评价<i class="header-icon el-icon-info"></i>
           </h1>
         </template>
 
@@ -28,7 +28,7 @@
         <el-collapse-item name="2">
         <template slot="title">
           <h1 style="color: #42b983">
-            {{$store.state.uname}}&nbsp;&&nbsp;第二年评价<i class="header-icon el-icon-info"></i>
+            &nbsp;&nbsp;第二年评价<i class="header-icon el-icon-info"></i>
           </h1>
         </template>
 
@@ -40,7 +40,7 @@
         <el-collapse-item name="3">
         <template slot="title">
           <h1 style="color: #42b983">
-            {{$store.state.uname}}&nbsp;&&nbsp;第三年评价<i class="header-icon el-icon-info"></i>
+            &nbsp;&nbsp;第三年评价<i class="header-icon el-icon-info"></i>
           </h1>
         </template>
 

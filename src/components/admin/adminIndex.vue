@@ -35,7 +35,7 @@
       return {
         tableData: [],   //从后台获取数据
         adminMenus: [],
-        defaultActive:'/allStudentGrow',
+        defaultActive:'',
       }
     },
     methods: {
