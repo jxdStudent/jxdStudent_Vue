@@ -52,7 +52,6 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
-
 ::-webkit-scrollbar {
   width: 0px;
   height: 10px;

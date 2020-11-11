@@ -2,11 +2,11 @@
   <div>
     <el-container>
       <el-header>
-        <nav-menu :uid="this.$store.getters.uid"></nav-menu>
+        <nav-menu :edit_student="edit_student" :uid="this.$store.getters.uid"></nav-menu>
       </el-header>
       <el-container class="el-container">
         <el-aside width="15%">
-          <el-menu>
+          <el-menu :default-active="defaultActive">
           <navMenuSide v-for="(menu,i) in adminMenus" :key="i" :item="menu"></navMenuSide>
           </el-menu>
         </el-aside>
@@ -35,6 +35,7 @@
       return {
         tableData: [],   //从后台获取数据
         adminMenus: [],
+        defaultActive:'/allStudentGrow',
       }
     },
     methods: {
@@ -65,6 +66,9 @@
           }
         })
       },
+      edit_student() {
+        this.$message.error("暂未开放此功能")
+      },
     },
     created() {
       this.getUserForLogin();
@@ -73,7 +77,14 @@
     mounted() {
       this.getAllDept();
       this.getMenu();
-    }
+
+      let href = window.location.href;
+      this.defaultActive = href.split("/#")[1];
+      /*let defaultMenu = window.location.hash.substr(
+        window.location.hash.indexOf("/")
+      );
+      this.defaultActive = defaultMenu;*/
+    },
   }
 </script>
 

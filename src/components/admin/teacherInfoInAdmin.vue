@@ -10,21 +10,21 @@
     <div class="select">
       <el-form :inline="true" :model="selectTeacherForm" ref="selectTeacherForm" class="demo-form-inline">
         <el-row>
-          <el-col :span="8" offset="1">
-            <el-form-item label="教师ID" prop="tno">
+          <el-col :span="8" offset="5">
+            <el-form-item label="教师姓名" prop="tno">
               <el-input v-model="selectTeacherForm.tno"
                         @keyup.enter.native="onSelectID(selectTeacherForm.tno,'selectTeacherForm')"
-                        placeholder="请输入教师ID"></el-input>
+                        placeholder="请输入教师姓名"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="onSelectID(selectTeacherForm.tno,'selectTeacherForm')">查询</el-button>
             </el-form-item>
           </el-col>
-          <el-col :span="3" offset="1">
+          <!--<el-col :span="3" offset="1">
             <el-form-item>
               <el-button type="primary" @click="onSelectAll()">显示全部</el-button>
             </el-form-item>
-          </el-col>
+          </el-col>-->
           <el-col :span="3">
             <el-form-item>
               <el-button type="primary" @click="openTeacher(null,'添加教师')">添加老师</el-button>
@@ -35,11 +35,11 @@
               <el-button @click="delArray()" type="danger">批量删除</el-button>
             </el-form-item>
           </el-col>
-          <el-col :span="3">
+          <!--<el-col :span="3">
             <el-form-item>
               <el-button @click="toggleSelection()">取消选择</el-button>
             </el-form-item>
-          </el-col>
+          </el-col>-->
         </el-row>
       </el-form>
     </div>
@@ -59,7 +59,14 @@
         <el-table-column type="selection" width="55">
         </el-table-column>
         <el-table-column
+          label="序号"
+          type='index' :index='(index)=>{return (index+1) + (this.query.current-1)*this.query.size}'
+          align="center"
+          width="70px"
+        ></el-table-column>
+        <el-table-column
           prop="tno"
+          v-if="showClose"
           label="教师编号"
           align="center"
           sortable
@@ -91,12 +98,12 @@
     </div>
 
     <!--添加老师-->
-    <el-dialog :title="title" :visible.sync="dialogFormVisible">
-      <el-form :model="addTeacherForm" :rules="rules2" @close='closeDialog'>
+    <el-dialog :title="title"  :visible.sync="dialogFormVisible" @close='closeDialog("addTeacherForm")'>
+      <el-form :model="addTeacherForm" ref="addTeacherForm" :rules="rules2" >
         <el-row>
           <el-col :span="12" offset="5">
             <el-form-item label="老师姓名" :label-width="formLabelWidth" prop="tname">
-              <el-input v-model="addTeacherForm.tname" autocomplete="off"></el-input>
+              <el-input v-model="addTeacherForm.tname" placeholder="请输入教师姓名" autocomplete="off"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -181,6 +188,9 @@
     },
     methods: {
       getAllByPage: function (tno) {
+        if (tno == ""){
+          tno = "undefined";
+        }
         axios.get("http://localhost:8081/getAllTeacherInAdminByPage/" + this.query.current + "/" + this.query.size +
           "/" + tno).then(res => {
           this.tableData = res.data.records;
@@ -200,31 +210,36 @@
         }
       },
       addTeacher: function () {
-        let data = this.addTeacherForm;
-        var url = "/addTeacherInUser";
-        var message = "添加成功";
-        if (this.title == "编辑教师"){
-          url = "/editTeacher";
-          this.editTeacherForm.tname = this.addTeacherForm.tname;
-          data = this.editTeacherForm;
-          message = "编辑成功";
-        }
-        axios.post(url, Qs.stringify(data)).then(res => {
-          if (res.data == "success") {//添加成功
-            this.reload();/*动态刷新表格*/
-            this.dialogFormVisible = false;/*关闭弹出层*/
-            this.$message({
-              type: 'success',
-              message: message
-            });
-            //location.reload();
-          } else {
-            this.$message.error('操作失败！');
+        if (this.addTeacherForm.tname == "") {
+          this.$message.error('请输入信息！');
+        }else {
+          let data = this.addTeacherForm;
+          var url = "/addTeacherInUser";
+          var message = "添加成功";
+          if (this.title == "编辑教师") {
+            url = "/editTeacher";
+            this.editTeacherForm.tname = this.addTeacherForm.tname;
+            data = this.editTeacherForm;
+            message = "编辑成功";
           }
-        })
+          axios.post(url, Qs.stringify(data)).then(res => {
+            if (res.data == "success") {//添加成功
+              this.reload();/*动态刷新表格*/
+              this.dialogFormVisible = false;/*关闭弹出层*/
+              this.$message({
+                type: 'success',
+                message: message
+              });
+              //location.reload();
+            } else {
+              this.$message.error('操作失败！');
+            }
+          })
+        }
       },
-      closeDialog() {
-        this.addTeacherForm = '';//清空数据
+      closeDialog(addTeacherForm) {
+        this.$refs[addTeacherForm].resetFields();
+        //this.addTeacherForm = '';//清空数据
       },
       onSelectID(tno, selectTeacherForm) {
         console.log("onSelectID!!")

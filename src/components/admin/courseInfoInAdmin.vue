@@ -10,7 +10,7 @@
     <div class="select">
       <el-form :inline="true" :model="selectCourseForm" ref="selectCourseForm" class="demo-form-inline">
         <el-row>
-          <el-col :span="8" offset="4">
+          <el-col :span="8" offset="6">
             <el-form-item label="课程名称" prop="cname">
               <el-input v-model="selectCourseForm.cname" @keyup.enter.native="onSelectID(selectCourseForm.cname,'selectCourseForm')" placeholder="请输入课程名称"></el-input>
             </el-form-item>
@@ -18,13 +18,13 @@
               <el-button type="primary" @click="onSelectID(selectCourseForm.cname,'selectCourseForm')">查询</el-button>
             </el-form-item>
           </el-col>
-          <el-col :span="4" offset="1">
+          <!--<el-col :span="4" offset="1">
             <el-form :inline="true" :model="selectByName" ref="selectByName" class="demo-form-inline">
               <el-form-item>
                 <el-button type="primary" @click="onSelectAll()">显示全部</el-button>
               </el-form-item>
             </el-form>
-          </el-col>
+          </el-col>-->
           <el-col :span="4">
             <el-form-item>
               <el-button type="primary" @click="openCourse(null,'添加课程')">添加课程</el-button>
@@ -43,7 +43,14 @@
         style="width: 100%"
         :default-sort="{prop: 'date', order: 'descending'}">
         <el-table-column
+          label="序号"
+          type='index' :index='(index)=>{return (index+1) + (this.query.current-1)*this.query.size}'
+          align="center"
+          width="70px"
+        ></el-table-column>
+        <el-table-column
           prop="cno"
+          v-if="showClose"
           label="课程编号"
           align="center"
           sortable
@@ -78,12 +85,12 @@
     </div>
 
     <!--添加课程-->
-    <el-dialog :title="title" :visible.sync="dialogFormVisible">
-      <el-form :model="addCourseForm" :rules="rules2" @close='closeDialog'>
+    <el-dialog :title="title" :visible.sync="dialogFormVisible" @close='closeDialog("addCourseForm")'>
+      <el-form :model="addCourseForm" ref="addCourseForm" :rules="rules2" >
         <el-row>
           <el-col :span="12" offset="5">
             <el-form-item label="课程名称" :label-width="formLabelWidth" prop="cname">
-              <el-input v-model="addCourseForm.cname" autocomplete="off"></el-input>
+              <el-input v-model="addCourseForm.cname" placeholder="请输入课程名称" autocomplete="off"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -145,6 +152,9 @@
       },
       methods:{
         getAllByPage:function(cname){
+          if (cname == ""){
+            cname = "undefined";
+          }
           axios.get("http://localhost:8081/getAllCourseInAdminByPage/" + this.query.current + "/" + this.query.size +
                         "/" + cname).then(res=>{
             this.tableData = res.data.records;
@@ -165,28 +175,32 @@
 
         },
         addCourse:function () {
-          let data = this.addCourseForm;
-          var url = "/addCourse";
-          var message = "添加成功";
-          if (this.title == "编辑课程"){
-            url = "/editCourse";
-            this.editCourseForm.cname = this.addCourseForm.cname;
-            data = this.editCourseForm;
-            message = "编辑成功";
-          }
-
-          axios.post(url,Qs.stringify(data)).then(res => {
-            if (res.data == "success") {//添加成功
-              this.reload();/*动态刷新表格*/
-              this.dialogFormVisible = false;/*关闭弹出层*/
-              this.$message({
-                type: 'success',
-                message: message
-              });
-            } else {
-              this.$message.error('编辑失败');
+          if (this.addCourseForm.cname == "") {
+            this.$message.error('请输入信息！');
+          }else {
+            let data = this.addCourseForm;
+            var url = "/addCourse";
+            var message = "添加成功";
+            if (this.title == "编辑课程") {
+              url = "/editCourse";
+              this.editCourseForm.cname = this.addCourseForm.cname;
+              data = this.editCourseForm;
+              message = "编辑成功";
             }
-          })
+
+            axios.post(url, Qs.stringify(data)).then(res => {
+              if (res.data == "success") {//添加成功
+                this.reload();/*动态刷新表格*/
+                this.dialogFormVisible = false;/*关闭弹出层*/
+                this.$message({
+                  type: 'success',
+                  message: message
+                });
+              } else {
+                this.$message.error('编辑失败');
+              }
+            })
+          }
         },
         handleSizeChange(val) {
           this.page = 1;
@@ -201,6 +215,14 @@
           console.log('select!');
           this.getAllByPage(cname);
           //this.$refs[selectCourseForm].resetFields()
+        },
+        closeDialog(addCourseForm) {
+
+          this.$refs[addCourseForm].resetFields();
+
+          /*this.addStudentForm.stuname = '';//清空数据
+          this.addStudentForm.classno = '';//清空数据
+          this.addStudentForm.sex = '';//清空数据*/
         },
         onSelectAll(){
           this.getAllByPage("undefined");

@@ -33,7 +33,7 @@
                     </el-col>
                     <el-col :span="10">
                       <div>
-                        <el-form-item label="技术栈">
+                        <el-form-item label="班级名称">
                           <el-input v-model="table_course_head[0].classname" readonly :disabled="isEdit"></el-input>
                         </el-form-item>
                       </div>
@@ -329,6 +329,7 @@
       getForLogin:function() {
         this.axios.get("getUserForLogin/" + this.$store.getters.uid).then(res => {
           if (res.data.role != 0 && res.data.role != 2) {
+            debugger
             this.$router.go(-1)
           }
         })
@@ -464,6 +465,7 @@
                   type: 'success'
                 });
                 this.isEdit = false;
+                this.isHide = true;
               } else {
                 this.$message({
                   message: '修改信息失败',

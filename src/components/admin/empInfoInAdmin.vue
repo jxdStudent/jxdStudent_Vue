@@ -14,7 +14,7 @@
           <el-main>
             <div style="margin-top: -20px;padding-bottom: 20px">
             <el-row>
-              <el-col :span="2">
+              <el-col :span="2" >
                 <span style="font-family: 'Microsoft YaHei';font-weight: bold;font-size: 20px">员工管理</span>
               </el-col>
             </el-row>
@@ -22,21 +22,21 @@
             <div class="select">
               <el-form :inline="true" :model="selectEmp" ref="selectEmp" class="demo-form-inline">
                 <el-row>
-                  <el-col :span="8" offset="4">
-                    <el-form-item label="员工编号" prop="empno">
-                      <el-input v-model="selectEmp.empno" @keyup.enter.native="onSelect(selectEmp.empno,'selectEmp')" placeholder="请输入员工编号"></el-input>
+                  <el-col :span="8" offset="8">
+                    <el-form-item label="员工姓名" prop="empno">
+                      <el-input v-model="selectEmp.empno" @keyup.enter.native="onSelect(selectEmp.empno,'selectEmp')" placeholder="请输入员工姓名"></el-input>
                     </el-form-item>
                     <el-form-item>
                       <el-button type="primary" @click="onSelect(selectEmp.empno,'selectEmp')">查询</el-button>
                     </el-form-item>
                   </el-col>
-                  <el-col :span="4" offset="1">
+                  <!--<el-col :span="4" offset="1">
                     <el-form :inline="true" :model="selectByName" ref="selectByName" class="demo-form-inline">
                       <el-form-item>
                         <el-button type="primary" @click="onSelectAll()">显示全部</el-button>
                       </el-form-item>
                     </el-form>
-                  </el-col>
+                  </el-col>-->
                   <!--<el-col :span="4">
                     <el-form-item>
                       <el-button type="primary" @click="dialogFormVisible = true">添加员工</el-button>
@@ -54,7 +54,14 @@
                 style="width: 100%"
                 :default-sort="{prop: 'date', order: 'descending'}">
                 <el-table-column
+                  label="序号"
+                  type='index' :index='(index)=>{return (index+1) + (this.query.current-1)*this.query.size}'
+                  align="center"
+                  width="70px"
+                ></el-table-column>
+                <el-table-column
                   prop="empno"
+                  v-if="showClose"
                   label="员工编号"
                   align="center"
                   sortable
@@ -190,12 +197,18 @@
         })
       },
       getAllEmpSize: function (empno) {
+        if (empno == ""){
+          empno = "undefined";
+        }
         let deptno = this.$route.query.deptno;
         axios.get("http://localhost:8081/selectAllEmpByPage/" + deptno + "/" + empno).then(res => {
           this.query.total = res.data.length;
         })
       },
       getAllByPage: function (empno) {
+        if (empno == ""){
+          empno = "undefined";
+        }
         let deptno = this.$route.query.deptno;
         axios.get("http://localhost:8081/selectEmpWithDeptByPage/" + this.query.current + "/" +
           this.query.size + "/" + deptno + "/" + empno).then(res => {

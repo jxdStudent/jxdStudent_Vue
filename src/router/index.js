@@ -24,6 +24,8 @@ import editDeptEvaluate from "../components/editDeptEvaluate";
 import EmpEvaluate from "../components/EmpEvaluate";
 import EmpEvaluate_part from "../components/EmpEvaluate_part";
 import addOfficialDate from "../components/addOfficialDate";
+import allStudent from "../components/allStudent";
+import allStudentGrow from "../components/admin/allStudentGrow";
 
 
 
@@ -44,7 +46,7 @@ export default new Router({
       path: '/adminIndex',
       name: 'adminIndex',
       component: adminIndex,
-      redirect:"/studentInfoInAdmin",
+      redirect:"/allStudentGrow",
       children: [
         {
           path: '/studentInfoInAdmin',
@@ -75,6 +77,11 @@ export default new Router({
           path: '/accountInfoInAdmin',
           name: 'accountInfoInAdmin',
           component: accountInfoInAdmin
+        },
+        {
+          path: '/allStudentGrow',
+          name: 'allStudentGrow',
+          component: allStudentGrow
         }
       ]
     },
@@ -157,6 +164,12 @@ export default new Router({
       path: '/addOfficialDate',
       name: 'addOfficialDate',
       component: addOfficialDate
+    },
+    {
+      path: '/allStudent',
+      name: 'allStudent',
+      component: allStudent
     }
+
   ]
 })

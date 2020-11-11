@@ -10,7 +10,7 @@
     <div class="select">
       <el-form :inline="true" :model="selectClassForm" ref="selectClassForm" class="demo-form-inline">
         <el-row>
-          <el-col :span="8" offset="1">
+          <el-col :span="8" offset="5">
             <el-form-item label="学期类型" prop="classname">
               <el-input v-model="selectClassForm.classname" @keyup.enter.native="onSelectID(selectClassForm.classname)" placeholder="请输入学期类型"></el-input>
             </el-form-item>
@@ -18,11 +18,11 @@
               <el-button type="primary" @click="onSelectID(selectClassForm.classname)">查询</el-button>
             </el-form-item>
           </el-col>
-          <el-col :span="3" offset="1">
+          <!--<el-col :span="3" offset="1">
             <el-form-item>
               <el-button type="primary" @click="onSelectAll()">显示全部</el-button>
             </el-form-item>
-          </el-col>
+          </el-col>-->
           <el-col :span="3">
             <el-form-item>
               <el-button type="primary" @click="openClass(null,'添加学期')">添加学期</el-button>
@@ -33,11 +33,11 @@
                 <el-button @click="delArray()" type="danger">批量删除</el-button>
             </el-form-item>
           </el-col>
-          <el-col :span="3">
+          <!--<el-col :span="3">
             <el-form-item>
               <el-button @click="toggleSelection()">取消选择</el-button>
             </el-form-item>
-          </el-col>
+          </el-col>-->
         </el-row>
       </el-form>
     </div>
@@ -54,6 +54,12 @@
         :default-sort="{prop: 'date', order: 'descending'}">
         <el-table-column type="selection" width="55">
         </el-table-column>
+        <el-table-column
+          label="序号"
+          type='index' :index='(index)=>{return (index+1) + (this.query.current-1)*this.query.size}'
+          align="center"
+          width="70px"
+        ></el-table-column>
         <el-table-column
           prop="classno"
           label="学期编号"
@@ -88,9 +94,9 @@
         <el-table-column
           label="操作" align="center">
           <template slot-scope="scope">
-            <el-button @click.native.prevent="deleteObject(scope.$index,scope.row.classno,tableData)"
+            <!--<el-button @click.native.prevent="deleteObject(scope.$index,scope.row.classno,tableData)"
                        type="danger" size="mini">删除
-            </el-button>
+            </el-button>-->
             <el-button type="primary" size="mini" @click="openClass(scope.row,'编辑学期')">编辑</el-button>
           </template>
         </el-table-column>
@@ -108,12 +114,12 @@
     </div>
 
     <!--添加学期-->
-    <el-dialog :title="title" :visible.sync="dialogFormVisible" @close='closeDialog'>
+    <el-dialog :title="title" :visible.sync="dialogFormVisible" @close='closeDialog("addClassForm")'>
       <el-form :model="addClassForm" ref="addClassForm" :rules="rules2">
         <el-row>
           <el-col :span="12" offset="5">
             <el-form-item label="学期名称" :label-width="formLabelWidth" prop="classname">
-              <el-input v-model="addClassForm.classname" autocomplete="off" class="addClassFormInput"></el-input>
+              <el-input v-model="addClassForm.classname" placeholder="请输入学期名称" autocomplete="off" class="addClassFormInput"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -237,6 +243,9 @@
     },
     methods: {
       getAllClassSize: function (classname) {
+        if (classname == ""){
+          classname = "undefined";
+        }
         axios.get("http://localhost:8081/getAllClassByPage/" + classname).then(res => {
           this.query.total = res.data.length;
           this.tableData = res.data;
@@ -282,29 +291,34 @@
         //this.addClassForm.course = row.course;
       },
       addClass:function () {
-        var url = "addClass";
-        var message = "添加成功";
-
-        if (this.title == "编辑学期"){
-          url = "editClass";
-          message = "编辑成功";
+        if (this.addClassForm.classname == "" || this.addClassForm.tno == "" || this.addClassForm.course == "") {
+          this.$message.error('请输入信息！');
         }else {
-          alert(this.addClassForm.course)
-          this.editClassForm.classno = "undifinde";
-        }
-        axios.post(url + "/" + this.addClassForm.classname + "/" + this.addClassForm.tno +
-                  "/" + this.addClassForm.course + "/" + this.editClassForm.classno).then(res => {
-          if (res.data == "success") {//添加成功
-            this.reload();/*动态刷新表格*/
-            this.dialogFormVisible = false;/*关闭弹出层*/
-            this.$message({
-              type: 'success',
-              message: message
-            });
+
+          var url = "addClass";
+          var message = "添加成功";
+
+          if (this.title == "编辑学期") {
+            url = "editClass";
+            message = "编辑成功";
           } else {
-            this.$message.error('操作失败！');
+            alert(this.addClassForm.course)
+            this.editClassForm.classno = "undifinde";
           }
-        })
+          axios.post(url + "/" + this.addClassForm.classname + "/" + this.addClassForm.tno +
+            "/" + this.addClassForm.course + "/" + this.editClassForm.classno).then(res => {
+            if (res.data == "success") {//添加成功
+              this.reload();/*动态刷新表格*/
+              this.dialogFormVisible = false;/*关闭弹出层*/
+              this.$message({
+                type: 'success',
+                message: message
+              });
+            } else {
+              this.$message.error('操作失败！');
+            }
+          })
+        }
       },
       getTeacherForOptions : function() {
         axios.get("getAllTeacher").then(res => {
@@ -342,12 +356,12 @@
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
-      closeDialog:function(){
+      closeDialog:function(addClassForm){
         //this.addClassForm = '';   //下次编辑打开也没有
         this.addClassForm.classname = '';
         this.addClassForm.tno = '';
         this.addClassForm.course = [];
-        //this.$refs['addClassForm'].resetFields()  //下次添加打开还有
+        this.$refs[addClassForm].resetFields()  //下次添加打开还有
       },
       // 多选删除
       delArray() {
