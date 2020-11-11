@@ -75,16 +75,29 @@
         required: true
       }
     },
-    /*data() {
+    data() {
       return {
-        isCollapse: true
+        /*isCollapse: true*/
+        defaultActive: '', //关键   当前激活菜单的 index
       };
+    },
+    /*watch: {
+      $route () {
+        this.setCurrentRoute()
+      }
     },*/
     methods: {
       handleRoute (menu) {
         // 通过菜单URL跳转至指定路由
         this.$router.push(menu.path)
-      }
+      },
+      // 用于清空左栏菜单绑定的高亮样式
+      handleSelect(){
+        this.activePath=''//这是左侧菜单绑定的default-active，使它变成空就可以实现。
+      },
+      /*setCurrentRoute () {
+        this.defaultActive = this.$route.path;//关键   通过他就可以监听到当前路由状态并激活当前菜单
+      }*/
       /*handleOpen(key, keyPath) {
         console.log(key, keyPath);
       },
@@ -95,6 +108,17 @@
         this.$router.push(path)
       },*/
     },
+    mounted() {
+      /*let href = window.location.href;
+      this.defaultActive = href.split("/#")[1];*/
+      let defaultMenu = window.location.hash.substr(
+        window.location.hash.indexOf("/")
+      );
+      this.defaultActive = defaultMenu;
+    },
+    /*created () {
+      this.setCurrentRoute()
+    }*/
   }
 </script>
 

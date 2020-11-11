@@ -49,31 +49,45 @@
               ref="SelectForm"
               :model="SelectForm"
               class="demo-form-inline">
-              <el-col :span="8">
+              <el-col :span="16">
                 <el-form-item
-                  label="学生ID"
-                  prop="sno">
+                  label="姓名"
+                  prop="sname">
                   <el-input
-                    v-model="SelectForm.sno"
-                    @keyup.enter.native="onSelectID(SelectForm.sno,'SelectForm')"
-                    placeholder="请输入学生ID">
+                    style="width: 160px"
+                    v-model="SelectForm.sname"
+                    placeholder="请输入姓名">
                   </el-input>
                 </el-form-item>
-                <el-form-item>
-                  <el-button
-                    type="primary"
-                    @click="onSelectID(SelectForm.sno,'SelectForm')">查询
-                  </el-button>
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
                 <el-form-item
-                  label="学期"
+                  label="毕业"
+                  prop="isgraduated">
+                  <el-select
+                    style="width: 160px"
+                    v-model="SelectForm.isgraduated"
+                    filterable placeholder="请选择是否已毕业">
+                    <el-option>全部
+                    </el-option>
+                    <el-option
+                      v-for="item in isGraduatedOption"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                      <span style="float: left">
+                        {{ item.value }}
+                      </span>
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item
+                  label="班期"
                   prop="classno">
                   <el-select
+                    style="width: 160px"
                     v-model="SelectForm.classno"
-                    @change="onSelectClass(SelectForm.classno,'SelectForm')"
-                    filterable placeholder="请选择学期">
+                    filterable placeholder="请选择班期">
+                    <el-option>全部
+                    </el-option>
                     <el-option
                       v-for="item in options"
                       :key="item.classno"
@@ -89,16 +103,24 @@
                     </el-option>
                   </el-select>
                 </el-form-item>
+                <el-form-item>
+                  <el-button
+                    type="primary"
+                    @click="onSelect(SelectForm.sname, SelectForm.isgraduated, SelectForm.classno)">查询
+                  </el-button>
+                </el-form-item>
               </el-col>
             </el-form>
           </div>
           <div>
             <el-table
               :data="tableData"
+              height="500px"
               border
               stripe
               style="width: 100%"
               :default-sort="{prop: 'sno'}">
+
               <template
                 v-for="(item,index) in tableHead">
                 <el-table-column
@@ -110,6 +132,7 @@
                   v-if="item.column_name != 'id'">
                 </el-table-column>
               </template>
+
               <el-table-column
                 fixed="right"
                 label="操作"
@@ -122,6 +145,7 @@
                   </el-button>
                   <el-button
                     size="mini"
+                    type="primary"
                     @click="dialogOpen(scope.row.sno, scope.row.sname)">毕业
                   </el-button>
                   <el-dialog
@@ -184,13 +208,24 @@ export default {
         graduate: 0,
       },
       options: [],
+      isGraduatedOption: [
+        {
+          value: "已毕业",
+          label: "已毕业"
+        },
+        {
+          value: "未毕业",
+          label: "未毕业"
+        }
+      ],
       query: {
         total: 1,
         current: 1,
         size: 5,
       },
       SelectForm: {
-        sno: '',
+        sname: '',
+        isgraduated: '',
         classno: '',
         classname: ''
       },
@@ -200,9 +235,9 @@ export default {
     this.getTeacherForLogin();
   },
   mounted() {
-    this.getTableSize("undefined", "undefined");
+    this.getTableSize("undefined", "undefined", "undefined");
     this.getTableHead();
-    this.getAllByPage("undefined", "undefined");
+    this.getAllByPage("undefined", "undefined", "undefined");
     this.getClass();
   },
   methods: {
@@ -213,9 +248,10 @@ export default {
         }
       })
     },
-    getTableSize: function (sno, classno) {
+    getTableSize: function (sname, isgraduated, classno) {
       axios.get("getStudentTableSize/" + this.$store.getters.uid +
-        "/" + sno +
+        "/" + sname +
+        "/" + isgraduated +
         "/" + classno).then(res=>{
         this.query.total = res.data;
       })
@@ -230,6 +266,9 @@ export default {
         },
         {
           column_name: "classno", column_comment: "班期"
+        },
+        {
+          column_name: "isgraduated", column_comment: "是否毕业"
         }
       ];
       axios.get("getAllCourse/" + this.SelectForm.classno).then(res => {
@@ -239,14 +278,15 @@ export default {
           table_head_obj.column_comment = res.data[i].cname;
           table_head.push(table_head_obj);
         }
-      })
+      });
       this.tableHead = table_head;
     },
-    getAllByPage: function (sno, classno) {
+    getAllByPage: function (sname, isgraduated, classno) {
       axios.get("getAllStudentScoreWithInfoByPage/" + this.$store.getters.uid +
         "/" + this.query.current +
         "/" + this.query.size +
-        "/" + sno +
+        "/" + sname +
+        "/" + isgraduated +
         "/" + classno).then(res => {
         this.tableData = res.data;
       })
@@ -256,14 +296,18 @@ export default {
         this.options = res.data;
       })
     },
-    onSelectID(sno, SelectForm) {
+    onSelect(sname, isgraduated, classno) {
       console.log('submit!');
-      this.getAllByPage(sno, "undefined");
-    }
-    ,
-    onSelectClass(classno, SelectForm) {
-      console.log('select!');
-      this.getAllByPage("undefined", classno);
+      if (sname == "") {
+        sname = "undefined";
+      }
+      if (isgraduated == "") {
+        isgraduated = "undefined";
+      }
+      if (classno == "") {
+        classno = "undefined";
+      }
+      this.getAllByPage(sname, isgraduated, classno);
     },
     handleSizeChange(val) {
       this.page = 1;

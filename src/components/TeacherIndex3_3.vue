@@ -49,31 +49,25 @@
               ref="SelectForm"
               :model="SelectForm"
               class="demo-form-inline">
-              <el-col :span="8">
+              <el-col :span="12">
                 <el-form-item
-                  label="学生ID"
-                  prop="sno">
+                  label="姓名"
+                  prop="sname">
                   <el-input
-                    v-model="SelectForm.sno"
-                    @keyup.enter.native="onSelectID(SelectForm.sno,'SelectForm')"
-                    placeholder="请输入学生ID">
+                    style="width: 160px"
+                    v-model="SelectForm.sname"
+                    placeholder="请输入姓名">
                   </el-input>
                 </el-form-item>
-                <el-form-item>
-                  <el-button
-                    type="primary"
-                    @click="onSelectID(SelectForm.sno,'SelectForm')">查询
-                  </el-button>
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
                 <el-form-item
-                  label="学期"
+                  label="班期"
                   prop="classno">
                   <el-select
+                    style="width: 160px"
                     v-model="SelectForm.classno"
-                    @change="onSelectClass(SelectForm.classno,'SelectForm')"
-                    filterable placeholder="请选择学期">
+                    filterable placeholder="请选择班期">
+                    <el-option>全部
+                    </el-option>
                     <el-option
                       v-for="item in options"
                       :key="item.classno"
@@ -89,6 +83,12 @@
                     </el-option>
                   </el-select>
                 </el-form-item>
+                <el-form-item>
+                  <el-button
+                    type="primary"
+                    @click="onSelect(SelectForm.sname, SelectForm.classno)">查询
+                  </el-button>
+                </el-form-item>
               </el-col>
             </el-form>
           </div>
@@ -97,6 +97,7 @@
               :data="tableData"
               border
               stripe
+              height="500px"
               style="width: 100%"
               :default-sort="{prop: 'sno'}">
               <el-table-column
@@ -203,7 +204,7 @@ export default {
         size: 5,
       },
       SelectForm: {
-        sno: '',
+        sname: '',
         classno: '',
         classname: ''
       },
@@ -225,21 +226,21 @@ export default {
         }
       })
     },
-    getTableSize: function (sno, classno) {
+    getTableSize: function (sname, classno) {
       var year = 3;
       axios.get("getEmpTableSize/" + this.$store.getters.uid +
-        "/" + sno +
+        "/" + sname +
         "/" + classno +
         "/" + year).then(res=>{
         this.query.total = res.data;
       })
     },
-    getAllByPage: function (sno, classno) {
+    getAllByPage: function (sname, classno) {
       var year = 3;//第三年
       axios.get("getAllDeptEvaluateWithInfoByPage/" + this.$store.getters.uid +
         "/" + this.query.current +
         "/" + this.query.size +
-        "/" + sno +
+        "/" + sname +
         "/" + classno +
         "/" + year).then(res => {
         this.tableData = res.data;
@@ -250,14 +251,15 @@ export default {
         this.options = res.data;
       })
     },
-    onSelectID(sno, SelectForm) {
+    onSelect(sname, classno) {
       console.log('submit!');
-      this.getAllByPage(sno, "undefined");
-    }
-    ,
-    onSelectClass(classno, SelectForm) {
-      console.log('select!');
-      this.getAllByPage("undefined", classno);
+      if (sname == "") {
+        sname = "undefined";
+      }
+      if (classno == "") {
+        classno = "undefined";
+      }
+      this.getAllByPage(sname,classno);
     },
     handleSizeChange(val) {
       this.page = 1;
