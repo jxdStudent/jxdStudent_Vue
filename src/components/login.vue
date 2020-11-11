@@ -71,6 +71,7 @@
           }else if (res.data.role == 2){
               this.$message({type :"success", message :"登录成功"})
               this.$store.dispatch("setUserUid", this.form.name);
+              this.$store.dispatch("setSelectStuNo", this.form.name);
               //通过员工号获取学生号
               this.axios.get("getStudentnoByEmpno/" + this.form.name).then(res => {
                 //存储学号
@@ -81,6 +82,7 @@
               });
             } else if (res.data.role == 0){  //10001
               this.$message({type :"success", message :"登录成功"})
+              this.$store.dispatch("setSelectStuNo", this.form.name);
             this.$router.push({path: "/InfoIndex"});
           } else if(res.data.role == -1){
               this.$message.error("用户名或密码错误")

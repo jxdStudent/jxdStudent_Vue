@@ -69,6 +69,13 @@
           sortable>
         </el-table-column>
         <el-table-column
+          prop="empno"
+          v-if="showClose"
+          label="员工编号"
+          align="center"
+          sortable>
+        </el-table-column>
+        <el-table-column
           prop="classno"
           label="学期"
           align="center"
@@ -216,6 +223,7 @@
     name: "allStudentGrow",
     data() {
       return {
+        //showClose: false,
         tableHead: [],
         tableData: [],
         dialogVisible: false,
@@ -239,7 +247,7 @@
       }
     },
     created() {
-      this.getUserForLogin();
+      //this.getUserForLogin();
     },
     mounted() {
       this.getTableHead();
@@ -250,7 +258,7 @@
     methods: {
       getTeacherForLogin: function () {
         axios.get("getUserForLogin/" + this.$store.getters.uid).then(res => {
-          if (res.data.role != 1) {
+          if (res.data.role != 4) {
             this.$router.go(-1)
           }
         })
@@ -276,7 +284,17 @@
         this.tableHead = table_head;
       },
       handleEdit(row) {
-        this.$message.error("此处跳转至" + row.sname + "学生信息页面")
+        this.$message({type:"success",message: "进入学生" + row.sname + "个人信息页面"})
+        //存储学号
+        this.$store.dispatch("setSelectStuNo", row.sno);
+        //this.$store.dispatch("setSelectStuName", row.sname);
+        //this.$store.dispatch("setUserName", row.sname);
+        //存储员工
+        this.$store.dispatch("setSno", row.empno);
+        //this.$store.dispatch("setSname", row.sname);
+        this.$router.push({
+          path: "/InfoIndexFromAdmin",
+        });
       },
       getAllByPage: function (sno, classno) {
         if (sno == "") {

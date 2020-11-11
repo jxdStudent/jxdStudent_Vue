@@ -30,6 +30,7 @@ import addOfficialDate from "../components/addOfficialDate";
 import TeacherAllStudent from "../components/TeacherAllStudent";
 import allStudentGrow from "../components/admin/allStudentGrow";
 import studentScoreBySno from "../components/studentScoreBySno";
+import InfoIndexFromAdmin from "../components/admin/InfoIndexFromAdmin";
 
 
 import axios from 'axios'
@@ -192,7 +193,11 @@ export default new Router({
       path: '/studentScoreBySno',
       name: 'studentScoreBySno',
       component: studentScoreBySno
+    },
+    {
+      path: '/InfoIndexFromAdmin',
+      name: 'InfoIndexFromAdmin',
+      component: InfoIndexFromAdmin
     }
-
   ]
 })
