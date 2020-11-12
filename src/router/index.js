@@ -28,6 +28,7 @@ import EmpEvaluate_part2 from "../components/EmpEvaluate_part2";
 import EmpEvaluate_part3 from "../components/EmpEvaluate_part3";
 import addOfficialDate from "../components/addOfficialDate";
 import TeacherAllStudent from "../components/TeacherAllStudent";
+import TeacherOneStudent from "../components/TeacherOneStudent";
 import allStudentGrow from "../components/admin/allStudentGrow";
 import studentScoreBySno from "../components/studentScoreBySno";
 import InfoIndexFromAdmin from "../components/admin/InfoIndexFromAdmin";
@@ -189,6 +190,11 @@ export default new Router({
       path: '/teacherAllStudent',
       name: 'teacherAllStudent',
       component: TeacherAllStudent
+    },
+    {
+      path: '/teacherOneStudent',
+      name: 'teacherOneStudent',
+      component: TeacherOneStudent
     },
     {
       path: '/studentScoreBySno',

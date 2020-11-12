@@ -276,7 +276,7 @@ export default {
           column_name: "isgraduated", column_comment: "是否毕业"
         }
       ];
-      axios.get("getAllCourse/" + this.SelectForm.classno).then(res => {
+      axios.get("getAllCourseByTeacher/" + this.SelectForm.classno).then(res => {
         for (let i = 0; i < res.data.length; i++) {
           var table_head_obj = {};
           table_head_obj.column_name = res.data[i].cno + "";
