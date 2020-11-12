@@ -8,10 +8,10 @@
 
       <div style="width: 900px;margin: auto">
         <!--折叠面板-->
-            <el-collapse v-model="activeNames">
-          <el-collapse-item name="学生基本信息">
+            <el-collapse  v-model="activeNames">
+          <el-collapse-item  name="学生基本信息">
             <template slot="title">
-              <h1 style="color: #42b983">&nbsp;&nbsp;基本信息<i
+              <h1>&nbsp;&nbsp;学生（{{this.form.sname}}）基本信息<i
                 class="header-icon el-icon-info"></i>
               </h1>
             </template>
@@ -42,8 +42,6 @@
                         <i class="el-icon-picture"></i>
                         <p style="font-size: 20px">请上传图片</p>
                       </div>
-
-
                     </div>
                   </td>
                 </tr>
@@ -98,8 +96,8 @@
           <!--学员成绩信息-->
           <el-collapse-item name="学生成绩信息" >
             <template slot="title">
-              <h1 style="color: #42b983">
-                &nbsp;&nbsp;成绩<i class="header-icon el-icon-info"></i>
+              <h1 >
+                &nbsp;&nbsp;培训学校评价<i class="header-icon el-icon-info"></i>
               </h1>
             </template>
             <div v-if="isShowScore">
@@ -157,7 +155,7 @@
           </el-collapse-item>
 
           <!--部门评价-->
-          <EmpEvaluate ></EmpEvaluate>
+          <EmpEvaluateInAdmin ></EmpEvaluateInAdmin>
 
         </el-collapse>
 
@@ -240,7 +238,6 @@
                                           value-format="yyyy-MM-dd"
                                           v-model="form.birthday"
                                           :disabled="!isEdit">
-
                           </el-date-picker>
                         </el-form-item>
                       </div>
@@ -361,14 +358,14 @@
 <script>
 import Qs from 'qs';
 import navMenu from '../navMenu.vue';
-import EmpEvaluate from '../EmpEvaluate.vue';
+import EmpEvaluateInAdmin from "./EmpEvaluateInAdmin";
 import studentScoreBySno from '../studentScoreBySno.vue';
 
 export default {
   name: "InfoIndexFromAdmin",
   components: {
     navMenu: navMenu,
-    EmpEvaluate: EmpEvaluate,
+    EmpEvaluateInAdmin: EmpEvaluateInAdmin,
     studentScoreBySno: studentScoreBySno
   },
   data() {
@@ -405,7 +402,7 @@ export default {
       labelPosition: 'right',
 
       //折叠面板默认开启
-      activeNames: '',
+      activeNames: ['学生基本信息','学生成绩信息'],
 
       //是否编辑
       isEdit: false,
@@ -557,13 +554,11 @@ export default {
           return;
         }
         this.table_course_score = res.data;
-        this.getEvaluate();
       })
     },
     //获取学校的评价
     getEvaluate() {
       this.axios.get("getSchoolEvaluate/" + this.form.sno + "/" + this.tno).then(res => {
-        debugger
         if (res.data) {
           this.evaluate_school = res.data[0].sevaluate;
         } else {

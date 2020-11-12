@@ -31,7 +31,8 @@ import TeacherAllStudent from "../components/TeacherAllStudent";
 import allStudentGrow from "../components/admin/allStudentGrow";
 import studentScoreBySno from "../components/studentScoreBySno";
 import InfoIndexFromAdmin from "../components/admin/InfoIndexFromAdmin";
-
+import EmpEvaluateInAdmin from "../components/admin/EmpEvaluateInAdmin";
+import EmpEvaluate_partInAdmin from "../components/admin/EmpEvaluate_partInAdmin";
 
 import axios from 'axios'
 axios.defaults.baseURL = 'http://localhost:8081/'
@@ -198,6 +199,16 @@ export default new Router({
       path: '/InfoIndexFromAdmin',
       name: 'InfoIndexFromAdmin',
       component: InfoIndexFromAdmin
+    },
+    {
+      path: '/EmpEvaluateInAdmin',
+      name: 'EmpEvaluateInAdmin',
+      component: EmpEvaluateInAdmin
+    },
+    {
+      path: '/EmpEvaluate_partInAdmin',
+      name: 'EmpEvaluate_partInAdmin',
+      component: EmpEvaluate_partInAdmin
     }
   ]
 })
