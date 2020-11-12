@@ -8,11 +8,10 @@
 
       <div style="width: 900px;margin: auto">
         <!--折叠面板-->
-            <el-collapse v-model="activeNames">
+        <el-collapse v-model="activeNames">
           <el-collapse-item name="学生基本信息">
             <template slot="title">
-              <h1 style="color: #42b983">{{ $store.state.uname }}&nbsp;&&nbsp;基本信息<i
-                class="header-icon el-icon-info"></i>
+              <h1 style="color: #42b983">{{form.sname}}&nbsp;&&nbsp;基本信息<i class="header-icon el-icon-info"></i>
               </h1>
             </template>
 
@@ -99,7 +98,7 @@
           <el-collapse-item name="学生成绩信息" v-if="isStudent">
             <template slot="title">
               <h1 style="color: #42b983">
-                {{ $store.state.uname }}&nbsp;&&nbsp;成绩<i class="header-icon el-icon-info"></i>
+                {{form.sname}}&nbsp;&&nbsp;成绩<i class="header-icon el-icon-info"></i>
               </h1>
             </template>
             <div v-if="isShowScore">
@@ -129,22 +128,22 @@
                 <tr>
                   <td class="td_score">学习评价</td>
                   <td class="td_score">
-                    {{ form.classno }}
+                    {{form.classno}}
                     <!--<el-input v-model="form.classno" readonly></el-input>-->
                   </td>
                   <td class="td_score">
-                    {{ tname }}
+                    {{tname}}
                     <!--<el-input v-model="tname" readonly></el-input>-->
                   </td>
                   <td class="td_score">
-                    {{ table_course_score[0].score_total }}
+                    {{table_course_score[0].score_total}}
                     <!--<el-input v-model="table_course_score[0].score_total" readonly></el-input>-->
                   </td>
                 </tr>
                 <tr>
                   <td class="td_score_evaluate">评价（包括主要优点及缺陷）</td>
                   <td colspan="4" class="td_score_evaluates">
-                    {{ evaluate_school }}
+                    {{evaluate_school}}
                     <!--<el-input v-model="evaluate_school" readonly class="score_evaluate"></el-input>-->
                   </td>
                 </tr>
@@ -157,15 +156,15 @@
           </el-collapse-item>
 
           <!--部门评价-->
-          <EmpEvaluate v-else></EmpEvaluate>
+          <EmpEvaluate v-else :ename="form.sname"></EmpEvaluate>
 
         </el-collapse>
 
 
         <!--编辑基本信息-->
         <div>
-          <el-dialog title="修改基本信息" :visible.sync="dialogFormVisible" width="1000px">
-            <el-container>
+          <el-dialog title="修改基本信息" :visible.sync="dialogFormVisible" width="1000px" style="margin-top: -20px">
+            <el-container style="margin-top: -20px">
               <el-main>
 
                 <!--表单-->  <!--:span控制区域长度-->
@@ -290,15 +289,15 @@
                   </el-row>
 
                   <el-row>
-                        <el-col span="10">
-                          <div style="float: left;margin-left: 48px">备注：</div>
-                          <div style="margin-left: 100px;">
-                            <el-form-item prop="remark" >
-                              <el-input type="textarea" v-model="form.remark"  style="width: 500px"
-                                  maxlength="255" :autosize="{ minRows: 2}"
-                                  :disabled="!isEdit" show-word-limit></el-input>
-                      </el-form-item>
-                          </div>
+                    <el-col span="10">
+                      <div style="float: left;margin-left: 48px">备注：</div>
+                      <div style="margin-left: 100px;">
+                        <el-form-item prop="remark">
+                          <el-input type="textarea" v-model="form.remark" style="width: 500px"
+                                    maxlength="255" :autosize="{ minRows: 2}"
+                                    :disabled="!isEdit" show-word-limit></el-input>
+                        </el-form-item>
+                      </div>
                     </el-col>
                   </el-row>
 
@@ -308,6 +307,7 @@
                     <el-button type="primary" @click="onSubmit('form')" v-if="isEdit">保存</el-button>
                   </el-form-item>
                 </el-form>
+
               </el-main>
 
               <!--头像-->
@@ -351,403 +351,410 @@
       </div>
     </el-container>
 
-
-    <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
-
-
   </div>
 </template>
 
 <script>
-import Qs from 'qs';
-import navMenu from './navMenu.vue';
-import EmpEvaluate from './EmpEvaluate.vue';
-import studentScoreBySno from './studentScoreBySno.vue';
+  import Qs from 'qs';
+  import navMenu from './navMenu.vue';
+  import EmpEvaluate from './EmpEvaluate.vue';
+  import studentScoreBySno from './studentScoreBySno.vue';
 
-export default {
-  name: "InfoIndex",
-  components: {
-    navMenu: navMenu,
-    EmpEvaluate: EmpEvaluate,
-    studentScoreBySno: studentScoreBySno
-  },
-  data() {
-    return {
+  export default {
+    name: "InfoIndex",
+    components: {
+      navMenu: navMenu,
+      EmpEvaluate: EmpEvaluate,
+      studentScoreBySno: studentScoreBySno
+    },
+    data() {
+      return {
 
-      //学生个人数据
-      form: {},
-      //div_img:'require("../assets/imgs/" + this.form.photo)',
+        //学生个人数据
+        form: {},
+        //div_img:'require("../assets/imgs/" + this.form.photo)',
 
-      //编辑弹框
-      dialogFormVisible: false,
+        //编辑弹框
+        dialogFormVisible: false,
 
-      //显示的图片
-      imgUrl: null,
+        //显示的图片
+        imgUrl: null,
 
-      //学生课程
-      table_course_head: [],
+        //学生课程
+        table_course_head: [],
 
-      //学生课程成绩
-      table_course_score: [],
+        //学生课程成绩
+        table_course_score: [],
 
-      //老师编号
-      tno: null,
-      //老师姓名
-      tname: null,
+        //老师编号
+        tno: null,
+        //老师姓名
+        tname: null,
 
-      //学校的评价
-      evaluate_school: null,
+        //学校的评价
+        evaluate_school: null,
 
-      //修改密码
-      uid_change: null,
+        //修改密码
+        uid_change: null,
 
-      //表单对齐
-      labelPosition: 'right',
+        //表单对齐
+        labelPosition: 'right',
 
-      //折叠面板默认开启
-      activeNames: '',
+        //折叠面板默认开启
+        activeNames: ['学生基本信息','学生成绩信息'],
 
-      //是否编辑
-      isEdit: false,
+        //是否编辑
+        isEdit: false,
 
-      //控制必填项的 * 是否显示
-      isHide: true,
+        //控制必填项的 * 是否显示
+        isHide: true,
 
-      //登录的身份是学生还是员工
-      isStudent: true,
+        //登录的身份是学生还是员工
+        isStudent: true,
 
-      //是否显示成绩表格
-      isShowScore: true,
+        //是否显示成绩表格
+        isShowScore: true,
 
-      //验证规则
-      rules: {
-        nation: [
-          {required: true, message: '请输入所属民族', trigger: 'blur'},
-        ],
-        birthday: [
-          {required: true, message: '请输入生日', trigger: 'blur'}
-        ],
-        address: [
-          {required: true, message: '请输入家庭住址', trigger: 'blur'}
-        ],
-        tel: [
-          {required: true, message: '请输入联系电话', trigger: 'blur'},
-          {pattern: /^([1][3,4,5,6,7,8,9]\d{9})$/, message: '请输入正确的联系电话', trigger: 'blur'}
-        ],
-        identity: [
-          {required: true, message: '请输入身份证号', trigger: 'blur'},
-          {pattern: /^((\d{18})|([0-9x]{18})|([0-9X]{18}))$/, message: '请输入正确的身份证号', trigger: 'blur'}
-        ],
-        graduate: [
-          {required: true, message: '请输入毕业院校', trigger: 'blur'}
-        ],
-        major: [
-          {required: true, message: '请输入所学专业', trigger: 'blur'}
-        ]
-      }
-    }
-  },
-  watch: {
-    tname: {
-      deep: true,
-      handler: function (newVal, old) {
-
-      }
-    }
-  },
-  methods: {
-      getForLogin:function() {
-      },
-    //上传图片成功
-    handleAvatarSuccess(res, file) {
-      //this.imageUrl = URL.createObjectURL(file.raw);
-      if (this.$store.getters.studentNo) {
-        //登录身份为员工，上传图片到jxd_emp
-        this.axios.post("updateImgForEmp/" + this.$store.getters.studentNo).then(res => {
-          if (res.data != "fail") {
-            this.imgUrl = "http://localhost:8081/" + res.data;
-            this.$message({
-              type: 'success',
-              message: '上传成功'
-            })
-          } else {
-            this.$message.error("上传失败！")
-          }
-        })
-      } else {
-        //登录身份为学生，上传图片到jxd_student
-        this.axios.post("updateImgForStu/" + this.form.sno).then(res => {
-          if (res.data != "fail") {
-            this.imgUrl = "http://localhost:8081/" + res.data;
-            this.$message({
-              type: 'success',
-              message: '上传成功'
-            })
-          } else {
-            this.$message.error("上传失败！")
-          }
-        })
+        //验证规则
+        rules: {
+          nation: [
+            {required: true, message: '请输入所属民族', trigger: 'blur'},
+          ],
+          birthday: [
+            {required: true, message: '请输入生日', trigger: 'blur'}
+          ],
+          address: [
+            {required: true, message: '请输入家庭住址', trigger: 'blur'}
+          ],
+          tel: [
+            {required: true, message: '请输入联系电话', trigger: 'blur'},
+            {pattern: /^([1][3,4,5,6,7,8,9]\d{9})$/, message: '请输入正确的联系电话', trigger: 'blur'}
+          ],
+          identity: [
+            {required: true, message: '请输入身份证号', trigger: 'blur'},
+            {pattern: /^((\d{18})|([0-9x]{18})|([0-9X]{18}))$/, message: '请输入正确的身份证号', trigger: 'blur'}
+          ],
+          graduate: [
+            {required: true, message: '请输入毕业院校', trigger: 'blur'}
+          ],
+          major: [
+            {required: true, message: '请输入所学专业', trigger: 'blur'}
+          ]
+        }
       }
     },
-    //上传图片前对图片格式的要求
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg';
-      const isLt2M = file.size / 1024 / 1024 < 2;
+    watch: {
+      tname: {
+        deep: true,
+        handler: function (newVal, old) {
 
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!');
+        }
       }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!');
-      }
-      return isJPG && isLt2M;
     },
-    //获取个人信息
-    getAllInfo() {
+    methods: {
+      //登录控制
+      /*getForLogin:function() {
+        this.axios.get("getUserForLogin/" + this.$store.getters.uid).then(res => {
+          if (res.data.role != 0 && res.data.role != 2) {
+            debugger
+            this.$router.go(-1)
+          }
+        })
+      },*/
 
-      //获取基本信息
-      this.axios.get("getStudent/" + this.$store.getters.uid).then(res => {
-        if (res.data.marriage == 0) {
-          res.data.marriage = "未婚";
-        } else {
-          res.data.marriage = "已婚";
-        }
+      //上传图片成功
+      handleAvatarSuccess(res, file) {
+        //this.imageUrl = URL.createObjectURL(file.raw);
         if (this.$store.getters.studentNo) {
-          this.isStudent = false;
-        }
-        this.form = res.data;
-
-        //员工登录，获取员工图片信息
-        if (this.$store.getters.studentNo) {
-          this.axios.get("getEmpPhotoByEmpno/" + this.$store.getters.studentNo).then(res => {
-            this.imgUrl = res.data.photo
+          //登录身份为员工，上传图片到jxd_emp
+          this.axios.post("updateImgForEmp/" + this.$store.getters.studentNo).then(res => {
+            if (res.data != "fail") {
+              this.imgUrl = "http://localhost:8081/" + res.data;
+              this.$message({
+                type: 'success',
+                message: '上传成功'
+              })
+            } else {
+              this.$message.error("上传失败！")
+            }
           })
         } else {
-          this.imgUrl = this.form.photo
-        }
-
-        //根据登录角色传递登录用户id
-        if (this.$store.getters.studentNo) {
-          this.uid_change = this.$store.getters.studentNo
-        } else {
-          this.uid_change = this.$store.getters.uid
-        }
-
-        this.getAllCourse();
-        this.getAllScore();
-      })
-
-
-    },
-    //获取课程信息
-    getAllCourse() {
-      this.axios.get("getAllCourse/" + this.form.classno).then(res => {
-        this.table_course_head = res.data;
-        this.tname = res.data[0].tname;
-        this.tno = res.data[0].tno;
-
-        this.getEvaluate();
-      })
-    },
-    //获取该学生的课程成绩
-    getAllScore() {
-      this.axios.get("getAllScore/" + this.form.sno).then(res => {
-        if (res.data[0].score_total == 0) {
-          this.isShowScore = false;
-          return;
-        }
-        this.table_course_score = res.data;
-      })
-    },
-    //获取学校的评价
-    getEvaluate() {
-      this.axios.get("getSchoolEvaluate/" + this.form.sno + "/" + this.tno).then(res => {
-        if (res.data) {
-          this.evaluate_school = res.data[0].sevaluate;
-        } else {
-          this.evaluate_school = "暂未评价";
-        }
-      })
-    },
-    //编辑信息
-    edit_student() {
-      this.dialogFormVisible = true;
-      this.isEdit = !this.isEdit;
-      this.isHide = !this.isHide;
-    },
-    //取消编辑
-    cancel_edit(form) {
-      //重置信息
-      this.$refs[form].resetFields();
-      this.edit_student();
-      this.close_dialog();
-    },
-    close_dialog() {
-      this.dialogFormVisible = false;
-    },
-    //修改信息提交
-    onSubmit(form) {
-
-      //对表单的 “婚否” 数据进行修改为数据库对应字段
-      this.$refs[form].validate((valid) => {
-        if (valid) {
-          let data = this.form;
-          if (data.marriage == "未婚") {
-            data.marriage = 0;
-          } else {
-            data.marriage = 1;
-          }
-          data.photo = this.imgUrl;
-          //提交信息
-          this.axios.post("editStudent", Qs.stringify(data)).then(res => {
-            if (res.data) {
-              this.getAllInfo();
+          //登录身份为学生，上传图片到jxd_student
+          this.axios.post("updateImgForStu/" + this.form.sno).then(res => {
+            if (res.data != "fail") {
+              this.imgUrl = "http://localhost:8081/" + res.data;
               this.$message({
-                message: '修改信息成功',
-                type: 'success'
-              });
-              this.isEdit = false;
-              this.isHide = true;
-              this.close_dialog();
+                type: 'success',
+                message: '上传成功'
+              })
             } else {
-              this.$message({
-                message: '修改信息失败',
-                type: 'success'
-              });
+              this.$message.error("上传失败！")
             }
-          });
-        } else {
-          this.$message.error("请按照规范填写");
-          return false;
+          })
         }
-      })
-    }
-  },
-    /*created() {
-    this.getForLogin();
-    },*/
-  //加载执行
-  mounted() {
-    this.getAllInfo();
-    //在获取基本信息之后执行，以便获取其中的班级编号classno
-    //setTimeout(this.getAllCourse, 60);
-    //setTimeout(this.getAllScore, 60);
+      },
+      //上传图片前对图片格式的要求
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg';
+        const isLt2M = file.size / 1024 / 1024 < 2;
 
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG 格式!');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        return isJPG && isLt2M;
+      },
+      //获取个人信息
+      getAllInfo() {
+
+        //获取基本信息
+        this.axios.get("getStudent/" + this.$store.getters.uid).then(res => {
+          if (res.data.marriage == 0) {
+            res.data.marriage = "未婚";
+          } else {
+            res.data.marriage = "已婚";
+          }
+          if (this.$store.getters.studentNo) {
+            this.isStudent = false;
+          }
+          this.form = res.data;
+
+          //员工登录，获取员工图片信息
+          if (this.$store.getters.studentNo) {
+            this.axios.get("getEmpPhotoByEmpno/" + this.$store.getters.studentNo).then(res => {
+              this.imgUrl = res.data.photo
+            })
+          } else {
+            this.imgUrl = this.form.photo
+          }
+
+          //根据登录角色传递登录用户id
+          if (this.$store.getters.studentNo) {
+            this.uid_change = this.$store.getters.studentNo
+          } else {
+            this.uid_change = this.$store.getters.uid
+          }
+
+          this.getAllCourse();
+          this.getAllScore();
+        })
+
+
+      },
+      //获取课程信息
+      getAllCourse() {
+        this.axios.get("getAllCourse/" + this.form.classno).then(res => {
+          this.table_course_head = res.data;
+          this.tname = res.data[0].tname;
+          this.tno = res.data[0].tno;
+
+          this.getEvaluate();
+        })
+      },
+      //获取该学生的课程成绩
+      getAllScore() {
+        this.axios.get("getAllScore/" + this.form.sno).then(res => {
+          if (res.data[0].score_total == 0) {
+            this.isShowScore = false;
+            return;
+          }
+          this.table_course_score = res.data;
+        })
+      },
+      //获取学校的评价
+      getEvaluate() {
+        this.axios.get("getSchoolEvaluate/" + this.form.sno + "/" + this.tno).then(res => {
+          if (res.data) {
+            this.evaluate_school = res.data[0].sevaluate;
+          } else {
+            this.evaluate_school = "暂未评价";
+          }
+        })
+      },
+      //编辑信息
+      edit_student() {
+        this.dialogFormVisible = true;
+        this.isEdit = !this.isEdit;
+        this.isHide = !this.isHide;
+      },
+      //取消编辑
+      cancel_edit(form) {
+        //重置信息
+        this.$refs[form].resetFields();
+        this.edit_student();
+        this.close_dialog();
+      },
+      close_dialog() {
+        this.dialogFormVisible = false;
+      },
+      //修改信息提交
+      onSubmit(form) {
+
+        //对表单的 “婚否” 数据进行修改为数据库对应字段
+        this.$refs[form].validate((valid) => {
+          if (valid) {
+            let data = this.form;
+            if (data.marriage == "未婚") {
+              data.marriage = 0;
+            } else {
+              data.marriage = 1;
+            }
+            data.photo = this.imgUrl;
+            //提交信息
+            this.axios.post("editStudent", Qs.stringify(data)).then(res => {
+              if (res.data) {
+                this.getAllInfo();
+                this.$message({
+                  message: '修改信息成功',
+                  type: 'success'
+                });
+                this.isEdit = false;
+                this.isHide = true;
+                this.close_dialog();
+              } else {
+                this.$message({
+                  message: '修改信息失败',
+                  type: 'success'
+                });
+              }
+            });
+          } else {
+            this.$message.error("请按照规范填写");
+            return false;
+          }
+        })
+      }
+    },
+    /*created() {
+      this.getForLogin();
+    },*/
+    //加载执行
+    mounted() {
+      this.getAllInfo();
+      //在获取基本信息之后执行，以便获取其中的班级编号classno
+      //setTimeout(this.getAllCourse, 60);
+      //setTimeout(this.getAllScore, 60);
+
+    }
   }
-}
 </script>
 
 <style scoped>
-.el-input {
-  width: 200px;
-  font-size: medium;
-}
+  .el-input {
+    width: 200px;
+    font-size: medium;
+  }
 
-.input_show {
-  width: 140px;
-}
+  .input_show {
+    width: 140px;
+  }
 
-.input_show_middle {
-  width: 220px;
-}
+  .input_show_middle {
+    width: 220px;
+  }
 
-.input_show_large {
-  width: 800px;
-}
+  .input_show_large {
+    width: 800px;
+  }
 
 
-.el-select {
-  width: 200px;
-  font-size: medium;
-}
+  .el-select {
+    width: 200px;
+    font-size: medium;
+  }
 
-.width_mark {
+  .width_mark {
 
-}
+  }
 
-.width_idCard {
+  .width_idCard {
 
-}
+  }
 
-.el-img {
-  margin-top: 40px;
-  width: 50px;
-}
+  .el-img {
+    margin-top: 40px;
+    width: 50px;
+  }
 
-.el-date-picker {
-}
+  .el-date-picker {
+  }
 
-img {
-  width: 150px;
-}
+  img {
+    width: 150px;
+  }
 
-.el-aside {
-  background-color: #D3DCE6;
-  color: #333;
-  text-align: center;
-  /*line-height: 200px;*/
-}
+  .el-aside {
+    background-color: #D3DCE6;
+    color: #333;
+    text-align: center;
+    /*line-height: 200px;*/
+  }
 
-.el-main {
-  width: 800px;
-  background-color: #E9EEF3;
-  color: #333;
-  text-align: center;
+  .el-main {
+    width: 800px;
+    background-color: #E9EEF3;
+    color: #333;
+    text-align: center;
 
-}
+  }
 
-.el-form-item {
-  width: 300px;
-}
+  .el-form-item {
+    width: 300px;
+  }
 
-table, td {
-  border-collapse: collapse;
-  border: 1px black solid;
-  margin: 0px;
-}
+  table, td {
+    border-collapse: collapse;
+    border: 1px black solid;
+    margin: 0px;
+  }
 
-.col_1 {
-  width: 120px
-}
+  .col_1 {
+    width: 120px
+  }
 
-.col_2 {
-  width: 140px
-}
+  .col_2 {
+    width: 140px
+  }
 
-.col_3 {
-  width: 80px
-}
+  .col_3 {
+    width: 80px
+  }
 
-.col_4 {
-  width: 200px
-}
+  .col_4 {
+    width: 200px
+  }
 
-.col_5 {
-  width: 320px
-}
+  .col_5 {
+    width: 320px
+  }
 
-.col_6 {
-  width: 120px;
-}
+  .col_6 {
+    width: 120px;
+  }
 
-.td_score {
-  height: 40px;
-  width: 100px;
-}
+  .td_score {
+    height: 40px;
+    width: 100px;
+  }
 
-.td_score_evaluate {
-  height: 120px;
-}
+  .td_score_evaluate {
+    height: 120px;
+  }
 
-.score_evaluate {
-  width: 240px;
-}
+  .score_evaluate {
+    width: 240px;
+  }
 
-  .el-table{
+  .el-table {
     /*width: 410px!important;*/
     border: #000000;
   }
-  table{
+
+  table {
     width: 900px;
   }
+
+
 </style>

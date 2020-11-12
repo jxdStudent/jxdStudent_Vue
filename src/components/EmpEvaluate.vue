@@ -4,7 +4,7 @@
       <el-collapse-item name="0">
         <template slot="title">
           <h1 style="color: #42b983">
-            &nbsp;&nbsp;转正评价<i class="header-icon el-icon-info"></i>
+            {{ename}}&nbsp;&&nbsp;转正评价<i class="header-icon el-icon-info"></i>
           </h1>
         </template>
 
@@ -16,7 +16,7 @@
         <el-collapse-item name="1">
         <template slot="title">
           <h1 style="color: #42b983">
-            &nbsp;&nbsp;第一年评价<i class="header-icon el-icon-info"></i>
+            {{ename}}&nbsp;&&nbsp;第一年评价<i class="header-icon el-icon-info"></i>
           </h1>
         </template>
 
@@ -28,7 +28,7 @@
         <el-collapse-item name="2">
         <template slot="title">
           <h1 style="color: #42b983">
-            &nbsp;&nbsp;第二年评价<i class="header-icon el-icon-info"></i>
+            {{ename}}&nbsp;&&nbsp;第二年评价<i class="header-icon el-icon-info"></i>
           </h1>
         </template>
 
@@ -40,7 +40,7 @@
         <el-collapse-item name="3">
         <template slot="title">
           <h1 style="color: #42b983">
-            &nbsp;&nbsp;第三年评价<i class="header-icon el-icon-info"></i>
+            {{ename}}&nbsp;&&nbsp;第三年评价<i class="header-icon el-icon-info"></i>
           </h1>
         </template>
 
@@ -58,6 +58,12 @@
       components:{
         EmpEvaluate_part:EmpEvaluate_part
       },
+      props: {
+        ename:{
+          type:String,
+          required: true
+        }
+      },
       data(){
           return{
             //员工的评价
@@ -65,19 +71,20 @@
             //第几年的评价
             isYear:null,
             //折叠面板
-            activeNames:[]
+            activeNames:'0'
           }
       },
       methods:{
           //根据打开的第几行，传递index，查找第几年的评价
         getEvaluate(index) {
-          var index_now = "";
+          //this.$parent.activeNames="";
+          /*var index_now = "";
           for (let i = 0; i < index.length; i++) {
             index_now=index[i]
-          }
+          }*/
           //点击查看评价，隐藏基本信息
           if (index != "") {
-            this.isYear = index_now;
+            this.isYear = index;
             this.axios.get("getDeptEvaluate/" + this.$store.getters.studentNo + "/" + index).then(res => {
               //todo
               if (res.data[0]) {
@@ -88,9 +95,30 @@
             })
           }
         },
+        getEvaluateOfGraduate() {
+          //this.$parent.activeNames="";
+          /*var index_now = "";
+          for (let i = 0; i < index.length; i++) {
+            index_now=index[i]
+          }*/
+          //点击查看评价，隐藏基本信息
+
+            this.isYear = 0;
+            this.axios.get("getDeptEvaluate/" + this.$store.getters.studentNo + "/0").then(res => {
+              //todo
+              if (res.data[0]) {
+                this.table_evaluate = res.data
+              } else {
+                this.table_evaluate = res.data[0]
+              }
+            })
+
+        },
       },
       mounted(){
           //this.getEvaluate()
+        this.getEvaluateOfGraduate();
+
       }
     }
 </script>
