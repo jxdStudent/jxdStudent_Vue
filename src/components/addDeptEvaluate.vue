@@ -246,7 +246,17 @@
               if (res.data) {
                 this.$message("新增信息成功");
                 //页面跳转
-                this.$router.push({path:"/mgrIndex"})
+                this.$router.push({
+                  path: "/getDeptEvaluate",
+                  query: {
+                    empno:this.$route.query.empno,
+                    ename:this.$route.query.ename,
+                    dname:this.$route.query.dname,
+                    job:this.$route.query.job,
+                    sno:this.$route.query.sno,
+                    officialdate:this.$route.query.officialdate
+                  }
+                })
               } else {
                 this.$message("新增信息失败");
               }

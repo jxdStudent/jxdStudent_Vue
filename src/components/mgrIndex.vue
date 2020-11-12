@@ -2,7 +2,7 @@
   <div style="margin: auto">
     <el-container>
       <el-header>
-        <NavMenu></NavMenu>
+        <NavMenu :uid="this.$store.getters.uid"></NavMenu>
       </el-header>
     </el-container>
 
@@ -10,9 +10,9 @@
 
           <!-- 模糊查询 -->
           <el-row>
-            <el-col :span="8" :offset="5">
+            <el-col :span="8">
               <el-form :inline="true" :model="selectForm" ref="selectForm">
-                <el-form-item label="员工姓名">
+                <el-form-item>
                   <el-input  type="text" v-model="selectForm.ename" placeholder="请输入员工姓名"></el-input>
                 </el-form-item>
                 <el-form-item>
@@ -24,7 +24,7 @@
 
           <el-table
             :data="tableData"
-            @row-dblclick="getScore"
+            @row-click="getDeptEvaluate"
             border
             stripe
             style="width: 100%"
@@ -72,52 +72,78 @@
               width="50"
               align="center">
             </el-table-column>
-            <el-table-column
-              prop="birthday"
-              label="出生年月"
-              width="80"
-              align="center">
-            </el-table-column>
+
             <el-table-column
               prop="graduate"
               label="毕业学校"
               width="100"
               align="center">
             </el-table-column>
+
             <el-table-column
-              prop="major"
-              label="所学专业"
-              width="100"
-              align="center">
-            </el-table-column>
-            <el-table-column
+              v-if="false"
               prop="officialdate"
               label="转正时间"
               width="100"
               align="center">
             </el-table-column>
+
             <el-table-column
-              fixed="right"
-              label="操作"
+              header-align="center"
               align="center"
-              >
-              <template slot-scope="scope">
-                <el-button
-                  size="mini"
-                  @click="allow(scope.row)">允许转正</el-button>
-                <el-button
-                  size="mini"
-                  @click="getEvaluate(scope.row,0)">转正评价</el-button>
-                <el-button
-                  size="mini"
-                  @click="getEvaluate(scope.row,1)">工作一年评价</el-button>
-                <el-button
-                  size="mini"
-                  @click="getEvaluate(scope.row,2)">工作二年评价</el-button>
-                <el-button
-                  size="mini"
-                  @click="getEvaluate(scope.row,3)">工作三年评价</el-button>
+              show-overflow-tooltip
+              label="培训期间测试成绩">
+
+              <template
+                v-for="(head,index) in table_course_head">
+                <!--拼接''：格式转换--课程编号head.cno是number类型的，从后台接收的成绩json里cno是字符串，-->
+                <el-table-column
+                  :prop="head.cno + ''"
+                  :label="head.cname"
+                  align="center">
+                </el-table-column>
               </template>
+
+            </el-table-column>
+
+            <el-table-column
+              prop="school"
+              header-align="center"
+              align="left"
+              show-overflow-tooltip
+              label="学校评价">
+            </el-table-column>
+
+            <el-table-column
+              prop="type0"
+              header-align="center"
+              align="left"
+              show-overflow-tooltip
+              label="转正评价">
+            </el-table-column>
+
+            <el-table-column
+              prop="type1"
+              header-align="center"
+              align="left"
+              show-overflow-tooltip
+              label="一年评价">
+            </el-table-column>
+
+            <el-table-column
+              prop="type2"
+              header-align="center"
+              align="left"
+              show-overflow-tooltip
+              label="两年评价">
+            </el-table-column>
+
+            <el-table-column
+              prop="type3"
+              header-align="center"
+              align="left"
+              show-overflow-tooltip
+              label="三年评价">
             </el-table-column>
           </el-table>
         </el-main>
@@ -137,6 +163,7 @@
 </template>
 
 <script>
+  import axios from "axios";
   import NavMenu from "./navMenu";
   export default {
     components: {NavMenu},
@@ -148,81 +175,15 @@
           pageSize:5,
         },
         tableData: [],
+        table_course_head: [],
         selectForm:{
           ename:null
         }
       }
     },
     methods: {
-      //跳转到评价界面，并传值
-      getEvaluate(val1,val2) {//val1为员工编号，val2为评价类型
-        console.log(val1, val2);
-        // 获取工作满一，二，三年的日期，格式以YYYY-MM-DD显示
-        let nextYear = this.$moment(val1.officialdate).add(1, 'years').format('YYYY-MM-DD');
-        let secondYear = this.$moment(val1.officialdate).add(2, 'years').format('YYYY-MM-DD');
-        let thirdYear = this.$moment(val1.officialdate).add(3, 'years').format('YYYY-MM-DD');
-        //获取当前日期
-        let nowTime = this.$moment().format('YYYY-MM-DD');
-        console.log(nowTime+""+nextYear+""+secondYear+""+thirdYear)
-
-        let time,msg;
-        if(val2 == 1){
-          time = nextYear;
-          msg = "未满工作一年，不允许评价";
-        }else if(val2 == 2){
-          time = secondYear;
-          msg = "未满工作两年，不允许评价";
-        }else if(val2 == 3){
-          time = thirdYear;
-          msg = "未满工作三年，不允许评价";
-        }
-
-        if(val1.officialdate == null || val1.officialdate == ""){
-          this.$message("请添加转正时间");
-        }else {
-          //不满足工作年限，不允许评价
-          if (nowTime < time) {
-            this.$message(msg);
-          } else {
-            this.axios.get("getDeptEvaluate/" + val1.empno + "/" + val2).then(res => {
-              console.log(res.data);
-              debugger
-              if (res.data == "" || res.data == null) {
-                this.$message("评价信息为空，请增加评价信息");
-                //页面跳转
-                //路由传值
-                this.$router.push({
-                  path: "/addDeptEvaluate",
-                  query: {
-                    empno: val1.empno,
-                    ename: val1.sname,
-                    type: val2
-                  }
-                });
-              } else {
-                //页面跳转
-                //路由传值
-                debugger
-                let accountInfoJson = res.data;
-                var accountJson = JSON.stringify(accountInfoJson);//传递json字符串能避免刷新参数丢失
-                this.$router.push({
-                  path: '/getDeptEvaluate',
-                  query: {
-                    dataObj: accountJson,
-                    empno: val1.empno,
-                    ename: val1.sname,
-                    dname: val1.dname,
-                    job: val1.job
-                  }
-                })
-              }
-            })
-          }
-        }
-      },
       //获取经理管理的员工总数量
       getStudentBymgr: function (ename) {
-        debugger
         //通过getters属性获取仓库中的值
         var mgr = this.$store.getters.uid;
 
@@ -236,8 +197,10 @@
         var mgr = this.$store.getters.uid;
 
         this.axios.get("getAllByPage/"+this.query.page+"/"+this.query.pageSize+"/"+mgr+"/"+ename).then(res=>{
+          debugger
           this.tableData = res.data;
         })
+
       },
       handleSizeChange(val) {
         this.query.page = 1;
@@ -248,33 +211,23 @@
         this.query.page = val;
         this.getAllByPage()
       },
-      //跳转到学生成绩页面
-      getScore(val){
-      console.log(val.sno);
-        //页面跳转
-        //路由传值
+      //跳转到跟踪表
+      getDeptEvaluate(val){
+        debugger
+        console.log(val.sno)
+
         this.$router.push({
-          path: '/getDeptStudentScore',
+          path: '/getDeptEvaluate',
           query: {
-            sno: val.sno
+            empno: val.empno,
+            ename: val.sname,
+            dname: val.dname,
+            job: val.job,
+            sno: val.sno,
+            officialdate:val.officialdate
+
           }
         })
-      },
-      //允许转正
-      allow(val){
-        if(val.officialdate == null || val.officialdate == ""){
-          //页面跳转
-          //路由传值
-          this.$router.push({
-            path: '/addOfficialDate',
-            query: {
-              empno: val.empno,
-              ename:val.sname
-            }
-          })
-        }else{
-          this.$message("转正时间已经存在");
-        }
       },
       //模糊查询
       selectByEname(ename){
@@ -286,6 +239,12 @@
         this.getStudentBymgr(ename);
         this.getAllByPage(ename);
       },
+      getTableHead() {
+        //获取课程信息
+          axios.get("/getAllCourse").then(res => {
+            this.table_course_head = res.data;
+          })
+      },
 
 
     },
@@ -293,6 +252,7 @@
     created() {//创建实例后直接获取数据
       this.getAllByPage();
       this.getStudentBymgr();
+      this.getTableHead();
     }
   }
 </script>

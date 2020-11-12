@@ -71,7 +71,7 @@
             <el-row v-show="false">
               <el-col :span="8" :offset="7">
                 <div class="grid-content bg-purple">
-                  <el-form-item label="评价类型："  prop="type">
+                  <el-form-item label="评价类型：" >
                     <el-input type="text" v-model="form.type"
                               :disabled="!isEdit"></el-input>
                   </el-form-item>
@@ -209,10 +209,13 @@
       getQuery() {
         //获取个人信息
         // 取到路由带过来的参数
-        let routerQuery = this.$route.query.dataObj;
-        debugger
-        // 将数据放在当前组件的数据内（需要将json字符串转为json对象）
-        this.form = JSON.parse(routerQuery)[0];
+        let empno = this.$route.query.empno;
+        let type = this.$route.query.type;
+        this.form.type = type;
+
+        this.axios.get("getDeptEvaluate/" + empno + "/" + type).then(res => {
+          this.form  = res.data[0];
+        })
       },
       //取消编辑
       cancel_submit() {
@@ -233,7 +236,19 @@
                 this.isEdit = false;
 
                 //页面跳转
-                this.$router.push({path: "/mgrIndex"})
+                this.$router.push({
+                  path: "/getDeptEvaluate",
+                  query: {
+                    empno:this.$route.query.empno,
+                    ename:this.$route.query.ename,
+                    dname:this.$route.query.dname,
+                    job:this.$route.query.job,
+                    sno:this.$route.query.sno,
+                    officialdate:this.$route.query.officialdate
+                  }
+
+                })
+
               } else {
                 this.$message("编辑信息失败");
               }

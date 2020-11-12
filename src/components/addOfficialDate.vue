@@ -100,12 +100,16 @@
             //提交信息
             let time =  this.transformation(this.form.date);
             console.log(time);
-            debugger
             this.axios.get("addOfficialDate/"+this.form.empno+"/"+time).then(res => {
               if (res.data) {
                 this.$message("添加转正时间成功");
                 //页面跳转
-                this.$router.push({path:"/mgrIndex"})
+                this.$router.push({
+                  path:"/getDeptEvaluate",
+                  query:{
+                    officialdate:this.$route.query.officialdate
+                  }
+                })
               } else {
                 this.$message("添加转正时间失败");
               }
